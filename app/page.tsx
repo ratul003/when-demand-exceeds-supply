@@ -1,0 +1,1450 @@
+'use client'
+
+import React, { useState, useEffect, useRef } from 'react'
+
+const CYAN = '#06b6d4'
+
+// ── Types ──────────────────────────────────────────────────────────────────────
+type BarometerState = 'green' | 'yellow' | 'red'
+type ModuleId = 'signals' | 'health' | 'surge' | 'incentive' | 'routing'
+type PresetId = 'coto_wellness' | 'telehealth' | 'tutoring' | 'freelance'
+
+// ── Data ───────────────────────────────────────────────────────────────────────
+const WIN_METRICS = [
+  { raw: '3M+', label: 'App downloads enabled' },
+  { raw: '300+', label: 'Vetted experts' },
+  { raw: '5', label: 'Core modules' },
+  { raw: '4', label: 'Marketplace presets' },
+  { raw: '0', label: 'Net platform cost to run' },
+]
+
+const STORY_CHAPTERS = [
+  { id: 'problem',      num: '01', label: 'The Problem'      },
+  { id: 'barometer',   num: '02', label: 'The Intelligence'  },
+  { id: 'surge',       num: '03', label: 'The Response'      },
+  { id: 'dashboard',   num: '04', label: 'The Proof'         },
+]
+
+const BAROMETER_CONFIG: Record<BarometerState, {
+  label: string; color: string; delayThreshold: string; dropoutThreshold: string
+  status: string; supplyActions: string[]; demandActions: string[]; routingNote: string
+}> = {
+  green: {
+    label: 'Green', color: '#22c55e',
+    delayThreshold: '< 30 min', dropoutThreshold: '< 5%',
+    status: 'Operating normally — nothing fires',
+    supplyActions: [
+      'Standard earnings visibility displayed',
+      'Tiered membership benefits highlighted',
+      'Guaranteed earnings messaging active for qualifying experts',
+    ],
+    demandActions: [
+      'Base pricing — no surge',
+      'Standard booking flow, no wait-time messaging',
+    ],
+    routingNote: 'AI handles low-complexity queries freely. No pressure to route around.',
+  },
+  yellow: {
+    label: 'Yellow', color: '#f59e0b',
+    delayThreshold: '30–60 min', dropoutThreshold: '5–10%',
+    status: 'Supply pressure — incentive engine activates',
+    supplyActions: [
+      'Push to active, scheduled, and offline experts',
+      '"X customers waiting right now" — real-time earnings framing',
+      'Revenue share boost + 1.5× rating multiplier unlocked',
+      'Platform coins + surge fee share distributed to responders',
+      'Referral programme kicks in',
+    ],
+    demandActions: [
+      'Light surge fee on new bookings',
+      '"High demand — booking now secures your slot"',
+    ],
+    routingNote: 'Standard queries → AI. High-urgency requests queued for available experts.',
+  },
+  red: {
+    label: 'Red', color: '#ef4444',
+    delayThreshold: '≥ 60 min', dropoutThreshold: '≥ 10%',
+    status: 'Critical shortfall — maximum response',
+    supplyActions: [
+      'SMS + in-app + push across all expert tiers simultaneously',
+      'High-earnings bonus tier unlocked',
+      'Priority access badge for top responders',
+      'Surge fee share maxed — highest incentive payout possible',
+      'Auto-stop: everything pauses the moment supply recovers',
+    ],
+    demandActions: [
+      'Full surge pricing — transparent disclosure to customers',
+      'Estimated wait time shown at booking step',
+      'Queue position indicator for customers who choose to wait',
+    ],
+    routingNote: 'AI absorbs all non-urgent demand. Human experts reserved for highest-urgency only.',
+  },
+}
+
+const SCENARIO_STEPS = [
+  {
+    time: '23:00', icon: '📈',
+    event: 'Demand spike begins',
+    detail: 'Unique visitors triple in 20 minutes. Chat requests climb from 8 to 47. Queue depth: 31 open sessions, 3 experts available — all in active calls.',
+    metric: 'Delay time: 12 min · State: 🟢',
+    stateColor: '#22c55e',
+  },
+  {
+    time: '23:08', icon: '🟡',
+    event: 'Barometer turns Yellow',
+    detail: 'Delay time crosses 30 minutes. The Health Scoring Engine triggers Yellow state. Mental health category is hardest hit: 18 customers waiting, 1 expert available.',
+    metric: 'Delay time: 34 min · State: 🟡',
+    stateColor: '#f59e0b',
+  },
+  {
+    time: '23:08 +2s', icon: '💸',
+    event: 'Surge pricing activates',
+    detail: 'Category matrix fires: Mental Health +18%, Astrology +10%, Relationship +12%. Surge fees ring-fenced into expert incentive pool. Customer messaging updates immediately.',
+    metric: 'Surge: +10–18% applied',
+    stateColor: '#f59e0b',
+  },
+  {
+    time: '23:08 +5s', icon: '📲',
+    event: 'Incentive engine fires',
+    detail: 'Push to 48 active, scheduled, and offline experts: "12 customers waiting. Complete 3 sessions to earn ₹800 bonus. Rating multiplier 1.5× active." Revenue share boost unlocked.',
+    metric: '48 experts pinged',
+    stateColor: '#f59e0b',
+  },
+  {
+    time: '23:09', icon: '🤖',
+    event: 'AI Router adjusts',
+    detail: '31 queued sessions classified by NLP complexity. 19 standard queries → Joy (AI companion, instant). 12 high-complexity → human queue, prioritised by ERS score. Mental health sessions: always human, no exceptions.',
+    metric: '19 → AI · 12 → Human queue',
+    stateColor: '#f59e0b',
+  },
+  {
+    time: '23:14', icon: '🟢',
+    event: 'Supply recovers — auto-stop',
+    detail: '9 experts accepted the push. Delay drops 34 → 18 minutes. Engine detects Green recovery. All incentives pause automatically. Surge collected: ₹4,200. Bonuses paid: ₹3,800. Net platform cost: ₹400.',
+    metric: 'Delay: 18 min · State: 🟢 · Self-financed',
+    stateColor: '#22c55e',
+  },
+]
+
+const SURGE_CATEGORIES = [
+  { name: 'Astrology',           thresholds: ['+5%',  '+10%', '+15%'] },
+  { name: 'Relationship Coaching', thresholds: ['+8%', '+12%', '+20%'] },
+  { name: 'Mental Health',       thresholds: ['+10%', '+18%', '+25%'] },
+  { name: 'Financial Coaching',  thresholds: ['+8%',  '+15%', '+22%'] },
+  { name: 'Reproductive Health', thresholds: ['+10%', '+18%', '+25%'] },
+]
+
+const ROUTING_MATRIX = [
+  {
+    condition: 'Supply: Green', condColor: '#22c55e',
+    low:  { label: 'AI Companion',     color: '#22c55e', note: 'Instant · no queue · no surge'        },
+    high: { label: 'Human Expert',     color: CYAN,      note: 'Surge applies · immediate'             },
+  },
+  {
+    condition: 'Supply: Yellow', condColor: '#f59e0b',
+    low:  { label: 'AI + Queue Human', color: '#f59e0b', note: 'AI bridges the wait'                   },
+    high: { label: 'Human Expert',     color: CYAN,      note: 'Prioritised in expert queue'           },
+  },
+  {
+    condition: 'Supply: Red', condColor: '#ef4444',
+    low:  { label: 'AI + Queue Human', color: '#f59e0b', note: 'AI absorbs non-urgent volume'          },
+    high: { label: 'Human Expert',     color: CYAN,      note: 'Reserved for high-urgency only'        },
+  },
+  {
+    condition: 'Crisis category', condColor: '#ef4444',
+    low:  { label: 'Human (Always)',   color: '#ef4444', note: 'Hard rule · cannot be overridden'     },
+    high: { label: 'Human (Always)',   color: '#ef4444', note: 'Hard rule · cannot be overridden'     },
+  },
+]
+
+const PIPELINE_MODULES: { id: ModuleId; label: string; sub: string; color: string; desc: string; metrics: string[]; ai: string }[] = [
+  {
+    id: 'signals', label: 'Demand Signals', sub: 'Input layer', color: '#8b5cf6',
+    desc: 'Five real-time indicators feed the engine: unique visitors, active page views, chat request count, chatbot sentiment (willingness-to-wait, −1 to +1), and queue depth. Segment-compatible event stream or direct API. The sentiment score is the non-obvious one — it teaches the engine what "high pressure" looks like per category.',
+    metrics: ['Unique visitors (live)', 'Active page views vs. repeat', 'Chat request count', 'Chatbot sentiment (−1 to +1)', 'Queue depth per category'],
+    ai: 'Sentiment score feeds threshold calibration. The engine learns the customer tolerance band for each category over time.',
+  },
+  {
+    id: 'health', label: 'Health Scoring Engine', sub: 'Barometer core', color: CYAN,
+    desc: 'Evaluates signals against per-category thresholds. Outputs Green, Yellow, or Red. Two independent trigger types: Delay Time (minutes to expert assignment) and Dropout Rate (% of visitors leaving). Either alone can flip the state. Operators configure which triggers to use per category.',
+    metrics: ['Barometer state (Green / Yellow / Red)', 'Active trigger type', 'Per-category threshold config', 'State transition event log'],
+    ai: 'Auto-calibration via sentiment: thresholds tighten in categories where customers tolerate shorter waits.',
+  },
+  {
+    id: 'surge', label: 'Surge Pricing Calculator', sub: 'Demand-side response', color: '#f59e0b',
+    desc: 'Maps category × delay time to a multiplier. The key insight: surge fees collected from customers fund the expert incentives on the supply side. The system is self-financing — the platform never carries the cost of a supply response at any scale.',
+    metrics: ['Category × delay time matrix', 'Surge multiplier output', 'Self-financing balance', 'Revenue vs. incentive payout delta'],
+    ai: 'Surge parameters can tune to demand elasticity — customers who convert despite surge vs. those who drop reveal the platform-specific tolerance curve.',
+  },
+  {
+    id: 'incentive', label: 'Incentive Engine', sub: 'Supply-side response', color: '#22c55e',
+    desc: 'Fires tiered notification payloads based on barometer state. Yellow: light push with earnings framing. Red: high-earnings alert across all channels (in-app, push, SMS, email). Auto-stops when supply recovers — no manual intervention needed. Webhook-compatible, fires to any notification service.',
+    metrics: ['Tier (Yellow / Red)', 'Channel mix: in-app / push / SMS / email', 'Notification copy template', 'Supply recovery auto-stop trigger'],
+    ai: 'Dynamic copy and amount: the engine adjusts based on each expert\'s historical response rate to past pushes.',
+  },
+  {
+    id: 'routing', label: 'AI Escalation Router', sub: 'Routing layer', color: '#ec4899',
+    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how Coto\'s Joy → Expert escalation was designed.',
+    metrics: ['Supply availability score', 'Query complexity (NLP, 0–1)', 'Customer tier', 'Category routing rules', 'Always-human overrides'],
+    ai: 'Escalation feedback tightens complexity thresholds over time — poor CSAT on AI-handled sessions → router becomes more conservative.',
+  },
+]
+
+const PRESETS: { id: PresetId; label: string; color: string; desc: string; tag: string; highlights: string[] }[] = [
+  {
+    id: 'coto_wellness', label: 'coto_wellness', color: CYAN, tag: 'Default · Origin',
+    desc: 'Origin configuration. Five wellness categories, 30/60-min delay thresholds, 5/10% dropout thresholds. Sentiment calibration on. Mental health always routed to human experts.',
+    highlights: ['30 / 60 min delay thresholds', 'Sentiment-calibrated barometer', 'Mental health: always human'],
+  },
+  {
+    id: 'telehealth', label: 'telehealth', color: '#22c55e', tag: 'Healthcare',
+    desc: 'Credential-weighted. Stricter thresholds (15/30 min). Higher surge multipliers to prioritise certified providers. Always-human rules for urgent care and crisis.',
+    highlights: ['15 / 30 min (stricter)', 'Credential-tier weighting', 'Urgent care: always human'],
+  },
+  {
+    id: 'tutoring', label: 'tutoring', color: '#f59e0b', tag: 'EdTech',
+    desc: 'Retention-weighted. Looser thresholds (45/90 min). Subject-specific incentive ladders. Student tier gates AI routing — verified students see human options first.',
+    highlights: ['45 / 90 min (looser)', 'Subject-specific incentive ladders', 'Retention score weighted'],
+  },
+  {
+    id: 'freelance', label: 'freelance', color: '#8b5cf6', tag: 'Professional Services',
+    desc: 'Response-time-weighted. Hourly bandwidth caps per expert. Portfolio-verified tier. No always-human categories. Suited for design, writing, engineering, legal.',
+    highlights: ['Response time as primary signal', 'Hourly bandwidth caps', 'Portfolio-verified tier'],
+  },
+]
+
+const INDUSTRY_BENCHMARKS = [
+  {
+    company: 'Uber', category: 'Ride-hailing', bg: '#1a1a1a',
+    what: 'H3 hexagonal grid zones recalculate every 1–2 minutes. DeepETT demand model runs 2 million real-time forecasts per second. A 6% improvement in arrival-time accuracy → estimated $100M incremental annual revenue (Uber Eng Blog, 2026). Reinforcement learning now optimises driver allocation across 400+ cities simultaneously.',
+    signal: 'D/S ratio per H3 zone · Weather · Events · Flight arrivals',
+    gap: 'Hundreds of millions in infrastructure, built over a decade. None of it extractable.',
+  },
+  {
+    company: 'DoorDash', category: 'Food delivery', bg: '#c62300',
+    what: 'Their mobilisation system identifies supply gaps BEFORE they open — predicting required Dasher-hours, comparing to expected organic supply, issuing Peak Pay for exactly the shortfall. Proactive, not reactive. Published result: significant delivery quality improvement + reduced total cost.',
+    signal: 'Projected Dasher-hours vs. expected organic supply (forward-looking)',
+    gap: '"Anticipate and mobilise before the gap" is the core insight — published on their eng blog, tooling fully proprietary.',
+  },
+  {
+    company: 'Instacart', category: 'Grocery delivery', bg: '#2d7a2e',
+    what: 'SAGE (Supply Allocation and Generation Engine, 2020): treats pricing, incentives, and shopper outreach as ONE joint optimisation — not three separate triggers. Can mobilise shoppers with 1-hour lead time, including previously churned ones. Also nudges customers to off-peak times to smooth demand. ("Building for Balance," Instacart Eng Blog)',
+    signal: 'Predicted shopper supply vs. required hours per zone · Customer order timing',
+    gap: '"Treat all levers as one system" is the single most important published insight in marketplace ops. The system that acts on it: fully proprietary.',
+  },
+  {
+    company: 'Zocdoc', category: 'Provider booking', bg: '#174080',
+    what: '43% of bookings happen when the provider\'s office is closed — proof that always-on supply intelligence creates demand that would otherwise be lost. 200,000+ new patient appointments available within 24 hours. Zo AI converts incoming calls directly to booked appointments in real time. (Zocdoc, 2025)',
+    signal: 'Provider schedule (two-way EHR sync) · Real-time availability',
+    gap: 'Closest structural analog to Coto: two-sided marketplace for human expert time. Always-on layer is deeply embedded and not separable.',
+  },
+]
+
+const ANALOG_BENCHMARKS = [
+  {
+    company: 'BetterHelp', category: 'Online therapy', bg: '#1b3a6b',
+    scale: '25,000+ therapists · millions of clients',
+    what: 'Fastest-growing therapy platform through the pandemic, matching clients to licensed therapists. Marketed as "quick access" to mental health support.',
+    crisis: 'FTC settlement (Nov 2023, $7.8M): BetterHelp misrepresented therapist response times to millions of customers. The platform had more clients than therapists could serve. Matching delays stretched to 24+ hours — sometimes weeks — despite "fast matching" claims. Therapist burnout and attrition worsened the gap.',
+    lesson: 'The symptom of flying blind: you over-promise response times, discover the supply gap through customer complaints, not operations. The barometer engine surfaces this in real time — before the FTC does.',
+    lessonColor: '#ef4444',
+  },
+  {
+    company: 'Chegg', category: 'Online tutoring', bg: '#e8600a',
+    scale: '50,000+ human tutors at peak · tens of millions of students',
+    what: 'Built one of the largest human tutor networks in EdTech. Students could book on-demand tutoring sessions across subjects and grade levels.',
+    crisis: 'In 2022–23, Chegg\'s Q4 earnings calls documented explicit "supply side constraints": human tutors could not offer 24/7 availability, subject-specific gaps persisted through exam seasons, and per-session economics didn\'t hold at scale. By 2023–24, Chegg replaced its human tutor network with AI (ChegGPT). Not a strategic choice — a supply ceiling.',
+    lesson: 'When expert supply is inelastic, the options are: build operational intelligence to use what you have more efficiently, or replace humans with AI. Chegg chose AI. Equilibrium is the other path.',
+    lessonColor: '#f59e0b',
+  },
+  {
+    company: 'Clarity.fm', category: 'Expert calls · pay-per-minute', bg: '#1a3a2a',
+    scale: '180+ countries · pay-per-minute at $1–$15+/min by expert',
+    what: 'The closest structural analog to Coto: live expert calls, pay-per-minute billing, non-interchangeable supply by domain. Experts set their own rates. Categories span entrepreneurship, marketing, law, finance, health.',
+    crisis: 'Zero surge pricing. Zero demand signal routing. Expert rates are static regardless of demand. When a top expert goes offline, demand for that category has nowhere to go. No barometer. No incentive to pull supply back online. The platform manages supply-demand the same way it did at launch.',
+    lesson: 'Same model as Coto — same vulnerability. Clarity.fm proves the category is viable. Equilibrium is the operational intelligence layer that Clarity.fm never built.',
+    lessonColor: CYAN,
+  },
+]
+
+const ELASTICITY_ROWS = [
+  {
+    dimension: 'Supply type',
+    logistics: 'Interchangeable — any driver takes any delivery',
+    expert: 'Specialised — a mental health coach ≠ an astrologer ≠ a financial advisor',
+  },
+  {
+    dimension: 'Session duration',
+    logistics: '5–30 min / delivery → high throughput per unit',
+    expert: '30–90 min / session → an expert completes 4–8 sessions max per day',
+  },
+  {
+    dimension: 'Surge response speed',
+    logistics: 'Minutes — price goes up, drivers come online',
+    expert: 'Hours to days — experts have prep, scheduling, and emotional labour limits',
+  },
+  {
+    dimension: 'Hard capacity limit',
+    logistics: 'Capital constraint only (need a car) — fast to recruit, fast to scale',
+    expert: 'Credentialing + licensing + daily session caps — cannot be priced away',
+  },
+  {
+    dimension: 'Category crossover',
+    logistics: 'Full — a DoorDash driver can switch restaurant → grocery same day',
+    expert: 'None — you cannot reroute a Vedic astrology expert into mental health crisis support',
+  },
+]
+
+const STACK_TOOLS = [
+  { name: 'Python',      category: 'Core engine',       color: '#3776AB',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3C8.5 3 9 5.5 9 5.5V8h5v1H6.5S3 8.6 3 14s3 5.5 3 5.5h2v-2.7S7.8 14 11 14h6s3 0 3-3V8s.5-5-6-5zm-1.5 2c.8 0 1.5.7 1.5 1.5S13.3 8 12.5 8 11 7.3 11 6.5 11.7 5 12.5 5z" fill="#3776AB"/><path d="M14 25c5.5 0 5-2.5 5-2.5V20h-5v-1h7.5S25 19.4 25 14s-3-5.5-3-5.5h-2v2.7s.2 2.8-3 2.8h-6s-3 0-3 3v3s-.5 5 6 5zm1.5-2c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5z" fill="#FFD845"/></svg>` },
+  { name: 'FastAPI',     category: 'API layer',         color: '#009688',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="10" fill="#009688"/><path d="M14 6l-5 9h5l-1 7 6-10h-5l1-6z" fill="white"/></svg>` },
+  { name: 'React',       category: 'Operator dashboard',color: '#61DAFB',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="14" cy="14" rx="3" ry="3" fill="#61DAFB"/><ellipse cx="14" cy="14" rx="11" ry="4.5" stroke="#61DAFB" stroke-width="1.5" fill="none"/><ellipse cx="14" cy="14" rx="11" ry="4.5" stroke="#61DAFB" stroke-width="1.5" fill="none" transform="rotate(60 14 14)"/><ellipse cx="14" cy="14" rx="11" ry="4.5" stroke="#61DAFB" stroke-width="1.5" fill="none" transform="rotate(120 14 14)"/></svg>` },
+  { name: 'TypeScript',  category: 'Type safety',       color: '#3178C6',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="22" height="22" rx="3" fill="#3178C6"/><path d="M8 13h5M10.5 13v8M17 13.5c-.5-.5-1.2-.5-1.8-.2-.8.4-.9 1.5 0 2 .8.5 2.3.6 2.3 2-.1 1.2-1.3 1.8-2.5 1.5-.7-.2-1.2-.7-1.5-1.3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>` },
+  { name: 'PostgreSQL',  category: 'State store',       color: '#4169E1',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="14" cy="8" rx="8" ry="4" fill="#4169E1" opacity="0.3"/><ellipse cx="14" cy="8" rx="8" ry="4" stroke="#4169E1" stroke-width="1.5" fill="none"/><path d="M6 8v12c0 2.2 3.6 4 8 4s8-1.8 8-4V8" stroke="#4169E1" stroke-width="1.5" fill="none"/><path d="M6 14c0 2.2 3.6 4 8 4s8-1.8 8-4" stroke="#4169E1" stroke-width="1" stroke-dasharray="3 2" fill="none"/></svg>` },
+  { name: 'Redis',       category: 'Real-time cache',   color: '#DC382D',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 16.5l9 4.5 9-4.5" stroke="#DC382D" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 12.5l9 4.5 9-4.5" stroke="#DC382D" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8.5L14 13l9-4.5L14 4 5 8.5z" fill="#DC382D" opacity="0.25"/><path d="M5 8.5L14 13l9-4.5L14 4 5 8.5z" stroke="#DC382D" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>` },
+  { name: 'WebSockets',  category: 'Live dashboard',    color: '#22c55e',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 14c0-5 4-9 9-9" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/><path d="M8 14c0-3.3 2.7-6 6-6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/><path d="M23 14c0 5-4 9-9 9" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/><path d="M20 14c0 3.3-2.7 6-6 6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/><circle cx="14" cy="14" r="2" fill="#22c55e"/></svg>` },
+  { name: 'Segment',     category: 'Event ingestion',   color: '#52BD94',
+    svg: `<svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c4-6 12-6 16 0" stroke="#52BD94" stroke-width="2.5" stroke-linecap="round"/><path d="M6 18c4 6 12 6 16 0" stroke="#52BD94" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="14" r="2.5" fill="#52BD94"/></svg>` },
+]
+
+const NAV_SECTIONS = [
+  { id: 'problem',      label: 'The Problem'   },
+  { id: 'industry',     label: 'Industry'      },
+  { id: 'architecture', label: 'Architecture'  },
+  { id: 'barometer',    label: 'Barometer'     },
+  { id: 'surge',        label: 'Surge Pricing' },
+  { id: 'incentives',   label: 'Incentives'    },
+  { id: 'routing',      label: 'AI Routing'    },
+  { id: 'dashboard',    label: 'Dashboard'     },
+  { id: 'presets',      label: 'Configuration' },
+  { id: 'outcomes',     label: 'Outcomes'      },
+  { id: 'stack',        label: 'Tech Stack'    },
+]
+
+// ── Hooks ──────────────────────────────────────────────────────────────────────
+function useCountUp(target: number, duration = 1400, trigger: boolean) {
+  const [val, setVal] = useState(0)
+  useEffect(() => {
+    if (!trigger) return
+    let start: number | null = null
+    const step = (ts: number) => {
+      if (!start) start = ts
+      const p = Math.min((ts - start) / duration, 1)
+      setVal(Math.round((1 - Math.pow(1 - p, 3)) * target))
+      if (p < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }, [trigger, target, duration])
+  return val
+}
+
+// ── SectionNav ─────────────────────────────────────────────────────────────────
+function SectionNav() {
+  const [active, setActive] = useState('')
+  const [hov, setHov] = useState('')
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => { for (const e of entries) if (e.isIntersecting) setActive(e.target.id) },
+      { rootMargin: '-40% 0px -55% 0px' }
+    )
+    NAV_SECTIONS.forEach(({ id }) => { const el = document.getElementById(id); if (el) obs.observe(el) })
+    return () => obs.disconnect()
+  }, [])
+  return (
+    <nav className="hidden xl:flex" style={{ position: 'fixed', right: 24, top: '50%', transform: 'translateY(-50%)', zIndex: 50, flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+      {NAV_SECTIONS.map(({ id, label }) => (
+        <a key={id} href={`#${id}`} title={label}
+          onMouseEnter={() => setHov(id)} onMouseLeave={() => setHov('')}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+          {hov === id && <span style={{ fontSize: '0.68rem', color: CYAN, whiteSpace: 'nowrap' }}>{label}</span>}
+          <div style={{ width: active === id ? 10 : 7, height: active === id ? 10 : 7, borderRadius: '50%', background: active === id ? CYAN : 'rgba(255,255,255,0.2)', transition: 'all 0.2s' }} />
+        </a>
+      ))}
+    </nav>
+  )
+}
+
+// ── AnimatedMetric ─────────────────────────────────────────────────────────────
+function AnimatedMetric({ raw, label }: { raw: string; label: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [triggered, setTriggered] = useState(false)
+  const numMatch = raw.match(/[\d.]+/)
+  const num = numMatch ? parseFloat(numMatch[0]) : 0
+  const prefix = raw.match(/^[^0-9]*/)?.[0] ?? ''
+  const suffix = raw.match(/[^0-9.]+$/)?.[0] ?? ''
+  const counted = useCountUp(num, 1400, triggered)
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setTriggered(true) }, { threshold: 0.5 })
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+  const display = num === 0 ? raw : `${prefix}${Number.isInteger(num) ? counted : counted.toFixed(1)}${suffix}`
+  return (
+    <div ref={ref} style={{ textAlign: 'center', padding: '24px 16px' }}>
+      <div style={{ fontSize: '2.4rem', fontWeight: 800, color: CYAN, lineHeight: 1 }}>{display}</div>
+      <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: 8, lineHeight: 1.4 }}>{label}</div>
+    </div>
+  )
+}
+
+// ── BarometerGauge ─────────────────────────────────────────────────────────────
+// SVG semicircle dial. Three colored arc segments, animated needle.
+function BarometerGauge({ state }: { state: BarometerState }) {
+  const needleAngles = { green: -58, yellow: 0, red: 58 }
+  const stateColors  = { green: '#22c55e', yellow: '#f59e0b', red: '#ef4444' }
+  const angle = needleAngles[state]
+  const color = stateColors[state]
+  return (
+    <svg viewBox="0 0 200 118" style={{ width: '100%', maxWidth: 260, display: 'block', margin: '0 auto' }}>
+      {/* Shadow arc */}
+      <path d="M 20 105 A 80 80 0 0 1 180 105" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="18" strokeLinecap="round"/>
+      {/* Green segment (left third) */}
+      <path d="M 20 105 A 80 80 0 0 1 60 35.7" fill="none" stroke="#22c55e" strokeWidth="18" strokeLinecap="round"
+        opacity={state === 'green' ? 1 : 0.18} style={{ transition: 'opacity 0.5s' }}/>
+      {/* Yellow segment (middle third) */}
+      <path d="M 60 35.7 A 80 80 0 0 1 140 35.7" fill="none" stroke="#f59e0b" strokeWidth="18" strokeLinecap="round"
+        opacity={state === 'yellow' ? 1 : 0.18} style={{ transition: 'opacity 0.5s' }}/>
+      {/* Red segment (right third) */}
+      <path d="M 140 35.7 A 80 80 0 0 1 180 105" fill="none" stroke="#ef4444" strokeWidth="18" strokeLinecap="round"
+        opacity={state === 'red' ? 1 : 0.18} style={{ transition: 'opacity 0.5s' }}/>
+      {/* Needle group — rotates around (100, 105) */}
+      <g style={{ transformOrigin: '100px 105px', transform: `rotate(${angle}deg)`, transition: 'transform 0.55s cubic-bezier(0.34,1.4,0.64,1)' }}>
+        <line x1="100" y1="105" x2="100" y2="32" stroke={color} strokeWidth="3" strokeLinecap="round" style={{ transition: 'stroke 0.4s' }}/>
+        <line x1="100" y1="105" x2="100" y2="115" stroke={color} strokeWidth="2" strokeLinecap="round" opacity="0.4" style={{ transition: 'stroke 0.4s' }}/>
+      </g>
+      {/* Hub */}
+      <circle cx="100" cy="105" r="7" fill={color} style={{ transition: 'fill 0.4s' }}/>
+      <circle cx="100" cy="105" r="3.5" fill="#0a0a0f"/>
+      {/* Zone labels */}
+      <text x="14"  y="116" fontSize="9" fill="#22c55e" textAnchor="middle" fontFamily="system-ui, sans-serif">Green</text>
+      <text x="100" y="20"  fontSize="9" fill="#f59e0b" textAnchor="middle" fontFamily="system-ui, sans-serif">Yellow</text>
+      <text x="186" y="116" fontSize="9" fill="#ef4444" textAnchor="middle" fontFamily="system-ui, sans-serif">Red</text>
+    </svg>
+  )
+}
+
+// ── LiveScenario ───────────────────────────────────────────────────────────────
+// Interactive 6-step walkthrough of the system responding to a demand spike.
+function LiveScenario() {
+  const [step, setStep] = useState(0)
+  const s = SCENARIO_STEPS[step]
+  return (
+    <div>
+      {/* Step selector timeline */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 28, overflowX: 'auto' }}>
+        {SCENARIO_STEPS.map((st, i) => (
+          <React.Fragment key={i}>
+            <button onClick={() => setStep(i)} style={{
+              flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+              background: 'none', border: 'none', cursor: 'pointer', padding: '8px 12px',
+            }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1rem', transition: 'all 0.2s',
+                background: step === i ? `${st.stateColor}20` : 'rgba(255,255,255,0.04)',
+                border: `2px solid ${step === i ? st.stateColor : 'rgba(255,255,255,0.1)'}`,
+                boxShadow: step === i ? `0 0 14px ${st.stateColor}40` : 'none',
+              }}>{st.icon}</div>
+              <span style={{ fontSize: '0.62rem', color: step === i ? st.stateColor : '#475569', whiteSpace: 'nowrap' }}>{st.time}</span>
+            </button>
+            {i < SCENARIO_STEPS.length - 1 && (
+              <div style={{ flex: 1, minWidth: 20, height: 2, background: i < step ? `${SCENARIO_STEPS[i].stateColor}50` : 'rgba(255,255,255,0.06)', transition: 'background 0.3s' }} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      {/* Detail card */}
+      <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${s.stateColor}30`, borderRadius: 14, padding: '24px 26px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>{s.time}</div>
+            <div style={{ fontWeight: 700, color: s.stateColor, fontSize: '1.1rem' }}>{s.event}</div>
+          </div>
+          <div style={{ padding: '6px 12px', background: `${s.stateColor}15`, border: `1px solid ${s.stateColor}30`, borderRadius: 8, fontSize: '0.75rem', color: s.stateColor, whiteSpace: 'nowrap', flexShrink: 0 }}>
+            {s.metric}
+          </div>
+        </div>
+        <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: 1.7, margin: 0 }}>{s.detail}</p>
+      </div>
+      {/* Prev / Next */}
+      <div style={{ display: 'flex', gap: 10, marginTop: 16, justifyContent: 'flex-end' }}>
+        <button onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0} style={{ padding: '8px 16px', borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: step === 0 ? '#334155' : '#94a3b8', cursor: step === 0 ? 'not-allowed' : 'pointer', fontSize: '0.82rem', transition: 'all 0.15s' }}>← Prev</button>
+        <button onClick={() => setStep(Math.min(SCENARIO_STEPS.length - 1, step + 1))} disabled={step === SCENARIO_STEPS.length - 1} style={{ padding: '8px 16px', borderRadius: 8, background: step === SCENARIO_STEPS.length - 1 ? 'rgba(255,255,255,0.02)' : `${CYAN}18`, border: `1px solid ${step === SCENARIO_STEPS.length - 1 ? 'rgba(255,255,255,0.08)' : CYAN + '40'}`, color: step === SCENARIO_STEPS.length - 1 ? '#334155' : CYAN, cursor: step === SCENARIO_STEPS.length - 1 ? 'not-allowed' : 'pointer', fontSize: '0.82rem', transition: 'all 0.15s' }}>Next →</button>
+      </div>
+    </div>
+  )
+}
+
+// ── BarometerEngine ────────────────────────────────────────────────────────────
+function BarometerEngine() {
+  const [state, setState] = useState<BarometerState>('green')
+  const cfg = BAROMETER_CONFIG[state]
+  return (
+    <div>
+      {/* Gauge + state selector side by side */}
+      <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 32, alignItems: 'center', marginBottom: 28 }}>
+        <BarometerGauge state={state} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {(['green', 'yellow', 'red'] as BarometerState[]).map(s => {
+            const c = BAROMETER_CONFIG[s]
+            return (
+              <button key={s} onClick={() => setState(s)} style={{
+                padding: '14px 18px', borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
+                border: `2px solid ${state === s ? c.color : 'rgba(255,255,255,0.08)'}`,
+                background: state === s ? `${c.color}12` : 'rgba(255,255,255,0.02)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: c.color, boxShadow: state === s ? `0 0 10px ${c.color}` : 'none', flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontWeight: 700, color: state === s ? c.color : '#64748b', fontSize: '0.9rem' }}>{c.label}</div>
+                    <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: 2 }}>{c.status}</div>
+                  </div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+      {/* Threshold row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+        {[['Delay Time Trigger', cfg.delayThreshold], ['Dropout Rate Trigger', cfg.dropoutThreshold]].map(([lbl, val]) => (
+          <div key={lbl} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '12px 16px' }}>
+            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{lbl}</div>
+            <div style={{ color: cfg.color, fontWeight: 700, fontSize: '1.1rem', transition: 'color 0.4s' }}>{val}</div>
+          </div>
+        ))}
+      </div>
+      {/* Actions grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${cfg.color}18`, borderRadius: 12, padding: '16px 18px' }}>
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Supply-side — what experts receive</div>
+          {cfg.supplyActions.map((a, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 7 }}>
+              <span style={{ color: cfg.color, fontSize: '0.65rem', marginTop: 4, flexShrink: 0 }}>▸</span>
+              <span style={{ fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.45 }}>{a}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(255,255,255,0.07)`, borderRadius: 12, padding: '16px 18px' }}>
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Demand-side — what customers see</div>
+          {cfg.demandActions.map((a, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 7 }}>
+              <span style={{ color: '#f59e0b', fontSize: '0.65rem', marginTop: 4, flexShrink: 0 }}>▸</span>
+              <span style={{ fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.45 }}>{a}</span>
+            </div>
+          ))}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: 14, paddingTop: 12 }}>
+            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>AI Routing</div>
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55 }}>{cfg.routingNote}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── PipelineArchitecture ───────────────────────────────────────────────────────
+function PipelineArchitecture() {
+  const [active, setActive] = useState<ModuleId>('health')
+  const mod = PIPELINE_MODULES.find(m => m.id === active)!
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 20, overflowX: 'auto' }}>
+        {PIPELINE_MODULES.map((m, i) => (
+          <React.Fragment key={m.id}>
+            <button onClick={() => setActive(m.id)} style={{
+              flexShrink: 0, padding: '12px 14px', borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s',
+              border: `2px solid ${active === m.id ? m.color : 'rgba(255,255,255,0.08)'}`,
+              background: active === m.id ? `${m.color}15` : 'rgba(255,255,255,0.02)',
+              textAlign: 'center', minWidth: 124,
+            }}>
+              <div style={{ fontSize: '0.64rem', color: active === m.id ? m.color : '#475569', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{m.sub}</div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: active === m.id ? m.color : '#64748b' }}>{m.label}</div>
+            </button>
+            {i < PIPELINE_MODULES.length - 1 && <div style={{ flexShrink: 0, color: '#1e293b', fontSize: '1.2rem', margin: '0 2px' }}>→</div>}
+          </React.Fragment>
+        ))}
+      </div>
+      <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${mod.color}28`, borderRadius: 14, padding: '22px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: mod.color, boxShadow: `0 0 10px ${mod.color}` }} />
+          <span style={{ fontWeight: 600, color: '#e2e8f0' }}>{mod.label}</span>
+          <span style={{ fontSize: '0.68rem', color: mod.color, textTransform: 'uppercase', letterSpacing: '0.07em', marginLeft: 4 }}>{mod.sub}</span>
+        </div>
+        <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.7, marginBottom: 18 }}>{mod.desc}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>Outputs</div>
+            {mod.metrics.map((m, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 }}>
+                <div style={{ width: 5, height: 5, borderRadius: '50%', background: mod.color, flexShrink: 0 }} />
+                <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>{m}</span>
+              </div>
+            ))}
+          </div>
+          <div>
+            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>Learning layer</div>
+            <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.6 }}>{mod.ai}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── SelfFinancingFlow ──────────────────────────────────────────────────────────
+function SelfFinancingFlow() {
+  const [hov, setHov] = useState<number | null>(null)
+  const nodes = [
+    { label: 'Demand spike', sub: 'Queue depth rises', color: '#8b5cf6', icon: '📈' },
+    { label: 'Surge fee collected', sub: 'From customer booking', color: '#f59e0b', icon: '💳' },
+    { label: 'Ring-fenced pool', sub: 'Per-session allocation', color: CYAN, icon: '🏦' },
+    { label: 'Expert bonus paid', sub: 'Revenue share boost', color: '#22c55e', icon: '💸' },
+    { label: 'Supply recovers', sub: 'Pool depletes to zero', color: '#22c55e', icon: '✅' },
+  ]
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto', padding: '8px 0' }}>
+        {nodes.map((n, i) => (
+          <React.Fragment key={n.label}>
+            <div onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} style={{
+              flexShrink: 0, textAlign: 'center', padding: '16px 14px', borderRadius: 12, minWidth: 130,
+              background: hov === i ? `${n.color}15` : 'rgba(255,255,255,0.03)',
+              border: `1px solid ${hov === i ? n.color + '40' : 'rgba(255,255,255,0.07)'}`,
+              transition: 'all 0.2s', cursor: 'default',
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 8 }}>{n.icon}</div>
+              <div style={{ fontWeight: 600, color: n.color, fontSize: '0.82rem', marginBottom: 4 }}>{n.label}</div>
+              <div style={{ fontSize: '0.7rem', color: '#475569' }}>{n.sub}</div>
+            </div>
+            {i < nodes.length - 1 && (
+              <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 4px' }}>
+                <div style={{ fontSize: '1.2rem', color: '#1e293b' }}>→</div>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      <div style={{ marginTop: 18, padding: '14px 18px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 10 }}>
+        <span style={{ color: CYAN, fontWeight: 600, fontSize: '0.88rem' }}>Net platform cost at any scale of demand spike: </span>
+        <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>zero. Surge collected from customers always exceeds incentives paid to experts — the delta is margin, not cost.</span>
+      </div>
+    </div>
+  )
+}
+
+// ── SurgeMatrix ────────────────────────────────────────────────────────────────
+function SurgeMatrix() {
+  const [hov, setHov] = useState<string | null>(null)
+  const delays = ['0–30 min', '30–45 min', '45+ min']
+  const delayColors = ['#22c55e', '#f59e0b', '#ef4444']
+  const delayDescs  = ['Green zone — light pressure', 'Yellow zone — surge active', 'Red zone — max multiplier']
+  return (
+    <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid rgba(255,255,255,0.07)' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <th style={{ padding: '12px 18px', textAlign: 'left', fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 500 }}>Category</th>
+            {delays.map((d, i) => (
+              <th key={d} style={{ padding: '12px 18px', textAlign: 'center', fontSize: '0.72rem', color: delayColors[i], textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.05)' : undefined, fontWeight: 600 }}>{d}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {SURGE_CATEGORIES.map((cat, ri) => (
+            <tr key={cat.name} style={{ borderBottom: ri < SURGE_CATEGORIES.length - 1 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
+              <td style={{ padding: '14px 18px', fontSize: '0.88rem', color: '#e2e8f0', fontWeight: 500, borderRight: '1px solid rgba(255,255,255,0.05)' }}>{cat.name}</td>
+              {cat.thresholds.map((t, ci) => {
+                const key = `${ri}-${ci}`
+                return (
+                  <td key={ci} onMouseEnter={() => setHov(key)} onMouseLeave={() => setHov(null)}
+                    style={{ padding: '14px 18px', textAlign: 'center', cursor: 'default', transition: 'background 0.15s', background: hov === key ? `${delayColors[ci]}14` : 'transparent', borderRight: ci < 2 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
+                    <div style={{ fontWeight: 700, fontSize: '1rem', color: delayColors[ci] }}>{t}</div>
+                    {hov === key && <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: 3 }}>{delayDescs[ci]}</div>}
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+// ── NotificationMockup ─────────────────────────────────────────────────────────
+function NotificationMockup() {
+  const [notifState, setNotifState] = useState<'yellow' | 'red'>('yellow')
+  const notifications = {
+    yellow: {
+      stateColor: '#f59e0b', icon: '🟡', label: 'Yellow state · Push notification',
+      title: '12 customers waiting right now',
+      body: 'Complete 3 sessions to earn your ₹800 bonus. Rating multiplier 1.5× active until supply recovers.',
+      cta: 'Open Coto Expert →', channels: ['Push notification'],
+    },
+    red: {
+      stateColor: '#ef4444', icon: '🔴', label: 'Red state · Push + SMS',
+      title: '🔴 High demand alert',
+      body: 'Highest earnings tier now active. Every session tonight earns max bonus + priority badge. 48 experts pinged.',
+      cta: 'Go online now — 23:08 →', channels: ['Push notification', 'SMS'],
+    },
+  }
+  const n = notifications[notifState]
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 32, alignItems: 'start' }}>
+      {/* Left: toggles + payload */}
+      <div>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 22 }}>
+          {(['yellow', 'red'] as const).map(s => {
+            const ns = notifications[s]
+            return (
+              <button key={s} onClick={() => setNotifState(s)} style={{
+                flex: 1, padding: '12px 16px', borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
+                border: `2px solid ${notifState === s ? ns.stateColor : 'rgba(255,255,255,0.08)'}`,
+                background: notifState === s ? `${ns.stateColor}12` : 'rgba(255,255,255,0.02)',
+              }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: notifState === s ? ns.stateColor : '#64748b', marginBottom: 2 }}>{ns.icon} {s === 'yellow' ? 'Yellow state' : 'Red state'}</div>
+                <div style={{ fontSize: '0.7rem', color: '#475569' }}>{ns.channels.join(' + ')}</div>
+              </button>
+            )
+          })}
+        </div>
+        {/* Payload detail */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '18px 20px' }}>
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Notification copy template (YAML)</div>
+          <pre style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8', lineHeight: 1.7, fontFamily: 'ui-monospace, monospace', whiteSpace: 'pre-wrap' }}>
+{notifState === 'yellow'
+? `yellow:
+  channels: [in_app, push]
+  template: >
+    {{ waiting_count }} customers waiting right now.
+    Complete {{ session_target }} sessions to earn
+    {{ incentive_summary }}.
+    Rating multiplier {{ multiplier }}× active.`
+: `red:
+  channels: [in_app, push, sms, email]
+  template: >
+    {{ state_emoji }} High demand alert.
+    {{ incentive_summary_lucrative }}
+
+auto_stop:
+  trigger: supply_health == 'green'
+  action: pause_all_active_incentives`}
+          </pre>
+        </div>
+      </div>
+      {/* Right: phone mockup */}
+      <div style={{ position: 'sticky', top: 80 }}>
+        <div style={{ background: '#111122', borderRadius: 28, padding: '14px', border: '2px solid rgba(255,255,255,0.1)', boxShadow: '0 24px 60px rgba(0,0,0,0.6)', maxWidth: 260 }}>
+          {/* Status bar */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#475569', marginBottom: 14, padding: '0 4px' }}>
+            <span>23:08</span>
+            <span>5G ●●● 100%</span>
+          </div>
+          {/* Notification banner */}
+          <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 16, padding: '12px 14px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.3s' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 9 }}>
+              <div style={{ width: 26, height: 26, borderRadius: 7, background: CYAN, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#0a0a0f' }}>C</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600 }}>Coto Expert</span>
+              </div>
+              <span style={{ fontSize: '0.62rem', color: '#334155' }}>now</span>
+            </div>
+            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#f1f5f9', marginBottom: 5, transition: 'all 0.3s' }}>{n.title}</div>
+            <div style={{ fontSize: '0.74rem', color: '#94a3b8', lineHeight: 1.55, marginBottom: 10, transition: 'all 0.3s' }}>{n.body}</div>
+            <div style={{ fontSize: '0.72rem', color: CYAN, fontWeight: 600 }}>{n.cta}</div>
+          </div>
+          {/* Channel pills */}
+          <div style={{ display: 'flex', gap: 5, justifyContent: 'center', marginTop: 10 }}>
+            {n.channels.map(ch => (
+              <span key={ch} style={{ fontSize: '0.6rem', color: '#475569', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: 10 }}>{ch}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── RoutingMatrix ──────────────────────────────────────────────────────────────
+function RoutingMatrix() {
+  const [hov, setHov] = useState<string | null>(null)
+  return (
+    <div>
+      <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid rgba(255,255,255,0.07)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <th style={{ padding: '12px 18px', textAlign: 'left', fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 500 }}>Supply state</th>
+              <th style={{ padding: '12px 18px', textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 600 }}>Low complexity (&lt; 0.4)</th>
+              <th style={{ padding: '12px 18px', textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', fontWeight: 600 }}>High complexity (≥ 0.7)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ROUTING_MATRIX.map((row, ri) => (
+              <tr key={row.condition} style={{ borderBottom: ri < ROUTING_MATRIX.length - 1 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
+                <td style={{ padding: '14px 18px', borderRight: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: row.condColor, flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.86rem', fontWeight: 600, color: '#e2e8f0' }}>{row.condition}</span>
+                  </div>
+                </td>
+                {[row.low, row.high].map((cell, ci) => {
+                  const key = `${ri}-${ci}`
+                  return (
+                    <td key={ci} onMouseEnter={() => setHov(key)} onMouseLeave={() => setHov(null)}
+                      style={{ padding: '14px 18px', textAlign: 'center', borderRight: ci === 0 ? '1px solid rgba(255,255,255,0.05)' : undefined, background: hov === key ? `${cell.color}10` : 'transparent', transition: 'background 0.15s', cursor: 'default' }}>
+                      <div style={{ fontWeight: 700, color: cell.color, fontSize: '0.88rem', marginBottom: 3 }}>{cell.label}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#475569' }}>{cell.note}</div>
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10 }}>
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>NLP complexity score</div>
+          <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>0–0.4: general questions, scheduling, basic info. 0.7+: crisis signals, trauma history, nuanced emotional context. Score adapts based on escalation CSAT feedback.</div>
+        </div>
+        <div style={{ padding: '12px 16px', background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: 10 }}>
+          <div style={{ fontSize: '0.68rem', color: '#ef4444', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Hard rules override the matrix</div>
+          <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Mental health crisis, crisis keywords detected, and any operator-defined "always human" categories bypass all routing logic. No exceptions.</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── DashboardPreview ───────────────────────────────────────────────────────────
+function DashboardPreview() {
+  const panels = [
+    {
+      label: 'Demand Panel', color: '#8b5cf6',
+      rows: [{ name: 'Unique visitors', pct: 72 }, { name: 'Active page views', pct: 58 }, { name: 'Chat requests', pct: 85 }, { name: 'Chatbot sentiment', pct: 63 }],
+    },
+    {
+      label: 'Matching Panel', color: CYAN,
+      rows: [{ name: 'Assigned', pct: 68 }, { name: 'Waiting', pct: 41 }, { name: 'In live session', pct: 77 }, { name: 'Fill rate', pct: 82 }],
+    },
+    {
+      label: 'Supply Panel', color: '#22c55e',
+      rows: [{ name: 'Expert utilization', pct: 74 }, { name: 'Idle time', pct: 29 }, { name: 'Actual vs planned', pct: 91 }, { name: 'Assignee time', pct: 55 }],
+    },
+  ]
+  const visuals = [
+    { label: 'Category Demand Heatmap', desc: 'Hourly active users across all categories', color: '#8b5cf6' },
+    { label: 'Delay Barometer', desc: 'Live Green / Yellow / Red platform state', color: CYAN },
+    { label: 'Hourly D&S Trend', desc: 'Demand vs supply gap over time', color: '#f59e0b' },
+    { label: 'Sentiment Chart', desc: 'Willingness-to-wait per category (−1 to +1)', color: '#22c55e' },
+    { label: 'Availability Calendar', desc: 'Expert schedules as building blocks', color: '#ec4899' },
+  ]
+  return (
+    <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ padding: '10px 18px', background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {[['#22c55e', 'Green'], ['#f59e0b', 'Yellow'], ['#ef4444', 'Red']].map(([c, l]) => (
+            <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
+              <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{l}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#334155' }}>Live · WebSocket · 30s refresh</div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+        {panels.map((p, pi) => (
+          <div key={p.label} style={{ padding: '16px', background: '#0a0a0f', borderRight: pi < 2 ? '1px solid rgba(255,255,255,0.06)' : undefined, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ fontSize: '0.68rem', color: p.color, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12, fontWeight: 600 }}>{p.label}</div>
+            {p.rows.map(r => (
+              <div key={r.name} style={{ marginBottom: 9 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
+                  <span style={{ fontSize: '0.76rem', color: '#94a3b8' }}>{r.name}</span>
+                  <span style={{ fontSize: '0.72rem', color: p.color }}>{r.pct}%</span>
+                </div>
+                <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
+                  <div style={{ width: `${r.pct}%`, height: '100%', borderRadius: 2, background: p.color, opacity: 0.7 }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)' }}>
+        {visuals.map((v, i) => (
+          <div key={v.label} style={{ padding: '14px', background: '#080810', borderRight: i < 4 ? '1px solid rgba(255,255,255,0.06)' : undefined, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ fontSize: '0.66rem', color: v.color, fontWeight: 600, marginBottom: 5 }}>{v.label}</div>
+            <div style={{ fontSize: '0.66rem', color: '#334155', lineHeight: 1.4, marginBottom: 10 }}>{v.desc}</div>
+            <div style={{ height: 28, borderRadius: 5, background: `${v.color}08`, border: `1px solid ${v.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '0.58rem', color: `${v.color}50`, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Chart</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── ConfigPresets ──────────────────────────────────────────────────────────────
+function ConfigPresets() {
+  const [active, setActive] = useState<PresetId>('coto_wellness')
+  const preset = PRESETS.find(p => p.id === active)!
+  const yaml = `equilibrium:
+  preset: ${preset.id}
+
+  categories:
+    - name: ${preset.id === 'coto_wellness' ? 'astrology' : preset.id === 'telehealth' ? 'primary_care' : preset.id === 'tutoring' ? 'mathematics' : 'design'}
+      delay_thresholds:
+        yellow: ${preset.id === 'telehealth' ? 15 : preset.id === 'tutoring' ? 45 : 30}
+        red:    ${preset.id === 'telehealth' ? 30 : preset.id === 'tutoring' ? 90 : 60}
+      dropout_thresholds:
+        yellow: ${preset.id === 'telehealth' ? 3 : preset.id === 'tutoring' ? 8 : 5}
+        red:    ${preset.id === 'telehealth' ? 7 : preset.id === 'tutoring' ? 15 : 10}
+
+  ai_escalation:
+    always_human: ${preset.id === 'coto_wellness' ? '[mental_health_crisis]' : preset.id === 'telehealth' ? '[urgent_care, crisis]' : '[]'}
+    complexity_threshold: ${preset.id === 'tutoring' ? 0.5 : 0.7}
+
+  webhooks:
+    incentive_trigger: https://your-service/incentive
+    surge_update:      https://your-service/surge`
+
+  return (
+    <div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 20 }}>
+        {PRESETS.map(p => (
+          <button key={p.id} onClick={() => setActive(p.id)} style={{
+            padding: '12px 14px', borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
+            border: `2px solid ${active === p.id ? p.color : 'rgba(255,255,255,0.08)'}`,
+            background: active === p.id ? `${p.color}12` : 'rgba(255,255,255,0.02)',
+          }}>
+            <div style={{ fontSize: '0.72rem', color: p.color, fontWeight: 700, fontFamily: 'monospace', marginBottom: 5 }}>{p.label}</div>
+            <div style={{ fontSize: '0.65rem', color: '#475569', background: `${p.color}18`, padding: '2px 6px', borderRadius: 4, display: 'inline-block' }}>{p.tag}</div>
+          </button>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${preset.color}28`, borderRadius: 12, padding: '20px' }}>
+          <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.65, marginBottom: 16 }}>{preset.desc}</p>
+          {preset.highlights.map((h, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: preset.color, flexShrink: 0 }} />
+              <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>{h}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ background: '#060610', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '18px', overflow: 'auto' }}>
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>equilibrium.yaml</div>
+          <pre style={{ margin: 0, fontSize: '0.74rem', color: '#94a3b8', lineHeight: 1.65, fontFamily: 'ui-monospace, monospace', whiteSpace: 'pre-wrap' }}>
+            <span style={{ color: preset.color }}>equilibrium:</span>
+            {'\n  preset: ' + preset.id}
+            {'\n' + yaml.split('\n').slice(2).join('\n')}
+          </pre>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Page ───────────────────────────────────────────────────────────────────────
+export default function Page() {
+  return (
+    <main style={{ fontFamily: 'var(--font-inter)', background: '#0a0a0f', minHeight: '100vh' }}>
+      <SectionNav />
+
+      {/* ── Sticky nav ── */}
+      <header style={{ position: 'sticky', top: 0, zIndex: 40, background: 'rgba(10,10,15,0.88)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 32px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', height: 60 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9' }}>Wahid Tawsif Ratul</span>
+            <span style={{ fontSize: '0.7rem', color: CYAN }}>Data Scientist · Product Manager</span>
+          </div>
+          <nav className="hidden md:flex" style={{ marginLeft: 'auto', display: 'flex', gap: 28 }}>
+            {[['Barometer', '#barometer'], ['Surge Pricing', '#surge'], ['AI Routing', '#routing'], ['Dashboard', '#dashboard'], ['Configuration', '#presets']].map(([l, h]) => (
+              <a key={l} href={h} style={{ fontSize: '0.82rem', color: '#64748b', textDecoration: 'none', transition: 'color 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = CYAN)} onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}>{l}</a>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      {/* ── Hero ── */}
+      <section style={{ position: 'relative', padding: '100px 32px 80px', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 500, background: `radial-gradient(ellipse, ${CYAN}14 0%, transparent 68%)`, pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 860, margin: '0 auto', position: 'relative' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}12`, border: `1px solid ${CYAN}30`, borderRadius: 20, padding: '6px 14px', marginBottom: 32 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
+            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Coto · Singapore · 2024 · Open-source</span>
+          </div>
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.12, marginBottom: 28, letterSpacing: '-0.02em' }}>
+            When Demand Exceeds Supply<br />
+            <span style={{ color: CYAN }}>in an Online Marketplace</span>
+          </h1>
+          <p style={{ fontSize: '1.05rem', color: '#94a3b8', lineHeight: 1.8, maxWidth: 700, marginBottom: 16 }}>
+            Coto started as a women-only community app — 7,000 communities, 400,000 users. When they pivoted to a live expert marketplace, the hardest problem wasn&apos;t the experts or the customers. It was the gap between them when demand spiked at 11pm and three experts were in calls.
+          </p>
+          <p style={{ fontSize: '1.05rem', color: '#94a3b8', lineHeight: 1.8, maxWidth: 700, marginBottom: 40 }}>
+            I designed the operational intelligence layer: a barometer engine, a self-financing surge model, a tiered incentive system, and an AI escalation router. Five modules. One YAML file. Zero platform cost. Coto went on to reach 3M+ downloads and train Joy — their AI companion — on 3 million minutes of real expert conversations. I open-sourced it so you don&apos;t have to start from scratch.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {[['3M+', 'App downloads'], ['300+', 'Vetted experts · 30% acceptance'], ['5', 'Core modules'], ['Self-financing', 'Surge model'], ['4', 'Marketplace presets']].map(([v, l]) => (
+              <div key={l} style={{ background: `${CYAN}10`, border: `1px solid ${CYAN}28`, borderRadius: 8, padding: '8px 14px', display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span style={{ fontWeight: 700, color: CYAN, fontSize: '0.9rem' }}>{v}</span>
+                <span style={{ color: '#475569', fontSize: '0.8rem' }}>{l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Win Showcase ── */}
+      <section style={{ padding: '0 32px 80px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+          {WIN_METRICS.map((m, i) => (
+            <div key={i} style={{ background: '#0a0a0f', borderRight: i < 4 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
+              <AnimatedMetric raw={m.raw} label={m.label} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Story Arc ── */}
+      <section style={{ padding: '0 32px 80px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.04)', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+          {STORY_CHAPTERS.map((ch, i) => (
+            <a key={ch.id} href={`#${ch.id}`} style={{ textDecoration: 'none', display: 'block', padding: '20px 22px', background: '#0a0a0f', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.05)' : undefined, transition: 'background 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.background = `${CYAN}06`)} onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0f')}>
+              <div style={{ fontSize: '0.68rem', color: CYAN, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>Ch{ch.num}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#e2e8f0' }}>{ch.label}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Ch01: The Problem ── */}
+      <section id="problem" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}10`, border: `1px solid ${CYAN}25`, borderRadius: 6, padding: '4px 10px', marginBottom: 20 }}>
+            <span style={{ fontSize: '0.68rem', color: CYAN, fontWeight: 700, letterSpacing: '0.1em' }}>CH01</span>
+            <span style={{ fontSize: '0.68rem', color: '#64748b' }}>THE PROBLEM</span>
+          </div>
+
+          {/* Narrative story block */}
+          <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '32px 36px', marginBottom: 40, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: 4, height: '100%', background: `linear-gradient(${CYAN}, #8b5cf6)` }} />
+            <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 20 }}>11:08pm · Your platform · Any night</div>
+            <p style={{ fontSize: '1.05rem', color: '#e2e8f0', lineHeight: 1.8, marginBottom: 16, fontStyle: 'italic' }}>
+              You have 47 open session requests. You have 3 experts online — all in active calls. Queue depth: 44.
+            </p>
+            <p style={{ fontSize: '0.95rem', color: '#94a3b8', lineHeight: 1.8, marginBottom: 16 }}>
+              On the other side of the platform, 12 experts are offline. They don&apos;t know any of this is happening. No notification fired. No one pinged them. Your ops team won&apos;t see the dropout spike until tomorrow&apos;s report — by then, those 44 customers are gone.
+            </p>
+            <p style={{ fontSize: '0.95rem', color: '#94a3b8', lineHeight: 1.8, margin: 0 }}>
+              No alert. No automatic response. No surge to signal value. No incentive to pull supply back online. Just a quiet platform hemorrhaging demand while experts sleep, unaware.
+            </p>
+          </div>
+
+          <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>This isn&apos;t a technology problem. It&apos;s a coordination problem.</h2>
+          <p style={{ fontSize: '0.95rem', color: '#94a3b8', lineHeight: 1.75, maxWidth: 720, marginBottom: 40 }}>
+            Every two-sided marketplace hits this wall eventually. The gap between demand spiking and supply responding is where revenue disappears. The platforms that solved it — Uber, DoorDash, Instacart — spent years and tens of millions building proprietary systems to close it. Nobody open-sourced any of it.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {[
+              { icon: '◎', color: '#ef4444', title: 'Flying blind', body: 'No real-time demand signal means ops teams discover shortfalls after they&apos;ve peaked. By the time anyone reacts, the dropout wave has crested and receded.' },
+              { icon: '⟲', color: '#f59e0b', title: 'Manual at scale', body: 'Slack pings, spreadsheet checks, phone calls. Manual ops can&apos;t operate at the speed of a live platform. Every minute of lag costs sessions.' },
+              { icon: '⬜', color: CYAN, title: 'No open-source tooling', body: 'Uber, DoorDash, and Instacart built this ops intelligence layer — deeply embedded, never extractable. No marketplace founder starting today has a reusable starting point.' },
+            ].map(c => (
+              <div key={c.title} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${c.color}20`, borderRadius: 14, padding: '22px' }}>
+                <div style={{ fontSize: '1.5rem', color: c.color, marginBottom: 14 }}>{c.icon}</div>
+                <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#f1f5f9', marginBottom: 10 }}>{c.title}</h3>
+                <p style={{ fontSize: '0.84rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }} dangerouslySetInnerHTML={{ __html: c.body }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Industry Context ── */}
+      <section id="industry" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+
+          {/* ── Part 1: Logistics giants ── */}
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>What the gig economy figured out first</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 36 }}>
+            Uber, DoorDash, Instacart, and Zocdoc each built sophisticated supply-demand intelligence systems — millions in engineering, years of iteration, fully proprietary. The mechanics are documented. The tooling is not yours. But the principles matter: treat pricing, incentives, and supply outreach as one joint optimisation, not three independent triggers.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 48 }}>
+            {INDUSTRY_BENCHMARKS.map(b => (
+              <div key={b.company} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: b.bg, border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#fff' }}>{b.company[0]}</span>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#f1f5f9', fontSize: '0.95rem' }}>{b.company}</div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{b.category}</div>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>What they built</div>
+                  <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.62 }}>{b.what}</p>
+                </div>
+                <div style={{ padding: '10px 14px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: 8 }}>
+                  <div style={{ fontSize: '0.68rem', color: '#ef4444', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Why it&apos;s not yours</div>
+                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55, margin: 0 }}>{b.gap}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Part 2: The elasticity gap ── */}
+          <div style={{ marginBottom: 56, padding: '28px 30px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+              <div style={{ width: 4, height: 36, borderRadius: 2, background: `linear-gradient(${CYAN}, #8b5cf6)`, flexShrink: 0 }} />
+              <div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f1f5f9', margin: 0, marginBottom: 4 }}>But expert time doesn&apos;t surge like driver time</h3>
+                <p style={{ fontSize: '0.84rem', color: '#64748b', margin: 0 }}>The logistics playbook assumes elastic, interchangeable supply. Expert session marketplaces break every one of those assumptions.</p>
+              </div>
+            </div>
+            {/* Comparison table */}
+            <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid rgba(255,255,255,0.07)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 500, width: '22%' }}>Dimension</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: '#22c55e', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 600, width: '39%' }}>Logistics gig (Uber / Instacart)</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', fontWeight: 600, width: '39%' }}>Expert sessions (Coto / BetterHelp / Clarity)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ELASTICITY_ROWS.map((row, i) => (
+                    <tr key={row.dimension} style={{ borderBottom: i < ELASTICITY_ROWS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
+                      <td style={{ padding: '12px 16px', fontSize: '0.78rem', fontWeight: 600, color: '#94a3b8', borderRight: '1px solid rgba(255,255,255,0.05)', verticalAlign: 'top' }}>{row.dimension}</td>
+                      <td style={{ padding: '12px 16px', fontSize: '0.8rem', color: '#64748b', lineHeight: 1.55, borderRight: '1px solid rgba(255,255,255,0.05)', verticalAlign: 'top' }}>{row.logistics}</td>
+                      <td style={{ padding: '12px 16px', fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55, verticalAlign: 'top' }}>{row.expert}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p style={{ fontSize: '0.84rem', color: '#64748b', lineHeight: 1.65, margin: '16px 0 0' }}>
+              This is why you can&apos;t copy Uber&apos;s surge model for a wellness or coaching marketplace. The incentive tiers, the auto-stop, the category-specific thresholds — every design decision in Equilibrium exists because of these constraints.
+            </p>
+          </div>
+
+          {/* ── Part 3: Closer analogs — what happened ── */}
+          <h3 style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 10, letterSpacing: '-0.01em' }}>Platforms that look like Coto — and what happened to them</h3>
+          <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 28 }}>
+            BetterHelp, Chegg, and Clarity.fm are the real comparables: live expert sessions, pay-per-session or pay-per-minute, non-interchangeable supply. Each hit the same wall. Each responded differently.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
+            {ANALOG_BENCHMARKS.map(b => (
+              <div key={b.company} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: b.bg, border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#fff' }}>{b.company[0]}</span>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#f1f5f9', fontSize: '0.95rem' }}>{b.company}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{b.category}</div>
+                    <div style={{ fontSize: '0.67rem', color: '#475569', marginTop: 2 }}>{b.scale}</div>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>What happened</div>
+                  <p style={{ fontSize: '0.79rem', color: '#94a3b8', lineHeight: 1.58 }}>{b.crisis}</p>
+                </div>
+                <div style={{ padding: '10px 14px', background: `${b.lessonColor}08`, border: `1px solid ${b.lessonColor}22`, borderRadius: 8 }}>
+                  <div style={{ fontSize: '0.68rem', color: b.lessonColor, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>The lesson</div>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', lineHeight: 1.55, margin: 0 }}>{b.lesson}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ padding: '22px 26px', background: `${CYAN}08`, border: `1px solid ${CYAN}22`, borderRadius: 14 }}>
+            <div style={{ fontWeight: 600, color: CYAN, fontSize: '0.95rem', marginBottom: 8 }}>The pattern is consistent</div>
+            <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.7, margin: 0 }}>
+              Every expert session marketplace hits the same supply ceiling: you cannot surge-price your way to 2× therapists in 10 minutes. BetterHelp discovered this through an FTC complaint. Chegg discovered it through their P&L. Clarity.fm hasn&apos;t built around it yet. Equilibrium is the operational layer designed specifically for this constraint — not borrowed from logistics, but built for the session economy.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── System Architecture ── */}
+      <section id="architecture" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Five modules. One system.</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 36 }}>
+            Each module can run standalone. Together, they form a closed loop: demand signals trigger health scoring, which fires surge pricing and expert incentives simultaneously, then pushes everything to the operator dashboard via WebSocket. Click any module to see what it ingests and outputs.
+          </p>
+          <PipelineArchitecture />
+          {/* Data flow strip */}
+          <div style={{ marginTop: 28, padding: '18px 22px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12 }}>
+            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14 }}>Event loop — end to end</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto' }}>
+              {[
+                { label: 'Customer action', color: '#8b5cf6' }, { label: 'Signal ingested', color: '#8b5cf6' },
+                { label: 'State recalculated', color: CYAN }, { label: 'Change detected?', color: CYAN },
+                { label: 'Surge + incentive', color: '#f59e0b' }, { label: 'Dashboard push', color: '#22c55e' },
+              ].map((node, i) => (
+                <React.Fragment key={node.label}>
+                  <div style={{ flexShrink: 0, padding: '8px 12px', borderRadius: 8, background: `${node.color}10`, border: `1px solid ${node.color}25`, textAlign: 'center', minWidth: 110 }}>
+                    <span style={{ fontSize: '0.72rem', color: node.color }}>{node.label}</span>
+                  </div>
+                  {i < 5 && <div style={{ color: '#1e293b', fontSize: '1rem', margin: '0 4px', flexShrink: 0 }}>→</div>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Ch02: Barometer Engine ── */}
+      <section id="barometer" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}10`, border: `1px solid ${CYAN}25`, borderRadius: 6, padding: '4px 10px', marginBottom: 20 }}>
+            <span style={{ fontSize: '0.68rem', color: CYAN, fontWeight: 700, letterSpacing: '0.1em' }}>CH02</span>
+            <span style={{ fontSize: '0.68rem', color: '#64748b' }}>THE INTELLIGENCE</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>The Barometer Engine</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 40 }}>
+            The central state machine. Monitors demand signals continuously, evaluates them against per-category thresholds, and outputs one of three states. Each state triggers a different set of actions on both sides of the platform — simultaneously, automatically, within seconds. Click each state to see exactly what fires.
+          </p>
+          <BarometerEngine />
+          <div style={{ marginTop: 28, padding: '18px 22px', background: `${CYAN}06`, border: `1px solid ${CYAN}18`, borderRadius: 12 }}>
+            <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Why two trigger types</div>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
+              Delay Time catches system-wide slowdowns. Dropout Rate catches category-specific pressure — a category can be underwater even when the platform overall looks healthy. I made both configurable per category because a 30-minute wait for astrology is tolerable; a 30-minute wait for mental health is a crisis.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Live Scenario Walkthrough ── */}
+      <section style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Watch it work: 11pm demand spike</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 36 }}>
+            Step through exactly what happens — timestamp by timestamp — from the moment demand outpaces supply to the moment the system recovers and shuts itself off.
+          </p>
+          <LiveScenario />
+        </div>
+      </section>
+
+      {/* ── Ch03: Surge Pricing ── */}
+      <section id="surge" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}10`, border: `1px solid ${CYAN}25`, borderRadius: 6, padding: '4px 10px', marginBottom: 20 }}>
+            <span style={{ fontSize: '0.68rem', color: CYAN, fontWeight: 700, letterSpacing: '0.1em' }}>CH03</span>
+            <span style={{ fontSize: '0.68rem', color: '#64748b' }}>THE RESPONSE</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Surge Pricing: the money that funds its own response</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 36 }}>
+            Surge fees collected from customers are ring-fenced and used to fund the expert bonuses on the other side. The system is entirely self-financing. The platform never carries the cost of a supply response — at any scale.
+          </p>
+          {/* Self-financing flow */}
+          <div style={{ marginBottom: 36 }}>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>How the money moves</div>
+            <SelfFinancingFlow />
+          </div>
+          {/* Surge matrix */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Surge multiplier matrix — hover any cell</div>
+            <SurgeMatrix />
+          </div>
+          <div style={{ padding: '18px 22px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12 }}>
+            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>My design decision</div>
+            <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
+              I designed this to be self-financing from day one — not as a constraint, but as a first principle. If the system ever costs the platform money to run, operators will turn it off when they need it most. Making the incentives funded by the surge fees that caused them means the system is always affordable, regardless of how bad the spike gets.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Incentive Orchestration ── */}
+      <section id="incentives" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>What lands on the expert&apos;s phone</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 40 }}>
+            The incentive engine fires within seconds of a state change. Two tiers — Yellow for early pressure, Red for critical shortfall. The copy is configurable, the channels are configurable, and the whole thing stops automatically when supply recovers. Select a state to preview the notification.
+          </p>
+          <NotificationMockup />
+        </div>
+      </section>
+
+      {/* ── AI Escalation Router ── */}
+      <section id="routing" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>AI or human? The routing decision</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 40 }}>
+            When supply is under pressure, you can&apos;t route every customer to a human expert — there aren&apos;t enough. The router decides which sessions go to Joy (the AI companion) and which go to the expert queue, based on four signals: supply health, query complexity, customer tier, and category. One rule overrides all of them.
+          </p>
+          <RoutingMatrix />
+          {/* Joy connection */}
+          <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(236,72,153,0.06)', border: '1px solid rgba(236,72,153,0.22)', borderRadius: 12 }}>
+            <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.9rem', marginBottom: 8 }}>This logic is how Joy was designed</div>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
+              Coto&apos;s AI companion — trained on 3 million minutes of real expert conversations — uses a version of this routing architecture to decide when it can handle a session and when it surfaces a human expert instead. The Expert Readiness Score (built in Project 6) feeds into the routing layer: top-scoring experts are reserved for the highest-urgency escalations, keeping AI-routed sessions from degrading CSAT.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Ch04: Operator Dashboard ── */}
+      <section id="dashboard" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}10`, border: `1px solid ${CYAN}25`, borderRadius: 6, padding: '4px 10px', marginBottom: 20 }}>
+            <span style={{ fontSize: '0.68rem', color: CYAN, fontWeight: 700, letterSpacing: '0.1em' }}>CH04</span>
+            <span style={{ fontSize: '0.68rem', color: '#64748b' }}>THE PROOF</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>What your ops team sees at 11pm</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 36 }}>
+            The operator dashboard is pushed via WebSocket — no manual refresh, no lag. Three live panels (demand, matching, supply) plus five visualisations. Delivered first as a working Google Sheets dashboard (3 tabs), then as React components. The layout below shows the full panel structure.
+          </p>
+          <DashboardPreview />
+          <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+            {[
+              { label: 'Demand Panel', items: ['Unique visitors (live)', 'Active page views vs. repeat', 'Chat request count', 'Chatbot sentiment score (−1 to +1)', 'Regional + time-of-day split'], color: '#8b5cf6' },
+              { label: 'Supply Panel', items: ['Expert utilization rate', 'Idle time', 'Actual vs planned hours', 'Expert assignee time', 'Fill rate'], color: '#22c55e' },
+              { label: 'Matching Panel', items: ['Assigned / waiting / in session', 'Waiting cohorts: <30 / 30–60 / >60 min', 'Expert late rate', 'Fill rate', 'Per-category breakdown'], color: CYAN },
+            ].map(panel => (
+              <div key={panel.label} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '16px' }}>
+                <div style={{ fontSize: '0.7rem', color: panel.color, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10, fontWeight: 600 }}>{panel.label}</div>
+                {panel.items.map(item => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 }}>
+                    <div style={{ width: 4, height: 4, borderRadius: '50%', background: panel.color, flexShrink: 0, opacity: 0.5 }} />
+                    <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Configuration ── */}
+      <section id="presets" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>One YAML file. Four starting points.</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 36 }}>
+            Every threshold, multiplier, incentive payload, routing rule, and notification template lives in a single YAML config. Four built-in presets cover the most common marketplace verticals. Select one to see how the config changes.
+          </p>
+          <ConfigPresets />
+        </div>
+      </section>
+
+      {/* ── Outcomes ── */}
+      <section id="outcomes" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Coto: what happened after</h2>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 40 }}>
+            I designed this system before Coto had the engineering team to build it. The barometer thresholds, the self-financing surge mechanic, the incentive notification copy, the AI escalation logic — all designed first, then built. Here&apos;s what Coto became.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 32 }}>
+            {[
+              { stat: '3M+', label: 'App downloads', desc: 'Astrology, mental health, reproductive health, financial coaching, relationship coaching — India, MENA, and global diaspora markets. The platform the ops layer was built to serve.', color: CYAN },
+              { stat: '300+', label: 'Vetted experts · 30% acceptance rate', desc: 'Rigorous category-specific KYC and credential verification. Only 3 in 10 applicants accepted. The incentive system I designed had to work for a constrained, high-quality supply pool.', color: '#22c55e' },
+              { stat: 'Joy', label: 'AI companion — trained on 3M minutes of real expert conversations', desc: 'Belief-adaptive. Multilingual (Hindi, Punjabi, Gujarati, Tamil, Telugu). Handles the first layer of every session; escalates to human when complexity or sensitivity warrants it.', color: '#ec4899' },
+              { stat: '₹40–50/min', label: 'Pay-per-minute · Pay Only When Happy', desc: '"Pay Only When Happy" removes demand-side risk for new users. The surge and incentive model I designed had to work within a pricing structure where customers could walk away if dissatisfied.', color: '#f59e0b' },
+            ].map(o => (
+              <div key={o.label} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${o.color}20`, borderRadius: 14, padding: '22px' }}>
+                <div style={{ fontSize: '1.7rem', fontWeight: 800, color: o.color, marginBottom: 6 }}>{o.stat}</div>
+                <div style={{ fontWeight: 600, color: '#f1f5f9', fontSize: '0.9rem', marginBottom: 10 }}>{o.label}</div>
+                <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.6, margin: 0 }}>{o.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ padding: '24px 28px', background: `${CYAN}06`, border: `1px solid ${CYAN}18`, borderRadius: 14 }}>
+            <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Why open-source</div>
+            <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.75, margin: 0 }}>
+              The design work took months. Getting the threshold values right, calibrating the incentive ladder, figuring out the self-financing mechanic so it could never become a cost centre — none of that is obvious the first time. No marketplace founder building in telehealth, tutoring, or expert services today should have to re-derive all of it from first principles. Equilibrium is the foundation I wish had existed when I was building it for Coto.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Tech Stack ── */}
+      <section id="stack" style={{ padding: '0 32px 100px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 36, letterSpacing: '-0.01em' }}>Tech Stack</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 24 }}>
+            {STACK_TOOLS.map(tool => (
+              <div key={tool.name} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, textAlign: 'center', transition: 'border-color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = `${tool.color}40`)}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)')}>
+                <div style={{ width: 28, height: 28 }} dangerouslySetInnerHTML={{ __html: tool.svg }} />
+                <div>
+                  <div style={{ fontWeight: 600, color: '#e2e8f0', fontSize: '0.85rem' }}>{tool.name}</div>
+                  <div style={{ fontSize: '0.7rem', color: tool.color, marginTop: 2 }}>{tool.category}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+            {[
+              { label: 'Segment-compatible ingestion', desc: 'Drop-in if the platform already uses Segment. No custom event collector required.' },
+              { label: 'Webhook-native orchestration', desc: 'Incentive and surge events fire as webhooks — plug in any notification service you already run.' },
+              { label: 'YAML-first configuration', desc: 'All thresholds, matrices, routing rules, and templates in one file. No code changes for new presets.' },
+            ].map(p => (
+              <div key={p.label} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '16px' }}>
+                <div style={{ fontWeight: 600, color: CYAN, fontSize: '0.82rem', marginBottom: 6 }}>{p.label}</div>
+                <p style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.55, margin: 0 }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '48px 32px', background: '#060609' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ fontSize: '0.72rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Portfolio</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+              {[
+                { label: 'Product Intelligence Platform', color: '#6366f1', href: 'https://product-intelligence-platform.vercel.app' },
+                { label: 'Data Engineering Foundation',  color: '#10b981', href: 'https://data-engineering-foundation.vercel.app' },
+                { label: 'The Experiment Playbook',      color: '#f59e0b', href: 'https://experimentation-science.vercel.app' },
+                { label: 'Systems Architecture',         color: '#f43f5e', href: 'https://systems-architecture.vercel.app' },
+                { label: 'Rank, Reward, Retain',         color: '#8b5cf6', href: '#' },
+              ].map(link => (
+                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
+                  style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: '0.82rem', color: '#64748b', textDecoration: 'none', transition: 'color 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = link.color)} onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}>
+                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: link.color }} />{link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+          <p style={{ fontSize: '0.76rem', color: '#334155', lineHeight: 1.65, marginBottom: 24, maxWidth: 700 }}>
+            Written case study — all system design, thresholds, incentive logic, and architecture described from first-hand freelance work at Coto (Singapore, 2024). No internal proprietary data reproduced. Methodology and design are original and publishable.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#f1f5f9' }}>Wahid Tawsif Ratul</div>
+              <div style={{ fontSize: '0.75rem', color: CYAN, marginTop: 2 }}>Data Scientist · Product Manager</div>
+            </div>
+            <a href="https://github.com/ratul003" target="_blank" rel="noopener noreferrer"
+              style={{ fontSize: '0.78rem', color: '#475569', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, transition: 'color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = CYAN)} onMouseLeave={e => (e.currentTarget.style.color = '#475569')}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              github.com/ratul003
+            </a>
+          </div>
+        </div>
+      </footer>
+    </main>
+  )
+}
