@@ -134,6 +134,30 @@ const SURGE_CATEGORIES = [
   { name: 'Reproductive Health', thresholds: ['+10%', '+18%', '+25%'] },
 ]
 
+// ── Surge impact datasets ──────────────────────────────────────────────────────
+const RECOVERY_WITH_EQ: { t: number; q: number }[] = [
+  { t: 0, q: 0 }, { t: 5, q: 4 }, { t: 8, q: 31 }, { t: 10, q: 34 },
+  { t: 12, q: 34 }, { t: 14, q: 28 }, { t: 16, q: 20 },
+  { t: 18, q: 12 }, { t: 20, q: 5 }, { t: 22, q: 1 }, { t: 25, q: 0 },
+]
+const RECOVERY_WITHOUT_EQ: { t: number; q: number }[] = [
+  { t: 0, q: 0 }, { t: 5, q: 4 }, { t: 8, q: 31 }, { t: 10, q: 43 },
+  { t: 12, q: 54 }, { t: 14, q: 61 }, { t: 16, q: 64 },
+  { t: 18, q: 65 }, { t: 20, q: 65 }, { t: 22, q: 63 }, { t: 25, q: 60 },
+]
+const SUPPLY_RESPONSE = [
+  { tier: 'No incentive',            rate: 8,  color: '#475569', note: 'Organic — experts checking the app' },
+  { tier: 'Yellow  ·  ₹80/session', rate: 38, color: '#f59e0b', note: '+1.5× rating · 10% rev share boost' },
+  { tier: 'Red  ·  ₹160/session',   rate: 55, color: '#ef4444', note: '+2× rating · 20% rev share · SMS push' },
+]
+const PLATFORM_PNL = [
+  { cat: 'Astrology',        surge: 840,  bonus: 672,  color: '#8b5cf6' },
+  { cat: 'Mental Health',    surge: 1620, bonus: 1296, color: '#ec4899' },
+  { cat: 'Relationship',     surge: 1100, bonus: 880,  color: '#06b6d4' },
+  { cat: 'Financial Coach.', surge: 825,  bonus: 660,  color: '#22c55e' },
+  { cat: 'Reproductive',     surge: 1015, bonus: 812,  color: '#f59e0b' },
+]
+
 const ROUTING_MATRIX = [
   {
     condition: 'Supply: Green', condColor: '#22c55e',
@@ -675,6 +699,249 @@ function SurgeMatrix() {
           ))}
         </tbody>
       </table>
+    </div>
+  )
+}
+
+// ── SurgePricingImpact ─────────────────────────────────────────────────────────
+type SurgePanel = 'timeline' | 'response' | 'pnl'
+
+function SurgePricingImpact() {
+  const [panel, setPanel] = useState<SurgePanel>('timeline')
+
+  // SVG chart dimensions
+  const W = 560, H = 210
+  const padL = 50, padR = 16, padT = 16, padB = 40
+  const chartW = W - padL - padR
+  const chartH = H - padT - padB
+  const tMax = 25, qMax = 70
+
+  const xOf = (t: number) => padL + (t / tMax) * chartW
+  const yOf = (q: number) => padT + chartH - (q / qMax) * chartH
+  const toPoints = (data: { t: number; q: number }[]) =>
+    data.map(d => `${xOf(d.t).toFixed(1)},${yOf(d.q).toFixed(1)}`).join(' ')
+
+  const areaPoints = [
+    `${xOf(0)},${yOf(0)}`,
+    ...RECOVERY_WITHOUT_EQ.map(d => `${xOf(d.t).toFixed(1)},${yOf(d.q).toFixed(1)}`),
+    `${xOf(25)},${yOf(0)}`,
+  ].join(' ')
+
+  const TABS: [SurgePanel, string][] = [
+    ['timeline', 'Recovery Timeline'],
+    ['response', 'Supply Response'],
+    ['pnl',      'Platform P&L'],
+  ]
+
+  const gridQs = [0, 20, 40, 60]
+  const eventMarkers = [
+    { t: 8,  label: '🟡 Barometer Yellow', color: '#f59e0b' },
+    { t: 14, label: 'Supply recovers',     color: '#22c55e' },
+  ]
+
+  return (
+    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px', marginBottom: 16 }}>
+      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Surge pricing impact — statistical view</div>
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        {TABS.map(([id, label]) => (
+          <button key={id} onClick={() => setPanel(id)} style={{
+            padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600,
+            transition: 'all 0.15s',
+            border: `2px solid ${panel === id ? CYAN : 'rgba(255,255,255,0.08)'}`,
+            background: panel === id ? `${CYAN}15` : 'rgba(255,255,255,0.02)',
+            color: panel === id ? CYAN : '#64748b',
+          }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Panel 1: Recovery Timeline ── */}
+      {panel === 'timeline' && (
+        <div>
+          <div style={{ display: 'flex', gap: 20, marginBottom: 14, alignItems: 'center' }}>
+            {[
+              { color: CYAN,     label: 'With Equilibrium',    dash: false },
+              { color: '#ef4444', label: 'Without Equilibrium', dash: true  },
+            ].map(leg => (
+              <div key={leg.label} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <svg width="24" height="10" viewBox="0 0 24 10">
+                  {leg.dash
+                    ? <line x1="0" y1="5" x2="24" y2="5" stroke={leg.color} strokeWidth="2" strokeDasharray="4 2" />
+                    : <line x1="0" y1="5" x2="24" y2="5" stroke={leg.color} strokeWidth="2.5" />}
+                </svg>
+                <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{leg.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
+            {/* Y grid + labels */}
+            {gridQs.map(q => (
+              <g key={q}>
+                <line x1={padL} y1={yOf(q)} x2={W - padR} y2={yOf(q)} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                <text x={padL - 6} y={yOf(q) + 4} textAnchor="end" fontSize="9" fill="#475569" fontFamily="system-ui">{q}</text>
+              </g>
+            ))}
+            {/* Y axis label */}
+            <text x={12} y={padT + chartH / 2} textAnchor="middle" fontSize="8" fill="#475569"
+              fontFamily="system-ui" transform={`rotate(-90, 12, ${padT + chartH / 2})`}>Queue depth</text>
+            {/* X axis labels */}
+            {[0, 5, 8, 14, 20, 25].map(t => (
+              <text key={t} x={xOf(t)} y={H - 6} textAnchor="middle" fontSize="9" fill="#475569" fontFamily="system-ui">{t}m</text>
+            ))}
+            {/* Axes */}
+            <line x1={padL} y1={padT} x2={padL} y2={padT + chartH} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+            <line x1={padL} y1={padT + chartH} x2={W - padR} y2={padT + chartH} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+            {/* Event markers */}
+            {eventMarkers.map(ev => (
+              <g key={ev.t}>
+                <line x1={xOf(ev.t)} y1={padT} x2={xOf(ev.t)} y2={padT + chartH}
+                  stroke={ev.color} strokeWidth="1" strokeDasharray="3 3" opacity="0.45" />
+                <text x={xOf(ev.t) + 4} y={padT + 11} fontSize="8" fill={ev.color} fontFamily="system-ui">{ev.label}</text>
+              </g>
+            ))}
+            {/* Loss zone — area under "without" curve */}
+            <polygon points={areaPoints} fill="rgba(239,68,68,0.07)" />
+            {/* Without line */}
+            <polyline points={toPoints(RECOVERY_WITHOUT_EQ)} fill="none"
+              stroke="#ef4444" strokeWidth="2" strokeOpacity="0.55" strokeDasharray="5 3" />
+            {/* With line */}
+            <polyline points={toPoints(RECOVERY_WITH_EQ)} fill="none" stroke={CYAN} strokeWidth="2.5" />
+            {/* Annotations */}
+            <text x={xOf(18) + 4} y={yOf(65) - 6} fontSize="9" fill="#ef4444" fontFamily="system-ui" fontWeight="600">Peak: 65</text>
+            <text x={xOf(22) + 4} y={yOf(1) - 6} fontSize="9" fill={CYAN} fontFamily="system-ui" fontWeight="600">Recovered</text>
+          </svg>
+
+          {/* Stats row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 16 }}>
+            {[
+              { label: 'Peak queue depth',   with: '34 sessions',        without: '65 sessions',            delta: '–48% peak reduction',           color: CYAN     },
+              { label: 'Time to recovery',   with: '22 min',             without: 'Persists beyond window', delta: 'Fully cleared in-window',        color: '#22c55e' },
+              { label: 'Dropout exposure',   with: 'Contained',          without: '~30% demand at risk',    delta: 'Sessions and revenue protected',  color: '#f59e0b' },
+            ].map(s => (
+              <div key={s.label} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '13px 15px' }}>
+                <div style={{ fontSize: '0.62rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 7 }}>{s.label}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>With</span>
+                  <span style={{ fontSize: '0.75rem', color: CYAN, fontWeight: 700 }}>{s.with}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Without</span>
+                  <span style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 700 }}>{s.without}</span>
+                </div>
+                <div style={{ fontSize: '0.7rem', color: s.color, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 6 }}>{s.delta}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Panel 2: Supply Response Rate ── */}
+      {panel === 'response' && (
+        <div>
+          <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, marginBottom: 24, maxWidth: 620 }}>
+            Expert acceptance rate by incentive tier. The base organic rate reflects experts who happen to open the app during a spike. Yellow and Red tiers measure the incremental supply unlocked — modelled from Beta-distributed response behaviour across the expert pool.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {SUPPLY_RESPONSE.map(r => (
+              <div key={r.tier}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                  <div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#e2e8f0' }}>{r.tier}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#475569', marginTop: 2 }}>{r.note}</div>
+                  </div>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 800, color: r.color, lineHeight: 1 }}>{r.rate}%</span>
+                </div>
+                <div style={{ height: 12, background: 'rgba(255,255,255,0.05)', borderRadius: 6, overflow: 'hidden', position: 'relative' }}>
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, height: '100%', borderRadius: 6,
+                    width: `${r.rate}%`,
+                    background: `linear-gradient(90deg, ${r.color}80, ${r.color})`,
+                  }} />
+                  {r.rate > 8 && (
+                    <div style={{ position: 'absolute', top: 0, left: '8%', width: 1, height: '100%', background: 'rgba(255,255,255,0.25)' }} />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ padding: '16px 18px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 12 }}>
+              <div style={{ fontSize: '1.9rem', fontWeight: 800, color: CYAN, marginBottom: 6 }}>4.75×</div>
+              <div style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55 }}>Yellow tier (38%) vs organic base (8%). +30pp absolute lift from structured incentives alone.</div>
+            </div>
+            <div style={{ padding: '16px 18px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12 }}>
+              <div style={{ fontSize: '1.9rem', fontWeight: 800, color: '#ef4444', marginBottom: 6 }}>6.9×</div>
+              <div style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55 }}>Red tier (55%) vs organic base (8%). Multi-channel push (in-app + push + SMS) drives the incremental lift.</div>
+            </div>
+          </div>
+          <p style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.55, marginTop: 12 }}>
+            Modelled as Beta distributions: Yellow Beta(3, 5) mean ≈ 38%; Red Beta(5, 4) mean ≈ 55%. Both configurable per marketplace — platforms with higher expert engagement see higher base rates.
+          </p>
+        </div>
+      )}
+
+      {/* ── Panel 3: Platform P&L ── */}
+      {panel === 'pnl' && (
+        <div>
+          <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, marginBottom: 24, maxWidth: 620 }}>
+            Per-category surge P&L during an 11pm spike. Each bar shows surge fees collected from customers (full bar extent) vs. expert bonuses paid (filled portion). The gap is platform surplus — self-financing in every category, at every scale.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {PLATFORM_PNL.map(row => {
+              const maxVal = Math.max(...PLATFORM_PNL.map(r => r.surge)) * 1.06
+              const surgeW  = (row.surge / maxVal) * 100
+              const bonusW  = (row.bonus / maxVal) * 100
+              const surplus = row.surge - row.bonus
+              const marginPct = Math.round((surplus / row.surge) * 100)
+              return (
+                <div key={row.cat}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, flexWrap: 'wrap', gap: 4 }}>
+                    <span style={{ fontSize: '0.84rem', fontWeight: 600, color: '#e2e8f0' }}>{row.cat}</span>
+                    <div style={{ display: 'flex', gap: 12 }}>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>collected: <span style={{ color: row.color, fontWeight: 700 }}>₹{row.surge}</span></span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>paid: <span style={{ color: '#94a3b8', fontWeight: 600 }}>₹{row.bonus}</span></span>
+                      <span style={{ fontSize: '0.72rem', color: '#22c55e', fontWeight: 700 }}>+{marginPct}% margin</span>
+                    </div>
+                  </div>
+                  <div style={{ position: 'relative', height: 24, background: 'rgba(255,255,255,0.04)', borderRadius: 5 }}>
+                    <div style={{ position: 'absolute', top: 2, left: 0, width: `${surgeW}%`, height: 'calc(100% - 4px)', background: `${row.color}20`, borderRadius: 3, border: `1px solid ${row.color}30` }} />
+                    <div style={{ position: 'absolute', top: 2, left: 0, width: `${bonusW}%`, height: 'calc(100% - 4px)', background: row.color, opacity: 0.7, borderRadius: 3 }} />
+                    <div style={{ position: 'absolute', top: 0, left: `${bonusW + 1}%`, height: '100%', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.62rem', color: '#22c55e', fontWeight: 700, whiteSpace: 'nowrap' }}>+₹{surplus} surplus</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          {(() => {
+            const totalSurge   = PLATFORM_PNL.reduce((a, r) => a + r.surge, 0)
+            const totalBonus   = PLATFORM_PNL.reduce((a, r) => a + r.bonus, 0)
+            const totalSurplus = totalSurge - totalBonus
+            return (
+              <div style={{ marginTop: 20, padding: '16px 20px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 12, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                {[
+                  { label: 'Surge collected',  value: `₹${totalSurge.toLocaleString()}`,                  color: CYAN      },
+                  { label: 'Bonuses paid',     value: `₹${totalBonus.toLocaleString()}`,                   color: '#f59e0b' },
+                  { label: 'Net platform cost', value: `+₹${totalSurplus.toLocaleString()} surplus`,       color: '#22c55e' },
+                ].map(stat => (
+                  <div key={stat.label}>
+                    <div style={{ fontSize: '0.62rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{stat.label}</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: stat.color }}>{stat.value}</div>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
+          <p style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.55, marginTop: 12 }}>
+            Surge fees at Yellow tier using Coto wellness default multipliers. Expert bonuses at ₹80/session, 60% acceptance rate. Surplus scales with spike intensity — larger spikes generate proportionally larger margin.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -1260,10 +1527,12 @@ export default function Page() {
             <SelfFinancingFlow />
           </div>
           {/* Surge matrix */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 24 }}>
             <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Surge multiplier matrix — hover any cell</div>
             <SurgeMatrix />
           </div>
+          {/* Surge impact — statistical visuals */}
+          <SurgePricingImpact />
           <div style={{ padding: '18px 22px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12 }}>
             <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>My design decision</div>
             <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
