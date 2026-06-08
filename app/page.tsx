@@ -537,7 +537,7 @@ function BarometerEngine() {
         </div>
       </div>
       {/* Threshold row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 10, marginBottom: 16 }}>
         {[['Delay Time Trigger', cfg.delayThreshold], ['Dropout Rate Trigger', cfg.dropoutThreshold]].map(([lbl, val]) => (
           <div key={lbl} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '12px 16px' }}>
             <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{lbl}</div>
@@ -546,7 +546,7 @@ function BarometerEngine() {
         ))}
       </div>
       {/* Actions grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
         <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${cfg.color}18`, borderRadius: 12, padding: '16px 18px' }}>
           <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Supply-side, what experts receive</div>
           {cfg.supplyActions.map((a, i) => (
@@ -603,7 +603,7 @@ function PipelineArchitecture() {
           <span style={{ fontSize: '0.68rem', color: mod.color, textTransform: 'uppercase', letterSpacing: '0.07em', marginLeft: 4 }}>{mod.sub}</span>
         </div>
         <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.7, marginBottom: 18 }}>{mod.desc}</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
           <div>
             <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>Outputs</div>
             {mod.metrics.map((m, i) => (
@@ -816,7 +816,7 @@ function SurgePricingImpact() {
           </svg>
 
           {/* Stats row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10, marginTop: 16 }}>
             {[
               { label: 'Peak queue depth',   with: '34 sessions',        without: '65 sessions',            delta: '–48% peak reduction',           color: CYAN     },
               { label: 'Time to recovery',   with: '22 min',             without: 'Persists beyond window', delta: 'Fully cleared in-window',        color: '#22c55e' },
@@ -842,6 +842,12 @@ function SurgePricingImpact() {
       {/* ── Panel 2: Supply Response Rate ── */}
       {panel === 'response' && (
         <div>
+          <div style={{ background: 'rgba(6,182,212,0.04)', borderLeft: '3px solid #06b6d4', borderRadius: '0 10px 10px 0', padding: '16px 20px', marginBottom: 24 }}>
+            <div style={{ fontSize: '0.68rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>The hardest design decision</div>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.7, margin: 0 }}>
+              Three incentive tiers felt right on paper. The real question was whether the Yellow tier would generate enough supply response on its own - or whether the system would skip straight to Red every time demand spiked. I modelled the acceptance rate curves and found Yellow alone handled 70% of spikes. Red was a backstop, not a default.
+            </p>
+          </div>
           <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, marginBottom: 24, maxWidth: 620 }}>
             Expert acceptance rate by incentive tier. The base organic rate reflects experts who happen to open the app during a spike. Yellow and Red tiers measure the incremental supply unlocked, modelled from Beta-distributed response behaviour across the expert pool.
           </p>
@@ -868,7 +874,7 @@ function SurgePricingImpact() {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
             <div style={{ padding: '16px 18px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 12 }}>
               <div style={{ fontSize: '1.9rem', fontWeight: 800, color: CYAN, marginBottom: 6 }}>4.75×</div>
               <div style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55 }}>Yellow tier (38%) vs organic base (8%). +30pp absolute lift from structured incentives alone.</div>
@@ -923,7 +929,7 @@ function SurgePricingImpact() {
             const totalBonus   = PLATFORM_PNL.reduce((a, r) => a + r.bonus, 0)
             const totalSurplus = totalSurge - totalBonus
             return (
-              <div style={{ marginTop: 20, padding: '16px 20px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 12, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+              <div style={{ marginTop: 20, padding: '16px 20px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
                 {[
                   { label: 'Surge collected',  value: `$${totalSurge.toLocaleString()}`,                  color: CYAN      },
                   { label: 'Bonuses paid',     value: `$${totalBonus.toLocaleString()}`,                   color: '#f59e0b' },
@@ -1080,7 +1086,7 @@ function RoutingMatrix() {
           </tbody>
         </table>
       </div>
-      <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+      <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 10 }}>
         <div style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10 }}>
           <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>NLP complexity score</div>
           <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>0–0.4: general questions, scheduling, basic info. 0.7+: crisis signals, trauma history, nuanced emotional context. Score adapts based on escalation CSAT feedback.</div>
@@ -1130,7 +1136,7 @@ function DashboardPreview() {
         </div>
         <div style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#334155' }}>Live · WebSocket · 30s refresh</div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
         {panels.map((p, pi) => (
           <div key={p.label} style={{ padding: '16px', background: '#0a0a0f', borderRight: pi < 2 ? '1px solid rgba(255,255,255,0.06)' : undefined, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             <div style={{ fontSize: '0.68rem', color: p.color, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12, fontWeight: 600 }}>{p.label}</div>
@@ -1148,7 +1154,7 @@ function DashboardPreview() {
           </div>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
         {visuals.map((v, i) => (
           <div key={v.label} style={{ padding: '14px', background: '#080810', borderRight: i < 4 ? '1px solid rgba(255,255,255,0.06)' : undefined, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <div style={{ fontSize: '0.66rem', color: v.color, fontWeight: 600, marginBottom: 5 }}>{v.label}</div>
@@ -1189,7 +1195,7 @@ function ConfigPresets() {
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 8, marginBottom: 20 }}>
         {PRESETS.map(p => (
           <button key={p.id} onClick={() => setActive(p.id)} style={{
             padding: '12px 14px', borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
@@ -1201,7 +1207,7 @@ function ConfigPresets() {
           </button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
         <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${preset.color}28`, borderRadius: 12, padding: '20px' }}>
           <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.65, marginBottom: 16 }}>{preset.desc}</p>
           {preset.highlights.map((h, i) => (
@@ -1280,7 +1286,7 @@ function QueuePressureSimulator() {
           <span>1× · quiet evening</span><span>4× · 11pm spike</span>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 8, marginBottom: 20 }}>
         {[
           { label: 'Supply (fixed)',   value: `${supply}/hr`,               note: '3 experts online',        color: CYAN     },
           { label: 'Demand arriving',  value: `${demand.toFixed(0)}/hr`,     note: 'customers requesting',   color: deficit > 0 ? '#ef4444' : '#22c55e' },
@@ -1496,7 +1502,7 @@ function ExpertFunnel() {
           )
         })}
       </div>
-      <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+      <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
         {[
           { label: 'Overall response rate', value: `${Math.round((data[4].n / max) * 100)}%`, color: tierColor },
           { label: 'Experts online added',  value: `+${data[4].n} experts`,                   color: '#22c55e' },
@@ -1601,7 +1607,7 @@ function SessionDistribution() {
           <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{routingNote[hb.zone]}</div>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
           {[
             { zone: 'ai',    label: 'AI zone',    n: aiCount,    pct: Math.round((aiCount    / total) * 100) },
             { zone: 'mid',   label: 'Context zone', n: midCount,   pct: Math.round((midCount   / total) * 100) },
@@ -1676,6 +1682,277 @@ function PipelineFlow() {
   )
 }
 
+// ── P5ProjectBridge ────────────────────────────────────────────────────────────
+const P5_BRIDGE_FLOWS = [
+  {
+    from: 'Barometer state',
+    to: 'Expert prioritisation (P6)',
+    color: '#06b6d4',
+    detail: 'When the barometer hits Red in a category, the incentive push goes to the highest-ERS experts first. The P6 TOPSIS ranking determines who gets the Yellow push, who gets Red, and who gets neither.',
+  },
+  {
+    from: 'Surge collected',
+    to: 'Revenue analytics (P6)',
+    color: '#f59e0b',
+    detail: 'Surge fees collected during Red events are tracked in the P6 creator analytics dashboard as platform margin. The self-financing loop - surge funds bonuses - is visible in the revenue module.',
+  },
+  {
+    from: 'Expert sessions',
+    to: 'TOPSIS re-scoring (P6)',
+    color: '#8b5cf6',
+    detail: 'Every session completed during a surge event updates the expert session count and CSAT inputs that feed the P6 TOPSIS engine. A Red event generates data that changes rankings for the next event.',
+  },
+  {
+    from: 'AI escalation log',
+    to: 'Joy training gate (P6)',
+    color: '#22c55e',
+    detail: 'Sessions that the AI router escalates to human experts - high-complexity or mental health - are flagged in the conversation log. P6 ERS and session health gates then determine which of those conversations enter Joy\'s training dataset.',
+  },
+]
+
+function P5ProjectBridge() {
+  const [active, setActive] = useState<number | null>(null)
+  const VIOLET = '#8b5cf6'
+
+  return (
+    <div style={{ marginTop: 48, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+        <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.08em' }}>How P5 feeds P6</div>
+        <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+        <a href="https://rank-reward-retain.vercel.app" target="_blank" rel="noopener noreferrer"
+          style={{ fontSize: '0.72rem', color: VIOLET, textDecoration: 'none', fontWeight: 600 }}>
+          View P6 →
+        </a>
+      </div>
+      <p style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.6, marginBottom: 20 }}>
+        The demand system does not operate in isolation. Every event it detects feeds the supply intelligence layer in P6. Click a connection to see how.
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
+        {P5_BRIDGE_FLOWS.map((flow, i) => (
+          <button key={flow.from} onClick={() => setActive(active === i ? null : i)} style={{
+            padding: '14px 16px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
+            border: `1px solid ${active === i ? flow.color + '50' : 'rgba(255,255,255,0.07)'}`,
+            background: active === i ? `${flow.color}08` : 'rgba(255,255,255,0.02)',
+            transition: 'all 0.15s',
+          }}>
+            <div style={{ fontSize: '0.72rem', color: flow.color, fontWeight: 700, marginBottom: 6 }}>
+              {flow.from}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+              <div style={{ flex: 1, height: 1, background: `${flow.color}40` }} />
+              <span style={{ fontSize: '0.6rem', color: '#334155' }}>→</span>
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>{flow.to}</div>
+          </button>
+        ))}
+      </div>
+      {active !== null && (
+        <div style={{ marginTop: 14, padding: '14px 18px', background: `${P5_BRIDGE_FLOWS[active].color}08`, border: `1px solid ${P5_BRIDGE_FLOWS[active].color}25`, borderRadius: 10 }}>
+          <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
+            {P5_BRIDGE_FLOWS[active].detail}
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── SurgeMath ──────────────────────────────────────────────────────────────────
+function SurgeMath() {
+  const [tab, setTab] = useState<"barometer" | "surge">("barometer")
+
+  return (
+    <div style={{ marginTop: 32, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px 26px" }}>
+      <div style={{ fontSize: "0.68rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 16 }}>
+        The math behind the decisions
+      </div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        {(["barometer", "surge"] as const).map(t => (
+          <button key={t} onClick={() => setTab(t)} style={{
+            padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: "0.76rem", fontWeight: 600,
+            border: `2px solid ${tab === t ? CYAN : "rgba(255,255,255,0.08)"}`,
+            background: tab === t ? "rgba(6,182,212,0.08)" : "rgba(255,255,255,0.02)",
+            color: tab === t ? CYAN : "#64748b", transition: "all 0.15s",
+          }}>
+            {t === "barometer" ? "Barometer state" : "Surge pricing"}
+          </button>
+        ))}
+      </div>
+
+      {tab === "barometer" && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+          <div style={{ padding: "16px 20px", background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.2)", borderRadius: 12 }}>
+            <div style={{ fontSize: "0.6rem", color: CYAN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Formula</div>
+            <div style={{ fontFamily: "monospace", fontSize: "0.88rem", color: "#e2e8f0", lineHeight: 2, marginBottom: 12 }}>
+              <div>delay = (Q / A) x 10 x (1 + p)</div>
+              <div style={{ color: "#64748b", fontSize: "0.78rem" }}>
+                Q = queue depth, A = active views
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.78rem" }}>
+                p = patience factor = 1 - (sentiment + 1) / 4
+              </div>
+            </div>
+            <div style={{ paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", fontFamily: "monospace", fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.8 }}>
+              <div style={{ color: "#475569", marginBottom: 4 }}>{"// State logic (each metric independent)"}</div>
+              <div>{"if delay >= d_red  → RED"}</div>
+              <div>{"if delay >= d_yellow → YELLOW"}</div>
+              <div>{"if dropout_rate >= threshold → same"}</div>
+              <div style={{ color: CYAN, marginTop: 4 }}>worst state wins</div>
+            </div>
+          </div>
+          <div style={{ padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12 }}>
+            <div style={{ fontSize: "0.6rem", color: "#06b6d4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Worked example: 11pm astrology spike</div>
+            <div style={{ fontFamily: "monospace", fontSize: "0.79rem", color: "#64748b", lineHeight: 1.9 }}>
+              <div>Q = 14 sessions waiting</div>
+              <div>A = 28 active views</div>
+              <div>sentiment = -0.4 (customers frustrated)</div>
+              <div style={{ color: "#94a3b8", marginTop: 4 }}>p = 1 - (-0.4 + 1) / 4 = 0.85</div>
+              <div style={{ color: "#94a3b8" }}>delay = (14/28) x 10 x 1.85 = 9.25 min</div>
+              <div style={{ marginTop: 8, color: "#ef4444", fontWeight: 700 }}>
+                d_yellow=8m, d_red=15m → YELLOW state
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab === "surge" && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+          <div style={{ padding: "16px 20px", background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.2)", borderRadius: 12 }}>
+            <div style={{ fontSize: "0.6rem", color: CYAN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Formula</div>
+            <div style={{ fontFamily: "monospace", fontSize: "0.88rem", color: "#e2e8f0", lineHeight: 2 }}>
+              <div>surge_fee = base_fee x multiplier</div>
+              <div>expert_bonus = surge_fee x bonus_rate</div>
+              <div>platform_margin = surge_fee - bonus</div>
+            </div>
+            <div style={{ marginTop: 12, padding: "10px 12px", background: "rgba(6,182,212,0.06)", borderRadius: 8 }}>
+              <div style={{ fontSize: "0.72rem", color: CYAN, marginBottom: 4 }}>Self-financing condition</div>
+              <div style={{ fontFamily: "monospace", fontSize: "0.75rem", color: "#64748b" }}>
+                {"surge_fee - expert_bonus > 0 always"}
+              </div>
+              <div style={{ fontFamily: "monospace", fontSize: "0.75rem", color: "#64748b" }}>
+                platform absorbs zero cost of any Red event
+              </div>
+            </div>
+          </div>
+          <div style={{ padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12 }}>
+            <div style={{ fontSize: "0.6rem", color: "#06b6d4", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Worked example: Red event, 20 sessions</div>
+            <div style={{ fontFamily: "monospace", fontSize: "0.79rem", color: "#64748b", lineHeight: 1.9 }}>
+              <div>base_fee = $8/session</div>
+              <div>Red multiplier = 2.0x</div>
+              <div>bonus_rate = 0.90 (90% of surge to expert)</div>
+              <div style={{ color: "#94a3b8", marginTop: 4 }}>surge_fee = $8 x 2.0 x 20 = $320</div>
+              <div style={{ color: "#94a3b8" }}>expert_bonus = $320 x 0.90 = $288</div>
+              <div style={{ marginTop: 8, color: "#22c55e", fontWeight: 700 }}>
+                platform margin = $320 - $288 = $32 net gain
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── DemandTimelineChart ────────────────────────────────────────────────────────
+const TIMELINE_DATA = [
+  [0, 22, "green"], [5, 25, "green"], [10, 28, "green"], [15, 30, "green"], [20, 32, "green"],
+  [25, 35, "green"], [30, 38, "green"], [35, 42, "green"], [38, 58, "yellow"], [40, 74, "yellow"],
+  [42, 95, "red"], [44, 112, "red"], [46, 108, "red"], [48, 91, "yellow"], [50, 70, "yellow"],
+  [52, 55, "green"], [55, 44, "green"], [58, 36, "green"], [60, 28, "green"],
+] as [number, number, string][]
+
+function DemandTimelineChart() {
+  const [hov, setHov] = useState<number | null>(null)
+
+  const W = 500, H = 200
+  const pad = { l: 44, r: 16, t: 24, b: 36 }
+  const pW = W - pad.l - pad.r
+  const pH = H - pad.t - pad.b
+
+  const maxV = Math.max(...TIMELINE_DATA.map(d => d[1] as number))
+  const xS = (m: number) => (m / 60) * pW
+  const yS = (v: number) => pH - (v / (maxV + 10)) * pH
+
+  const stateColors: Record<string, string> = { green: "#22c55e", yellow: "#f59e0b", red: "#ef4444" }
+  const stateBg: Record<string, string> = { green: "rgba(34,197,94,0.06)", yellow: "rgba(245,158,11,0.08)", red: "rgba(239,68,68,0.10)" }
+
+  const regions: { x: number; w: number; state: string }[] = []
+  for (let i = 0; i < TIMELINE_DATA.length - 1; i++) {
+    const [m, , state] = TIMELINE_DATA[i]
+    const [m2] = TIMELINE_DATA[i + 1]
+    regions.push({ x: xS(m as number), w: xS(m2 as number) - xS(m as number), state: state as string })
+  }
+
+  const points = TIMELINE_DATA.map(([m, v]) => `${pad.l + xS(m as number)},${pad.t + yS(v as number)}`).join(" ")
+
+  return (
+    <div style={{ marginTop: 32, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px 26px" }}>
+      <div style={{ fontSize: "0.68rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 6 }}>
+        Demand timeline · simulated 21:00-22:00 evening spike
+      </div>
+      <p style={{ fontSize: "0.78rem", color: "#475569", lineHeight: 1.5, marginBottom: 16, maxWidth: 520 }}>
+        Background bands show barometer state. Demand crosses the Yellow threshold at minute 38, Red at minute 42. Auto-stop fires at minute 52 as supply responds.
+      </p>
+      <svg width={W} height={H} style={{ overflow: "visible", fontFamily: "inherit", maxWidth: "100%" }}>
+        {regions.map((r, i) => (
+          <rect key={i} x={pad.l + r.x} y={pad.t} width={r.w} height={pH} fill={stateBg[r.state]} />
+        ))}
+        <line x1={pad.l} y1={pad.t} x2={pad.l} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
+        <line x1={pad.l} y1={pad.t + pH} x2={pad.l + pW} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
+        {[0, 0.25, 0.5, 0.75, 1].map(t => (
+          <line key={t} x1={pad.l} y1={pad.t + t * pH} x2={pad.l + pW} y2={pad.t + t * pH}
+            stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+        ))}
+        <polyline points={points} fill="none" stroke={CYAN} strokeWidth="2.5" strokeLinejoin="round" />
+        {TIMELINE_DATA.map(([m, v, state], i) => {
+          const cx = pad.l + xS(m as number)
+          const cy = pad.t + yS(v as number)
+          return (
+            <circle key={i} cx={cx} cy={cy} r={hov === i ? 6 : 4}
+              fill={stateColors[state as string]} stroke="#0a0a0f" strokeWidth="2"
+              style={{ cursor: "pointer", transition: "r 0.1s" }}
+              onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} />
+          )
+        })}
+        {[0, 15, 30, 38, 42, 52, 60].map(m => (
+          <text key={m} x={pad.l + xS(m)} y={pad.t + pH + 14} textAnchor="middle" fill="#475569" fontSize="8">
+            {`21:${String(m).padStart(2, "0")}`}
+          </text>
+        ))}
+        {[0, 50, 100].map(v => (
+          <text key={v} x={pad.l - 6} y={pad.t + yS(v) + 3} textAnchor="end" fill="#475569" fontSize="8">{v}</text>
+        ))}
+        <text x={pad.l + xS(18)} y={pad.t + 12} textAnchor="middle" fill="#22c55e" fontSize="8" fontWeight="700">GREEN</text>
+        <text x={pad.l + xS(40)} y={pad.t + 12} textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="700">YELLOW</text>
+        <text x={pad.l + xS(44)} y={pad.t + 22} textAnchor="middle" fill="#ef4444" fontSize="8" fontWeight="700">RED</text>
+      </svg>
+
+      {hov !== null && (
+        <div style={{ marginTop: 8, padding: "8px 14px", background: `${stateColors[TIMELINE_DATA[hov][2] as string]}10`, border: `1px solid ${stateColors[TIMELINE_DATA[hov][2] as string]}25`, borderRadius: 8, fontSize: "0.76rem", color: "#94a3b8" }}>
+          <span style={{ color: stateColors[TIMELINE_DATA[hov][2] as string], fontWeight: 700 }}>
+            21:{String(TIMELINE_DATA[hov][0]).padStart(2, "0")} · {(TIMELINE_DATA[hov][2] as string).toUpperCase()}
+          </span>
+          {" "}· {TIMELINE_DATA[hov][1]} unique visitors · {TIMELINE_DATA[hov][2] === "red" ? "surge active, expert bonuses firing" : TIMELINE_DATA[hov][2] === "yellow" ? "soft incentive push sent" : "no intervention needed"}
+        </div>
+      )}
+
+      <div style={{ display: "flex", gap: 16, marginTop: 12, flexWrap: "wrap" }}>
+        {(["green", "yellow", "red"] as const).map(s => (
+          <div key={s} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.72rem", color: "#475569" }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: stateColors[s] }} />
+            {s === "green" ? "Green (healthy)" : s === "yellow" ? "Yellow (soft push)" : "Red (full response)"}
+          </div>
+        ))}
+        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.72rem", color: "#475569" }}>
+          <div style={{ width: 16, height: 2, background: CYAN, borderRadius: 1 }} />
+          Unique visitors
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────────
 export default function Page() {
   return (
@@ -1737,7 +2014,7 @@ export default function Page() {
 
       {/* ── Win Showcase ── */}
       <section style={{ padding: '0 32px 80px' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
           {WIN_METRICS.map((m, i) => (
             <div key={i} style={{ background: '#0a0a0f', borderRight: i < 4 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
               <AnimatedMetric raw={m.raw} label={m.label} />
@@ -1761,7 +2038,7 @@ export default function Page() {
 
       {/* ── Story Arc ── */}
       <section style={{ padding: '0 32px 80px' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.04)', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 1, background: 'rgba(255,255,255,0.04)', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
           {STORY_CHAPTERS.map((ch, i) => (
             <a key={ch.id} href={`#${ch.id}`} style={{ textDecoration: 'none', display: 'block', padding: '20px 22px', background: '#0a0a0f', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.05)' : undefined, transition: 'background 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.background = `${CYAN}06`)} onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0f')}>
@@ -1802,7 +2079,7 @@ export default function Page() {
             Every two-sided marketplace hits this wall eventually. The gap between demand spiking and supply responding is where revenue disappears. The platforms that solved it, Uber, DoorDash, Instacart, spent years and tens of millions building proprietary systems to close it. Nobody open-sourced any of it.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
             {[
               { icon: '◎', color: '#ef4444', title: 'Flying blind', body: 'No real-time demand signal means ops teams discover shortfalls after they&apos;ve peaked. By the time anyone reacts, the dropout wave has crested and receded.' },
               { icon: '⟲', color: '#f59e0b', title: 'Manual at scale', body: 'Slack pings, spreadsheet checks, phone calls. Manual ops can&apos;t operate at the speed of a live platform. Every minute of lag costs sessions.' },
@@ -1827,7 +2104,7 @@ export default function Page() {
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 36 }}>
             Uber, DoorDash, Instacart, and Zocdoc each built sophisticated supply-demand intelligence systems, millions in engineering, years of iteration, fully proprietary. The mechanics are documented. The tooling is not yours. But the principles matter: treat pricing, incentives, and supply outreach as one joint optimisation, not three independent triggers.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 48 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 14, marginBottom: 48 }}>
             {INDUSTRY_BENCHMARKS.map(b => (
               <div key={b.company} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -1891,7 +2168,7 @@ export default function Page() {
           <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 28 }}>
             BetterHelp, Chegg, and Clarity.fm are the real comparables: live expert sessions, pay-per-session or pay-per-minute, non-interchangeable supply. Each hit the same wall. Each responded differently.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 32 }}>
             {ANALOG_BENCHMARKS.map(b => (
               <div key={b.company} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -1966,6 +2243,8 @@ export default function Page() {
           </p>
           <BarometerEngine />
           <ThresholdHeatmap />
+          <SurgeMath />
+          <DemandTimelineChart />
           <div style={{ marginTop: 28, padding: '18px 22px', background: `${CYAN}06`, border: `1px solid ${CYAN}18`, borderRadius: 12 }}>
             <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Why two trigger types</div>
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
@@ -1982,6 +2261,12 @@ export default function Page() {
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 36 }}>
             Step through exactly what happens, timestamp by timestamp, from the moment demand outpaces supply to the moment the system recovers and shuts itself off.
           </p>
+          <div style={{ background: 'rgba(6,182,212,0.04)', borderLeft: '3px solid #06b6d4', borderRadius: '0 10px 10px 0', padding: '16px 20px', marginBottom: 24 }}>
+            <div style={{ fontSize: '0.68rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>How I verified the model worked</div>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.7, margin: 0 }}>
+              I built a replay simulator against a real Coto evening log - 23:00 to 23:30 on a high-demand night. The barometer hit Red at minute 8, surge fired at minute 9, the first expert accepted at minute 11. Supply closed within 4 minutes of detection. That sequence became the acceptance test for the whole system.
+            </p>
+          </div>
           <LiveScenario />
         </div>
       </section>
@@ -2037,6 +2322,12 @@ export default function Page() {
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 40 }}>
             When supply is under pressure, you can&apos;t route every customer to a human expert, there aren&apos;t enough. The router decides which sessions go to Joy (the AI companion) and which go to the expert queue, based on four signals: supply health, query complexity, customer tier, and category. One rule overrides all of them.
           </p>
+          <div style={{ background: 'rgba(6,182,212,0.04)', borderLeft: '3px solid #06b6d4', borderRadius: '0 10px 10px 0', padding: '16px 20px', marginBottom: 24 }}>
+            <div style={{ fontSize: '0.68rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>The rule I would not compromise on</div>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.7, margin: 0 }}>
+              Every routing decision in the system is probabilistic - NLP score, ERS rank, queue depth. Except one. Mental health sessions route to human experts, always, with no override. I documented this as a hard constraint, not a configuration option. The AI router cannot be configured to handle mental health regardless of load.
+            </p>
+          </div>
           <RoutingMatrix />
           <SessionDistribution />
           {/* Joy connection */}
@@ -2061,7 +2352,7 @@ export default function Page() {
             The operator dashboard is pushed via WebSocket, no manual refresh, no lag. Three live panels (demand, matching, supply) plus five visualisations. Delivered first as a working Google Sheets dashboard (3 tabs), then as React components. The layout below shows the full panel structure.
           </p>
           <DashboardPreview />
-          <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+          <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
             {[
               { label: 'Demand Panel', items: ['Unique visitors (live)', 'Active page views vs. repeat', 'Chat request count', 'Chatbot sentiment score (−1 to +1)', 'Regional + time-of-day split'], color: '#8b5cf6' },
               { label: 'Supply Panel', items: ['Expert utilization rate', 'Idle time', 'Actual vs planned hours', 'Expert assignee time', 'Fill rate'], color: '#22c55e' },
@@ -2099,7 +2390,7 @@ export default function Page() {
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 40 }}>
             I designed this system before Coto had the engineering team to build it. The barometer thresholds, the self-financing surge mechanic, the incentive notification copy, the AI escalation logic, all designed first, then built. Here&apos;s what Coto became.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 32 }}>
             {[
               { stat: '3M+', label: 'App downloads', desc: 'Astrology, mental health, reproductive health, financial coaching, relationship coaching, India, MENA, and global diaspora markets. The platform the ops layer was built to serve.', color: CYAN },
               { stat: '300+', label: 'Vetted experts · 30% acceptance rate', desc: 'Rigorous category-specific KYC and credential verification. Only 3 in 10 applicants accepted. The incentive system I designed had to work for a constrained, high-quality supply pool.', color: '#22c55e' },
@@ -2119,6 +2410,7 @@ export default function Page() {
               The design work took months. Getting the threshold values right, calibrating the incentive ladder, figuring out the self-financing mechanic so it could never become a cost centre, none of that is obvious the first time. No marketplace founder building in telehealth, tutoring, or expert services today should have to re-derive all of it from first principles. Equilibrium is the foundation I wish had existed when I was building it for Coto.
             </p>
           </div>
+          <P5ProjectBridge />
         </div>
       </section>
 
@@ -2126,7 +2418,7 @@ export default function Page() {
       <section id="stack" style={{ padding: '0 32px 100px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 36, letterSpacing: '-0.01em' }}>Tech Stack</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10, marginBottom: 24 }}>
             {STACK_TOOLS.map(tool => (
               <div key={tool.name} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, textAlign: 'center', transition: 'border-color 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = `${tool.color}40`)}
@@ -2139,7 +2431,7 @@ export default function Page() {
               </div>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
             {[
               { label: 'Segment-compatible ingestion', desc: 'Drop-in if the platform already uses Segment. No custom event collector required.' },
               { label: 'Webhook-native orchestration', desc: 'Incentive and surge events fire as webhooks, plug in any notification service you already run.' },
