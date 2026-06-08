@@ -106,7 +106,7 @@ const SCENARIO_STEPS = [
   {
     time: '23:08 +5s', icon: '📲',
     event: 'Incentive engine fires',
-    detail: 'Push to 48 active, scheduled, and offline experts: "12 customers waiting. Complete 3 sessions to earn ₹800 bonus. Rating multiplier 1.5× active." Revenue share boost unlocked.',
+    detail: 'Push to 48 active, scheduled, and offline experts: "12 customers waiting. Complete 3 sessions to earn $80 bonus. Rating multiplier 1.5× active." Revenue share boost unlocked.',
     metric: '48 experts pinged',
     stateColor: '#f59e0b',
   },
@@ -120,7 +120,7 @@ const SCENARIO_STEPS = [
   {
     time: '23:14', icon: '🟢',
     event: 'Supply recovers, auto-stop',
-    detail: '9 experts accepted the push. Delay drops 34 → 18 minutes. Engine detects Green recovery. All incentives pause automatically. Surge collected: ₹4,200. Bonuses paid: ₹3,800. Net platform cost: ₹400.',
+    detail: '9 experts accepted the push. Delay drops 34 → 18 minutes. Engine detects Green recovery. All incentives pause automatically. Surge collected: $420. Bonuses paid: $380. Net platform cost: $40.',
     metric: 'Delay: 18 min · State: 🟢 · Self-financed',
     stateColor: '#22c55e',
   },
@@ -147,8 +147,8 @@ const RECOVERY_WITHOUT_EQ: { t: number; q: number }[] = [
 ]
 const SUPPLY_RESPONSE = [
   { tier: 'No incentive',            rate: 8,  color: '#475569', note: 'Organic, experts checking the app' },
-  { tier: 'Yellow  ·  ₹80/session', rate: 38, color: '#f59e0b', note: '+1.5× rating · 10% rev share boost' },
-  { tier: 'Red  ·  ₹160/session',   rate: 55, color: '#ef4444', note: '+2× rating · 20% rev share · SMS push' },
+  { tier: 'Yellow  ·  $8/session', rate: 38, color: '#f59e0b', note: '+1.5× rating · 10% rev share boost' },
+  { tier: 'Red  ·  $16/session',   rate: 55, color: '#ef4444', note: '+2× rating · 20% rev share · SMS push' },
 ]
 const PLATFORM_PNL = [
   { cat: 'Astrology',        surge: 840,  bonus: 672,  color: '#8b5cf6' },
@@ -902,8 +902,8 @@ function SurgePricingImpact() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, flexWrap: 'wrap', gap: 4 }}>
                     <span style={{ fontSize: '0.84rem', fontWeight: 600, color: '#e2e8f0' }}>{row.cat}</span>
                     <div style={{ display: 'flex', gap: 12 }}>
-                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>collected: <span style={{ color: row.color, fontWeight: 700 }}>₹{row.surge}</span></span>
-                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>paid: <span style={{ color: '#94a3b8', fontWeight: 600 }}>₹{row.bonus}</span></span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>collected: <span style={{ color: row.color, fontWeight: 700 }}>${row.surge}</span></span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>paid: <span style={{ color: '#94a3b8', fontWeight: 600 }}>${row.bonus}</span></span>
                       <span style={{ fontSize: '0.72rem', color: '#22c55e', fontWeight: 700 }}>+{marginPct}% margin</span>
                     </div>
                   </div>
@@ -911,7 +911,7 @@ function SurgePricingImpact() {
                     <div style={{ position: 'absolute', top: 2, left: 0, width: `${surgeW}%`, height: 'calc(100% - 4px)', background: `${row.color}20`, borderRadius: 3, border: `1px solid ${row.color}30` }} />
                     <div style={{ position: 'absolute', top: 2, left: 0, width: `${bonusW}%`, height: 'calc(100% - 4px)', background: row.color, opacity: 0.7, borderRadius: 3 }} />
                     <div style={{ position: 'absolute', top: 0, left: `${bonusW + 1}%`, height: '100%', display: 'flex', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.62rem', color: '#22c55e', fontWeight: 700, whiteSpace: 'nowrap' }}>+₹{surplus} surplus</span>
+                      <span style={{ fontSize: '0.62rem', color: '#22c55e', fontWeight: 700, whiteSpace: 'nowrap' }}>+${surplus} surplus</span>
                     </div>
                   </div>
                 </div>
@@ -925,9 +925,9 @@ function SurgePricingImpact() {
             return (
               <div style={{ marginTop: 20, padding: '16px 20px', background: `${CYAN}08`, border: `1px solid ${CYAN}20`, borderRadius: 12, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
                 {[
-                  { label: 'Surge collected',  value: `₹${totalSurge.toLocaleString()}`,                  color: CYAN      },
-                  { label: 'Bonuses paid',     value: `₹${totalBonus.toLocaleString()}`,                   color: '#f59e0b' },
-                  { label: 'Net platform cost', value: `+₹${totalSurplus.toLocaleString()} surplus`,       color: '#22c55e' },
+                  { label: 'Surge collected',  value: `$${totalSurge.toLocaleString()}`,                  color: CYAN      },
+                  { label: 'Bonuses paid',     value: `$${totalBonus.toLocaleString()}`,                   color: '#f59e0b' },
+                  { label: 'Net platform cost', value: `+$${totalSurplus.toLocaleString()} surplus`,       color: '#22c55e' },
                 ].map(stat => (
                   <div key={stat.label}>
                     <div style={{ fontSize: '0.62rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{stat.label}</div>
@@ -938,7 +938,7 @@ function SurgePricingImpact() {
             )
           })()}
           <p style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.55, marginTop: 12 }}>
-            Surge fees at Yellow tier using Coto wellness default multipliers. Expert bonuses at ₹80/session, 60% acceptance rate. Surplus scales with spike intensity, larger spikes generate proportionally larger margin.
+            Surge fees at Yellow tier using Coto wellness default multipliers. Expert bonuses at $8/session, 60% acceptance rate. Surplus scales with spike intensity, larger spikes generate proportionally larger margin.
           </p>
         </div>
       )}
@@ -953,7 +953,7 @@ function NotificationMockup() {
     yellow: {
       stateColor: '#f59e0b', icon: '🟡', label: 'Yellow state · Push notification',
       title: '12 customers waiting right now',
-      body: 'Complete 3 sessions to earn your ₹800 bonus. Rating multiplier 1.5× active until supply recovers.',
+      body: 'Complete 3 sessions to earn your $80 bonus. Rating multiplier 1.5× active until supply recovers.',
       cta: 'Open Coto Expert →', channels: ['Push notification'],
     },
     red: {
@@ -1277,7 +1277,7 @@ function QueuePressureSimulator() {
           onChange={e => setMult(parseFloat(e.target.value))}
           style={{ width: '100%', accentColor: sc, cursor: 'pointer' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: '#334155', marginTop: 4 }}>
-          <span>1× — quiet evening</span><span>4× — 11pm spike</span>
+          <span>1× · quiet evening</span><span>4× · 11pm spike</span>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 20 }}>
@@ -1619,10 +1619,75 @@ function SessionDistribution() {
   )
 }
 
+// ── PipelineFlow ───────────────────────────────────────────────────────────────
+const PIPELINE_NODES = [
+  { id: 'signals',   label: 'Demand Signals',      sub: 'Input layer',          color: '#8b5cf6', icon: '📡',
+    desc: 'Five live signals: unique visitors, active views, chat volume, chatbot sentiment score (-1 to +1), and queue depth per category. The sentiment score is the non-obvious one - it measures whether customers are willing to wait, not just whether they are waiting.' },
+  { id: 'health',    label: 'Health Engine',         sub: 'Barometer core',       color: '#06b6d4', icon: '❤',
+    desc: 'Evaluates signals against per-category thresholds. Triggers Green, Yellow, or Red on two independent metrics: Delay Time (minutes to expert assignment) and Dropout Rate. Either alone can flip the state.' },
+  { id: 'surge',     label: 'Surge Calculator',      sub: 'Demand-side response', color: '#f59e0b', icon: '⚡',
+    desc: 'Category × delay matrix fires the surge fee. Fees collected from customers fund the expert incentive pool. Self-financing at every scale - the platform never carries the cost of a supply response.' },
+  { id: 'incentive', label: 'Incentive Engine',      sub: 'Supply-side response', color: '#22c55e', icon: '💸',
+    desc: 'Push to active, scheduled, and offline experts simultaneously. Revenue share boost, rating multiplier, priority badge. Auto-stop fires the moment the barometer returns to Green.' },
+  { id: 'router',    label: 'AI Router',             sub: 'Routing layer',        color: '#ec4899', icon: '🤖',
+    desc: 'NLP classifies every queued session by complexity. Standard queries route to Joy (AI companion), high-complexity to human queue by ERS score. Mental health: always human, no exceptions.' },
+]
+
+function PipelineFlow() {
+  const [activeNode, setActiveNode] = useState<string | null>(null)
+  const active = PIPELINE_NODES.find(n => n.id === activeNode)
+
+  return (
+    <div style={{ marginTop: 48, marginBottom: 48 }}>
+      <div style={{ fontSize: '0.68rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>System architecture - click any module to expand</div>
+      <p style={{ fontSize: '0.84rem', color: '#64748b', lineHeight: 1.6, marginBottom: 28, maxWidth: 620 }}>
+        Five modules, one loop. Demand signals trigger the health engine, which fires the surge calculator and incentive engine simultaneously, while the AI router redirects load in real time.
+      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
+        {PIPELINE_NODES.map((node, i) => (
+          <React.Fragment key={node.id}>
+            <button onClick={() => setActiveNode(activeNode === node.id ? null : node.id)} style={{
+              padding: '16px 18px', borderRadius: 12, cursor: 'pointer', textAlign: 'center', minWidth: 120,
+              border: `2px solid ${activeNode === node.id ? node.color : `${node.color}30`}`,
+              background: activeNode === node.id ? `${node.color}12` : 'rgba(255,255,255,0.02)',
+              transition: 'all 0.2s',
+            }}>
+              <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>{node.icon}</div>
+              <div style={{ fontSize: '0.76rem', fontWeight: 700, color: activeNode === node.id ? node.color : '#e2e8f0', marginBottom: 3 }}>{node.label}</div>
+              <div style={{ fontSize: '0.62rem', color: '#475569' }}>{node.sub}</div>
+            </button>
+            {i < PIPELINE_NODES.length - 1 && (
+              <div style={{ width: 28, height: 2, background: `linear-gradient(90deg, ${node.color}60, ${PIPELINE_NODES[i+1].color}60)`, flexShrink: 0, margin: '0 2px' }} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      {active && (
+        <div style={{ marginTop: 16, padding: '16px 20px', background: `${active.color}08`, border: `1px solid ${active.color}25`, borderRadius: 12, maxWidth: 680, transition: 'all 0.2s' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: '1.1rem' }}>{active.icon}</span>
+            <span style={{ fontSize: '0.88rem', fontWeight: 700, color: active.color }}>{active.label}</span>
+            <span style={{ fontSize: '0.7rem', color: '#475569', background: 'rgba(255,255,255,0.04)', borderRadius: 4, padding: '2px 8px' }}>{active.sub}</span>
+          </div>
+          <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>{active.desc}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────────
 export default function Page() {
   return (
     <main style={{ fontFamily: 'var(--font-inter)', background: '#0a0a0f', minHeight: '100vh' }}>
+      {/* companion project banner */}
+      <div style={{ background: 'rgba(6,182,212,0.06)', borderBottom: '1px solid rgba(6,182,212,0.15)', padding: '10px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+        <span style={{ fontSize: '0.72rem', color: '#475569' }}>Part of a two-project system</span>
+        <a href="https://rank-reward-retain.vercel.app" target="_blank" rel="noopener noreferrer"
+          style={{ fontSize: '0.76rem', color: CYAN, textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+          Companion: Rank, Reward, Retain (supply intelligence) →
+        </a>
+      </div>
       <SectionNav />
 
       {/* ── Sticky nav ── */}
@@ -1678,6 +1743,19 @@ export default function Page() {
               <AnimatedMetric raw={m.raw} label={m.label} />
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── Story framing + Pipeline ── */}
+      <section style={{ padding: '0 32px 0' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ background: 'rgba(255,255,255,0.02)', borderLeft: '4px solid #06b6d4', borderRadius: '0 12px 12px 0', padding: '20px 24px', marginBottom: 40, maxWidth: 720 }}>
+            <div style={{ fontSize: '0.7rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>What I was actually trying to solve</div>
+            <p style={{ fontSize: '0.92rem', color: '#e2e8f0', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>
+              Coto had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are available. The queue would grow, customers would leave, experts would never know demand was there, and the platform would absorb all the cost of that mismatch - in lost revenue, in dropout, in trust. I needed a system that detected the imbalance early, responded automatically, and paid for itself.
+            </p>
+          </div>
+          <PipelineFlow />
         </div>
       </section>
 
@@ -2026,7 +2104,7 @@ export default function Page() {
               { stat: '3M+', label: 'App downloads', desc: 'Astrology, mental health, reproductive health, financial coaching, relationship coaching, India, MENA, and global diaspora markets. The platform the ops layer was built to serve.', color: CYAN },
               { stat: '300+', label: 'Vetted experts · 30% acceptance rate', desc: 'Rigorous category-specific KYC and credential verification. Only 3 in 10 applicants accepted. The incentive system I designed had to work for a constrained, high-quality supply pool.', color: '#22c55e' },
               { stat: 'Joy', label: 'AI companion, trained on 3M minutes of real expert conversations', desc: 'Belief-adaptive. Multilingual (Hindi, Punjabi, Gujarati, Tamil, Telugu). Handles the first layer of every session; escalates to human when complexity or sensitivity warrants it.', color: '#ec4899' },
-              { stat: '₹40–50/min', label: 'Pay-per-minute · Pay Only When Happy', desc: '"Pay Only When Happy" removes demand-side risk for new users. The surge and incentive model I designed had to work within a pricing structure where customers could walk away if dissatisfied.', color: '#f59e0b' },
+              { stat: '$4-5/min', label: 'Pay-per-minute · Pay Only When Happy', desc: '"Pay Only When Happy" removes demand-side risk for new users. The surge and incentive model I designed had to work within a pricing structure where customers could walk away if dissatisfied.', color: '#f59e0b' },
             ].map(o => (
               <div key={o.label} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${o.color}20`, borderRadius: 14, padding: '22px' }}>
                 <div style={{ fontSize: '1.7rem', fontWeight: 800, color: o.color, marginBottom: 6 }}>{o.stat}</div>
