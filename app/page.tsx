@@ -208,7 +208,7 @@ const PIPELINE_MODULES: { id: ModuleId; label: string; sub: string; color: strin
   },
   {
     id: 'routing', label: 'AI Escalation Router', sub: 'Routing layer', color: '#ec4899',
-    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how Coto\'s Joy → Expert escalation was designed.',
+    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how the platform\'s Joy → Expert escalation was designed.',
     metrics: ['Supply availability score', 'Query complexity (NLP, 0–1)', 'Customer tier', 'Category routing rules', 'Always-human overrides'],
     ai: 'Escalation feedback tightens complexity thresholds over time, poor CSAT on AI-handled sessions → router becomes more conservative.',
   },
@@ -260,7 +260,7 @@ const INDUSTRY_BENCHMARKS = [
     company: 'Zocdoc', category: 'Provider booking', bg: '#174080',
     what: '43% of bookings happen when the provider\'s office is closed, proof that always-on supply intelligence creates demand that would otherwise be lost. 200,000+ new patient appointments available within 24 hours. Zo AI converts incoming calls directly to booked appointments in real time. (Zocdoc, 2025)',
     signal: 'Provider schedule (two-way EHR sync) · Real-time availability',
-    gap: 'Closest structural analog to Coto: two-sided marketplace for human expert time. Always-on layer is deeply embedded and not separable.',
+    gap: 'Closest structural analog to this platform: two-sided marketplace for human expert time. Always-on layer is deeply embedded and not separable.',
   },
 ]
 
@@ -284,9 +284,9 @@ const ANALOG_BENCHMARKS = [
   {
     company: 'Clarity.fm', category: 'Expert calls · pay-per-minute', bg: '#1a3a2a',
     scale: '180+ countries · pay-per-minute at $1–$15+/min by expert',
-    what: 'The closest structural analog to Coto: live expert calls, pay-per-minute billing, non-interchangeable supply by domain. Experts set their own rates. Categories span entrepreneurship, marketing, law, finance, health.',
+    what: 'The closest structural analog to the marketplace: live expert calls, pay-per-minute billing, non-interchangeable supply by domain. Experts set their own rates. Categories span entrepreneurship, marketing, law, finance, health.',
     crisis: 'Zero surge pricing. Zero demand signal routing. Expert rates are static regardless of demand. When a top expert goes offline, demand for that category has nowhere to go. No barometer. No incentive to pull supply back online. The platform manages supply-demand the same way it did at launch.',
-    lesson: 'Same model as Coto, same vulnerability. Clarity.fm proves the category is viable. Equilibrium is the operational intelligence layer that Clarity.fm never built.',
+    lesson: 'Same model as the marketplace, same vulnerability. Clarity.fm proves the category is viable. Equilibrium is the operational intelligence layer that Clarity.fm never built.',
     lessonColor: CYAN,
   },
 ]
@@ -944,7 +944,7 @@ function SurgePricingImpact() {
             )
           })()}
           <p style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.55, marginTop: 12 }}>
-            Surge fees at Yellow tier using Coto wellness default multipliers. Expert bonuses at $8/session, 60% acceptance rate. Surplus scales with spike intensity, larger spikes generate proportionally larger margin.
+            Surge fees at Yellow tier using wellness marketplace default multipliers. Expert bonuses at $8/session, 60% acceptance rate. Surplus scales with spike intensity, larger spikes generate proportionally larger margin.
           </p>
         </div>
       )}
@@ -960,7 +960,7 @@ function NotificationMockup() {
       stateColor: '#f59e0b', icon: '🟡', label: 'Yellow state · Push notification',
       title: '12 customers waiting right now',
       body: 'Complete 3 sessions to earn your $80 bonus. Rating multiplier 1.5× active until supply recovers.',
-      cta: 'Open Coto Expert →', channels: ['Push notification'],
+      cta: 'Open Expert App →', channels: ['Push notification'],
     },
     red: {
       stateColor: '#ef4444', icon: '🔴', label: 'Red state · Push + SMS',
@@ -1028,7 +1028,7 @@ auto_stop:
                 <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#0a0a0f' }}>C</span>
               </div>
               <div style={{ flex: 1 }}>
-                <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600 }}>Coto Expert</span>
+                <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600 }}>Expert App</span>
               </div>
               <span style={{ fontSize: '0.62rem', color: '#334155' }}>now</span>
             </div>
@@ -1438,7 +1438,7 @@ const FUNNEL_DATA = {
   yellow: [
     { stage: 'Pinged',     n: 48, note: 'All offline + idle experts reached' },
     { stage: 'Delivered',  n: 44, note: 'Push notification received' },
-    { stage: 'Opened',     n: 26, note: 'Opened the Coto Expert app' },
+    { stage: 'Opened',     n: 26, note: 'Opened the expert app' },
     { stage: 'Accepted',   n: 18, note: 'Agreed to come online' },
     { stage: 'Online',     n: 18, note: 'In expert pool within 6 min' },
   ],
@@ -1686,27 +1686,27 @@ function PipelineFlow() {
 const P5_BRIDGE_FLOWS = [
   {
     from: 'Barometer state',
-    to: 'Expert prioritisation (P6)',
+    to: 'Expert prioritisation (Rank, Reward, Retain)',
     color: '#06b6d4',
-    detail: 'When the barometer hits Red in a category, the incentive push goes to the highest-ERS experts first. The P6 TOPSIS ranking determines who gets the Yellow push, who gets Red, and who gets neither.',
+    detail: 'When the barometer hits Red in a category, the incentive push goes to the highest-ERS experts first. The Rank, Reward, Retain TOPSIS ranking determines who gets the Yellow push, who gets Red, and who gets neither.',
   },
   {
     from: 'Surge collected',
-    to: 'Revenue analytics (P6)',
+    to: 'Revenue analytics (Rank, Reward, Retain)',
     color: '#f59e0b',
-    detail: 'Surge fees collected during Red events are tracked in the P6 creator analytics dashboard as platform margin. The self-financing loop - surge funds bonuses - is visible in the revenue module.',
+    detail: 'Surge fees collected during Red events are tracked in the Rank, Reward, Retain creator analytics dashboard as platform margin. The self-financing loop - surge funds bonuses - is visible in the revenue module.',
   },
   {
     from: 'Expert sessions',
-    to: 'TOPSIS re-scoring (P6)',
+    to: 'TOPSIS re-scoring (Rank, Reward, Retain)',
     color: '#8b5cf6',
-    detail: 'Every session completed during a surge event updates the expert session count and CSAT inputs that feed the P6 TOPSIS engine. A Red event generates data that changes rankings for the next event.',
+    detail: 'Every session completed during a surge event updates the expert session count and CSAT inputs that feed the Rank, Reward, Retain TOPSIS engine. A Red event generates data that changes rankings for the next event.',
   },
   {
     from: 'AI escalation log',
-    to: 'Joy training gate (P6)',
+    to: 'Joy training gate (Rank, Reward, Retain)',
     color: '#22c55e',
-    detail: 'Sessions that the AI router escalates to human experts - high-complexity or mental health - are flagged in the conversation log. P6 ERS and session health gates then determine which of those conversations enter Joy\'s training dataset.',
+    detail: 'Sessions that the AI router escalates to human experts - high-complexity or mental health - are flagged in the conversation log. Rank, Reward, Retain ERS and session health gates then determine which of those conversations enter Joy\'s training dataset.',
   },
 ]
 
@@ -1717,15 +1717,15 @@ function P5ProjectBridge() {
   return (
     <div style={{ marginTop: 48, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-        <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.08em' }}>How P5 feeds P6</div>
+        <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.08em' }}>How this project feeds Rank, Reward, Retain</div>
         <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
         <a href="https://rank-reward-retain.vercel.app" target="_blank" rel="noopener noreferrer"
           style={{ fontSize: '0.72rem', color: VIOLET, textDecoration: 'none', fontWeight: 600 }}>
-          View P6 →
+          View Rank, Reward, Retain →
         </a>
       </div>
       <p style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.6, marginBottom: 20 }}>
-        The demand system does not operate in isolation. Every event it detects feeds the supply intelligence layer in P6. Click a connection to see how.
+        The demand system does not operate in isolation. Every event it detects feeds the supply intelligence layer in <a href="https://rank-reward-retain.vercel.app" style={{ color: '#8b5cf6', textDecoration: 'none', fontWeight: 600 }}>Rank, Reward, Retain</a>. Click a connection to see how.
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10 }}>
         {P5_BRIDGE_FLOWS.map((flow, i) => (
@@ -1855,98 +1855,181 @@ function SurgeMath() {
 }
 
 // ── DemandTimelineChart ────────────────────────────────────────────────────────
-const TIMELINE_DATA = [
-  [0, 22, "green"], [5, 25, "green"], [10, 28, "green"], [15, 30, "green"], [20, 32, "green"],
-  [25, 35, "green"], [30, 38, "green"], [35, 42, "green"], [38, 58, "yellow"], [40, 74, "yellow"],
-  [42, 95, "red"], [44, 112, "red"], [46, 108, "red"], [48, 91, "yellow"], [50, 70, "yellow"],
-  [52, 55, "green"], [55, 44, "green"], [58, 36, "green"], [60, 28, "green"],
-] as [number, number, string][]
+const TIMELINE_FULL = [
+  [0,22,2,'green'],[5,25,3,'green'],[10,28,3,'green'],[15,30,4,'green'],[20,32,4,'green'],
+  [25,35,5,'green'],[30,38,5,'green'],[35,42,7,'green'],[38,58,12,'yellow'],[40,74,16,'yellow'],
+  [42,95,22,'red'],[44,112,28,'red'],[46,108,25,'red'],[48,91,18,'yellow'],[50,70,11,'yellow'],
+  [52,55,6,'green'],[55,44,4,'green'],[58,36,3,'green'],[60,28,2,'green'],
+] as [number, number, number, string][]
 
 function DemandTimelineChart() {
-  const [hov, setHov] = useState<number | null>(null)
+  const [hovIdx, setHovIdx] = useState<number | null>(null)
+  const [signal, setSignal] = useState<'visitors' | 'queue'>('visitors')
+  const [visCount, setVisCount] = useState(TIMELINE_FULL.length)
+  const [playing, setPlaying] = useState(false)
 
-  const W = 500, H = 200
-  const pad = { l: 44, r: 16, t: 24, b: 36 }
-  const pW = W - pad.l - pad.r
-  const pH = H - pad.t - pad.b
+  useEffect(() => {
+    if (!playing) return
+    if (visCount >= TIMELINE_FULL.length) { setPlaying(false); return }
+    const t = setTimeout(() => setVisCount(c => c + 1), 140)
+    return () => clearTimeout(t)
+  }, [playing, visCount])
 
-  const maxV = Math.max(...TIMELINE_DATA.map(d => d[1] as number))
+  const handlePlay = () => { setVisCount(1); setPlaying(true) }
+  const data = TIMELINE_FULL.slice(0, visCount)
+  const vals = data.map(d => signal === 'visitors' ? d[1] : d[2])
+
+  const VB_W = 800, VB_H = 300
+  const pad = { l: 52, r: 24, t: 40, b: 56 }
+  const pW = VB_W - pad.l - pad.r
+  const pH = VB_H - pad.t - pad.b
+  const maxV = signal === 'visitors' ? 130 : 35
   const xS = (m: number) => (m / 60) * pW
-  const yS = (v: number) => pH - (v / (maxV + 10)) * pH
+  const yS = (v: number) => pH - Math.min(v / maxV, 1) * pH
 
-  const stateColors: Record<string, string> = { green: "#22c55e", yellow: "#f59e0b", red: "#ef4444" }
-  const stateBg: Record<string, string> = { green: "rgba(34,197,94,0.06)", yellow: "rgba(245,158,11,0.08)", red: "rgba(239,68,68,0.10)" }
+  const stateColors: Record<string, string> = { green: '#22c55e', yellow: '#f59e0b', red: '#ef4444' }
+  const stateBg: Record<string, string> = { green: 'rgba(34,197,94,0.06)', yellow: 'rgba(245,158,11,0.09)', red: 'rgba(239,68,68,0.12)' }
 
-  const regions: { x: number; w: number; state: string }[] = []
-  for (let i = 0; i < TIMELINE_DATA.length - 1; i++) {
-    const [m, , state] = TIMELINE_DATA[i]
-    const [m2] = TIMELINE_DATA[i + 1]
-    regions.push({ x: xS(m as number), w: xS(m2 as number) - xS(m as number), state: state as string })
-  }
+  const regions = data.slice(0, -1).map((d, i) => ({
+    x: xS(d[0]), w: xS(data[i + 1][0]) - xS(d[0]), state: d[3] as string,
+  }))
 
-  const points = TIMELINE_DATA.map(([m, v]) => `${pad.l + xS(m as number)},${pad.t + yS(v as number)}`).join(" ")
+  const ptStr = data.map((d, i) => `${pad.l + xS(d[0])},${pad.t + yS(vals[i])}`).join(' ')
+  const areaPath = data.length > 1
+    ? `M ${ptStr.replace(/ /g, ' L ')} L ${pad.l + xS(data[data.length - 1][0])},${pad.t + pH} L ${pad.l + xS(data[0][0])},${pad.t + pH} Z`
+    : ''
 
   return (
-    <div style={{ marginTop: 32, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px 26px" }}>
-      <div style={{ fontSize: "0.68rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 6 }}>
-        Demand timeline · simulated 21:00-22:00 evening spike
+    <div style={{ marginTop: 32, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 28px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+        <div>
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+            Demand timeline · simulated evening spike (21:00 - 22:00)
+          </div>
+          <p style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.55, margin: 0, maxWidth: 520 }}>
+            Background bands show barometer state. Demand crosses Yellow at 21:38, Red at 21:42. Auto-stop fires at 21:52 as supply responds and queue clears.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 4 }}>
+            {(['visitors', 'queue'] as const).map(s => (
+              <button key={s} onClick={() => setSignal(s)} style={{
+                padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: '0.7rem', fontWeight: 600,
+                border: `1.5px solid ${signal === s ? CYAN : 'rgba(255,255,255,0.08)'}`,
+                background: signal === s ? 'rgba(6,182,212,0.1)' : 'rgba(255,255,255,0.02)',
+                color: signal === s ? CYAN : '#64748b', transition: 'all 0.15s',
+              }}>
+                {s === 'visitors' ? 'Unique visitors' : 'Queue depth'}
+              </button>
+            ))}
+          </div>
+          <button onClick={handlePlay} disabled={playing} style={{
+            padding: '5px 14px', borderRadius: 6, cursor: playing ? 'default' : 'pointer', fontSize: '0.7rem', fontWeight: 700,
+            border: `1.5px solid ${CYAN}`, background: 'rgba(6,182,212,0.08)', color: CYAN,
+            opacity: playing ? 0.5 : 1, transition: 'opacity 0.15s',
+          }}>
+            {playing ? 'Playing...' : '▶  Replay'}
+          </button>
+        </div>
       </div>
-      <p style={{ fontSize: "0.78rem", color: "#475569", lineHeight: 1.5, marginBottom: 16, maxWidth: 520 }}>
-        Background bands show barometer state. Demand crosses the Yellow threshold at minute 38, Red at minute 42. Auto-stop fires at minute 52 as supply responds.
-      </p>
-      <svg width={W} height={H} style={{ overflow: "visible", fontFamily: "inherit", maxWidth: "100%" }}>
+
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} width="100%" style={{ overflow: 'visible', display: 'block' }}>
+        <defs>
+          <linearGradient id="tlGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={CYAN} stopOpacity="0.20" />
+            <stop offset="100%" stopColor={CYAN} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
         {regions.map((r, i) => (
           <rect key={i} x={pad.l + r.x} y={pad.t} width={r.w} height={pH} fill={stateBg[r.state]} />
         ))}
-        <line x1={pad.l} y1={pad.t} x2={pad.l} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
-        <line x1={pad.l} y1={pad.t + pH} x2={pad.l + pW} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
+
         {[0, 0.25, 0.5, 0.75, 1].map(t => (
           <line key={t} x1={pad.l} y1={pad.t + t * pH} x2={pad.l + pW} y2={pad.t + t * pH}
             stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
         ))}
-        <polyline points={points} fill="none" stroke={CYAN} strokeWidth="2.5" strokeLinejoin="round" />
-        {TIMELINE_DATA.map(([m, v, state], i) => {
-          const cx = pad.l + xS(m as number)
-          const cy = pad.t + yS(v as number)
+
+        <line x1={pad.l} y1={pad.t} x2={pad.l} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
+        <line x1={pad.l} y1={pad.t + pH} x2={pad.l + pW} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
+
+        {areaPath && <path d={areaPath} fill="url(#tlGrad)" />}
+
+        {data.length > 1 && (
+          <polyline points={ptStr} fill="none" stroke={CYAN} strokeWidth="2.8"
+            strokeLinejoin="round" strokeLinecap="round" />
+        )}
+
+        {data.map((d, i) => {
+          const cx = pad.l + xS(d[0])
+          const cy = pad.t + yS(vals[i])
+          const isHov = hovIdx === i
           return (
-            <circle key={i} cx={cx} cy={cy} r={hov === i ? 6 : 4}
-              fill={stateColors[state as string]} stroke="#0a0a0f" strokeWidth="2"
-              style={{ cursor: "pointer", transition: "r 0.1s" }}
-              onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)} />
+            <g key={i}>
+              <circle cx={cx} cy={cy} r={16} fill="transparent" style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setHovIdx(i)} onMouseLeave={() => setHovIdx(null)} />
+              <circle cx={cx} cy={cy} r={isHov ? 8 : 5}
+                fill={stateColors[d[3] as string]} stroke="#0a0a0f" strokeWidth="2.5"
+                style={{ transition: 'r 0.12s', pointerEvents: 'none' }} />
+            </g>
           )
         })}
-        {[0, 15, 30, 38, 42, 52, 60].map(m => (
-          <text key={m} x={pad.l + xS(m)} y={pad.t + pH + 14} textAnchor="middle" fill="#475569" fontSize="8">
-            {`21:${String(m).padStart(2, "0")}`}
+
+        {hovIdx !== null && hovIdx < data.length && (() => {
+          const d = data[hovIdx]
+          const cx = pad.l + xS(d[0])
+          const cy = pad.t + yS(vals[hovIdx])
+          const tipW = 180, tipH = 66
+          const tipX = cx + tipW + 16 > VB_W - pad.r ? cx - tipW - 12 : cx + 12
+          const tipY = Math.max(pad.t, Math.min(cy - tipH / 2, pad.t + pH - tipH))
+          return (
+            <g style={{ pointerEvents: 'none' }}>
+              <rect x={tipX} y={tipY} width={tipW} height={tipH} rx="8"
+                fill="#1e293b" stroke={stateColors[d[3] as string]} strokeWidth="1.5" opacity="0.97" />
+              <text x={tipX + 12} y={tipY + 18} fill={stateColors[d[3] as string]} fontSize="12" fontWeight="700">
+                21:{String(d[0]).padStart(2, '0')} · {(d[3] as string).toUpperCase()}
+              </text>
+              <text x={tipX + 12} y={tipY + 36} fill="#94a3b8" fontSize="11">
+                Visitors: {d[1]}   Queue: {d[2]}
+              </text>
+              <text x={tipX + 12} y={tipY + 54} fill="#64748b" fontSize="10">
+                {d[3] === 'red' ? 'Surge active · expert bonuses firing' : d[3] === 'yellow' ? 'Soft incentive push sent' : 'No intervention needed'}
+              </text>
+            </g>
+          )
+        })()}
+
+        <text x={pad.l + xS(18)} y={pad.t + 16} textAnchor="middle" fill="#22c55e" fontSize="11" fontWeight="700" opacity="0.7">GREEN</text>
+        <text x={pad.l + xS(39)} y={pad.t + 16} textAnchor="middle" fill="#f59e0b" fontSize="11" fontWeight="700" opacity="0.85">YELLOW</text>
+        <text x={pad.l + xS(44)} y={pad.t + 32} textAnchor="middle" fill="#ef4444" fontSize="11" fontWeight="700">RED</text>
+        <text x={pad.l + xS(57)} y={pad.t + 16} textAnchor="middle" fill="#22c55e" fontSize="11" fontWeight="700" opacity="0.7">GREEN</text>
+
+        {[0, 10, 20, 30, 38, 42, 52, 60].map(m => (
+          <text key={m} x={pad.l + xS(m)} y={pad.t + pH + 20} textAnchor="middle" fill="#475569" fontSize="10">
+            {`21:${String(m).padStart(2, '0')}`}
           </text>
         ))}
-        {[0, 50, 100].map(v => (
-          <text key={v} x={pad.l - 6} y={pad.t + yS(v) + 3} textAnchor="end" fill="#475569" fontSize="8">{v}</text>
+
+        {[0, 25, 50, 75, 100, 125].filter(v => v <= maxV + 5).map(v => (
+          <text key={v} x={pad.l - 8} y={pad.t + yS(v) + 4} textAnchor="end" fill="#475569" fontSize="10">{v}</text>
         ))}
-        <text x={pad.l + xS(18)} y={pad.t + 12} textAnchor="middle" fill="#22c55e" fontSize="8" fontWeight="700">GREEN</text>
-        <text x={pad.l + xS(40)} y={pad.t + 12} textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="700">YELLOW</text>
-        <text x={pad.l + xS(44)} y={pad.t + 22} textAnchor="middle" fill="#ef4444" fontSize="8" fontWeight="700">RED</text>
+
+        <text x={16} y={pad.t + pH / 2} textAnchor="middle" fill="#475569" fontSize="11"
+          transform={`rotate(-90,16,${pad.t + pH / 2})`}>
+          {signal === 'visitors' ? 'Unique visitors' : 'Queue depth'}
+        </text>
       </svg>
 
-      {hov !== null && (
-        <div style={{ marginTop: 8, padding: "8px 14px", background: `${stateColors[TIMELINE_DATA[hov][2] as string]}10`, border: `1px solid ${stateColors[TIMELINE_DATA[hov][2] as string]}25`, borderRadius: 8, fontSize: "0.76rem", color: "#94a3b8" }}>
-          <span style={{ color: stateColors[TIMELINE_DATA[hov][2] as string], fontWeight: 700 }}>
-            21:{String(TIMELINE_DATA[hov][0]).padStart(2, "0")} · {(TIMELINE_DATA[hov][2] as string).toUpperCase()}
-          </span>
-          {" "}· {TIMELINE_DATA[hov][1]} unique visitors · {TIMELINE_DATA[hov][2] === "red" ? "surge active, expert bonuses firing" : TIMELINE_DATA[hov][2] === "yellow" ? "soft incentive push sent" : "no intervention needed"}
-        </div>
-      )}
-
-      <div style={{ display: "flex", gap: 16, marginTop: 12, flexWrap: "wrap" }}>
-        {(["green", "yellow", "red"] as const).map(s => (
-          <div key={s} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.72rem", color: "#475569" }}>
-            <div style={{ width: 10, height: 10, borderRadius: 2, background: stateColors[s] }} />
-            {s === "green" ? "Green (healthy)" : s === "yellow" ? "Yellow (soft push)" : "Red (full response)"}
+      <div style={{ display: 'flex', gap: 20, marginTop: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+        {[['green','#22c55e','Healthy (no action)'],['yellow','#f59e0b','Yellow push sent'],['red','#ef4444','Red response active']].map(([s, color, label]) => (
+          <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#475569' }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: color as string }} />
+            {label}
           </div>
         ))}
-        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.72rem", color: "#475569" }}>
-          <div style={{ width: 16, height: 2, background: CYAN, borderRadius: 1 }} />
-          Unique visitors
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#475569' }}>
+          <div style={{ width: 20, height: 2.5, background: CYAN, borderRadius: 1 }} />
+          {signal === 'visitors' ? 'Unique visitors' : 'Queue depth'}
         </div>
       </div>
     </div>
@@ -1989,17 +2072,14 @@ export default function Page() {
         <div style={{ maxWidth: 860, margin: '0 auto', position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}12`, border: `1px solid ${CYAN}30`, borderRadius: 20, padding: '6px 14px', marginBottom: 32 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
-            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Coto · Singapore · 2024 · Open-source</span>
+            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Expert Marketplace, Singapore 2024</span>
           </div>
           <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.12, marginBottom: 28, letterSpacing: '-0.02em' }}>
             When Demand Exceeds Supply<br />
             <span style={{ color: CYAN }}>in an Online Marketplace</span>
           </h1>
-          <p style={{ fontSize: '1.05rem', color: '#94a3b8', lineHeight: 1.8, maxWidth: 700, marginBottom: 16 }}>
-            Coto started as a women-only community app, 7,000 communities, 400,000 users. When they pivoted to a live expert marketplace, the hardest problem wasn&apos;t the experts or the customers. It was the gap between them when demand spiked at 11pm and three experts were in calls.
-          </p>
           <p style={{ fontSize: '1.05rem', color: '#94a3b8', lineHeight: 1.8, maxWidth: 700, marginBottom: 40 }}>
-            I designed the operational intelligence layer: a barometer engine, a self-financing surge model, a tiered incentive system, and an AI escalation router. Five modules. One YAML file. Zero platform cost. Coto went on to reach 3M+ downloads and train Joy, their AI companion, on 3 million minutes of real expert conversations. I open-sourced it so you don&apos;t have to start from scratch.
+            I built the live operations framework for a two-sided expert marketplace from the ground up. When demand spikes and supply can&apos;t keep pace — customers queue, experts miss the signal, and the platform absorbs the cost in silence. I designed a system that detects the imbalance in real time, responds with tiered incentives that pay for themselves through surge pricing, and routes every session intelligently based on complexity and expert quality. Five modules, one automated loop, shipped before the engineering team had capacity to build anything.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {[['3M+', 'App downloads'], ['300+', 'Vetted experts · 30% acceptance'], ['5', 'Core modules'], ['Self-financing', 'Surge model'], ['4', 'Marketplace presets']].map(([v, l]) => (
@@ -2029,7 +2109,7 @@ export default function Page() {
           <div style={{ background: 'rgba(255,255,255,0.02)', borderLeft: '4px solid #06b6d4', borderRadius: '0 12px 12px 0', padding: '20px 24px', marginBottom: 40, maxWidth: 720 }}>
             <div style={{ fontSize: '0.7rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>What I was actually trying to solve</div>
             <p style={{ fontSize: '0.92rem', color: '#e2e8f0', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>
-              Coto had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are available. The queue would grow, customers would leave, experts would never know demand was there, and the platform would absorb all the cost of that mismatch - in lost revenue, in dropout, in trust. I needed a system that detected the imbalance early, responded automatically, and paid for itself.
+              The marketplace had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are available. The queue would grow, customers would leave, experts would never know demand was there, and the platform would absorb all the cost of that mismatch - in lost revenue, in dropout, in trust. I needed a system that detected the imbalance early, responded automatically, and paid for itself.
             </p>
           </div>
           <PipelineFlow />
@@ -2144,7 +2224,7 @@ export default function Page() {
                   <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
                     <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 500, width: '22%' }}>Dimension</th>
                     <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: '#22c55e', textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.05)', fontWeight: 600, width: '39%' }}>Logistics gig (Uber / Instacart)</th>
-                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', fontWeight: 600, width: '39%' }}>Expert sessions (Coto / BetterHelp / Clarity)</th>
+                    <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', borderBottom: '1px solid rgba(255,255,255,0.07)', fontWeight: 600, width: '39%' }}>Expert sessions (Expert Marketplace / BetterHelp / Clarity)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2164,7 +2244,7 @@ export default function Page() {
           </div>
 
           {/* ── Part 3: Closer analogs, what happened ── */}
-          <h3 style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 10, letterSpacing: '-0.01em' }}>Platforms that look like Coto, and what happened to them</h3>
+          <h3 style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 10, letterSpacing: '-0.01em' }}>Platforms that look like this marketplace, and what happened to them</h3>
           <p style={{ fontSize: '0.9rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 28 }}>
             BetterHelp, Chegg, and Clarity.fm are the real comparables: live expert sessions, pay-per-session or pay-per-minute, non-interchangeable supply. Each hit the same wall. Each responded differently.
           </p>
@@ -2264,7 +2344,7 @@ export default function Page() {
           <div style={{ background: 'rgba(6,182,212,0.04)', borderLeft: '3px solid #06b6d4', borderRadius: '0 10px 10px 0', padding: '16px 20px', marginBottom: 24 }}>
             <div style={{ fontSize: '0.68rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>How I verified the model worked</div>
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.7, margin: 0 }}>
-              I built a replay simulator against a real Coto evening log - 23:00 to 23:30 on a high-demand night. The barometer hit Red at minute 8, surge fired at minute 9, the first expert accepted at minute 11. Supply closed within 4 minutes of detection. That sequence became the acceptance test for the whole system.
+              I built a replay simulator against a real platform evening log - 23:00 to 23:30 on a high-demand night. The barometer hit Red at minute 8, surge fired at minute 9, the first expert accepted at minute 11. Supply closed within 4 minutes of detection. That sequence became the acceptance test for the whole system.
             </p>
           </div>
           <LiveScenario />
@@ -2334,7 +2414,7 @@ export default function Page() {
           <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(236,72,153,0.06)', border: '1px solid rgba(236,72,153,0.22)', borderRadius: 12 }}>
             <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.9rem', marginBottom: 8 }}>This logic is how Joy was designed</div>
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
-              Coto&apos;s AI companion, trained on 3 million minutes of real expert conversations, uses a version of this routing architecture to decide when it can handle a session and when it surfaces a human expert instead. The Expert Readiness Score (built in Project 6) feeds into the routing layer: top-scoring experts are reserved for the highest-urgency escalations, keeping AI-routed sessions from degrading CSAT.
+              The platform&apos;s AI companion, trained on 3 million minutes of real expert conversations, uses a version of this routing architecture to decide when it can handle a session and when it surfaces a human expert instead. The Expert Readiness Score (built in <a href="https://rank-reward-retain.vercel.app" style={{ color: '#8b5cf6', textDecoration: 'none', fontWeight: 600 }}>Rank, Reward, Retain</a>) feeds into the routing layer: top-scoring experts are reserved for the highest-urgency escalations, keeping AI-routed sessions from degrading CSAT.
             </p>
           </div>
         </div>
@@ -2386,9 +2466,9 @@ export default function Page() {
       {/* ── Outcomes ── */}
       <section id="outcomes" style={{ padding: '0 32px 100px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Coto: what happened after</h2>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>The platform: what happened after</h2>
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 40 }}>
-            I designed this system before Coto had the engineering team to build it. The barometer thresholds, the self-financing surge mechanic, the incentive notification copy, the AI escalation logic, all designed first, then built. Here&apos;s what Coto became.
+            I designed this system before the marketplace had the engineering team to build it. The barometer thresholds, the self-financing surge mechanic, the incentive notification copy, the AI escalation logic, all designed first, then built. Here&apos;s what the platform became.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 32 }}>
             {[
@@ -2407,7 +2487,7 @@ export default function Page() {
           <div style={{ padding: '24px 28px', background: `${CYAN}06`, border: `1px solid ${CYAN}18`, borderRadius: 14 }}>
             <div style={{ fontSize: '0.68rem', color: CYAN, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Why open-source</div>
             <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.75, margin: 0 }}>
-              The design work took months. Getting the threshold values right, calibrating the incentive ladder, figuring out the self-financing mechanic so it could never become a cost centre, none of that is obvious the first time. No marketplace founder building in telehealth, tutoring, or expert services today should have to re-derive all of it from first principles. Equilibrium is the foundation I wish had existed when I was building it for Coto.
+              The design work took months. Getting the threshold values right, calibrating the incentive ladder, figuring out the self-financing mechanic so it could never become a cost centre, none of that is obvious the first time. No marketplace founder building in telehealth, tutoring, or expert services today should have to re-derive all of it from first principles. Equilibrium is the foundation I wish had existed when I was building it for the platform.
             </p>
           </div>
           <P5ProjectBridge />
@@ -2468,7 +2548,7 @@ export default function Page() {
             </div>
           </div>
           <p style={{ fontSize: '0.76rem', color: '#334155', lineHeight: 1.65, marginBottom: 24, maxWidth: 700 }}>
-            Written case study, all system design, thresholds, incentive logic, and architecture described from first-hand freelance work at Coto (Singapore, 2024). No internal proprietary data reproduced. Methodology and design are original and publishable.
+            Written case study, all system design, thresholds, incentive logic, and architecture described from first-hand freelance work at an expert marketplace (Singapore, 2024). No internal proprietary data reproduced. Methodology and design are original and publishable.
           </p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div>
