@@ -113,7 +113,7 @@ const SCENARIO_STEPS = [
   {
     time: '23:09', icon: '🤖',
     event: 'AI Router adjusts',
-    detail: '31 queued sessions classified by NLP complexity. 19 standard queries → Joy (AI companion, instant). 12 high-complexity → human queue, prioritised by ERS score. Mental health sessions: always human, no exceptions.',
+    detail: '31 queued sessions classified by NLP complexity. 19 standard queries → AI-powered agent (instant response). 12 high-complexity → human queue, prioritised by ERS score. Mental health sessions: always human, no exceptions.',
     metric: '19 → AI · 12 → Human queue',
     stateColor: '#f59e0b',
   },
@@ -208,7 +208,7 @@ const PIPELINE_MODULES: { id: ModuleId; label: string; sub: string; color: strin
   },
   {
     id: 'routing', label: 'AI Escalation Router', sub: 'Routing layer', color: '#ec4899',
-    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how the platform\'s Joy → Expert escalation was designed.',
+    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how the platform\'s AI agent → expert escalation was designed.',
     metrics: ['Supply availability score', 'Query complexity (NLP, 0–1)', 'Customer tier', 'Category routing rules', 'Always-human overrides'],
     ai: 'Escalation feedback tightens complexity thresholds over time, poor CSAT on AI-handled sessions → router becomes more conservative.',
   },
@@ -1550,7 +1550,7 @@ function SessionDistribution() {
   const hbColor = hb ? ZONE_COLORS[hb.zone as keyof typeof ZONE_COLORS] : CYAN
 
   const routingNote: Record<string, string> = {
-    ai:    'Low complexity (< 0.4). Joy handles these instantly, freeing human experts for harder cases.',
+    ai:    'Low complexity (< 0.4). The AI agent handles these instantly, freeing human experts for harder cases.',
     mid:   'Supply state decides. Green: AI handles. Yellow/Red: queued for human if complexity warrants it.',
     human: 'High complexity (≥ 0.7). Always routed to a human expert, regardless of supply state.',
   }
@@ -1636,7 +1636,7 @@ const PIPELINE_NODES = [
   { id: 'incentive', label: 'Incentive Engine',      sub: 'Supply-side response', color: '#22c55e', icon: '💸',
     desc: 'Push to active, scheduled, and offline experts simultaneously. Revenue share boost, rating multiplier, priority badge. Auto-stop fires the moment the barometer returns to Green.' },
   { id: 'router',    label: 'AI Router',             sub: 'Routing layer',        color: '#ec4899', icon: '🤖',
-    desc: 'NLP classifies every queued session by complexity. Standard queries route to Joy (AI companion), high-complexity to human queue by ERS score. Mental health: always human, no exceptions.' },
+    desc: 'NLP classifies every queued session by complexity. Standard queries route to the AI agent, high-complexity to human queue by ERS score. Mental health: always human, no exceptions.' },
 ]
 
 function PipelineFlow() {
@@ -1704,9 +1704,9 @@ const P5_BRIDGE_FLOWS = [
   },
   {
     from: 'AI escalation log',
-    to: 'Joy training gate (Rank, Reward, Retain)',
+    to: 'AI training gate (Rank, Reward, Retain)',
     color: '#22c55e',
-    detail: 'Sessions that the AI router escalates to human experts - high-complexity or mental health - are flagged in the conversation log. Rank, Reward, Retain ERS and session health gates then determine which of those conversations enter Joy\'s training dataset.',
+    detail: 'Sessions that the AI router escalates to human experts - high-complexity or mental health - are flagged in the conversation log. Rank, Reward, Retain ERS and session health gates then determine which of those conversations enter the AI training dataset.',
   },
 ]
 
@@ -1757,6 +1757,24 @@ function P5ProjectBridge() {
   )
 }
 
+// ── Math helpers ───────────────────────────────────────────────────────────────
+function MF({ n, d }: { n: React.ReactNode; d: React.ReactNode }) {
+  return (
+    <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', verticalAlign: 'middle', margin: '0 3px', lineHeight: 1.25 }}>
+      <span style={{ borderBottom: '1.5px solid #94a3b8', paddingBottom: 1, paddingLeft: 5, paddingRight: 5 }}>{n}</span>
+      <span style={{ paddingTop: 2, paddingLeft: 5, paddingRight: 5 }}>{d}</span>
+    </span>
+  )
+}
+function SR({ children }: { children: React.ReactNode }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'flex-start', gap: 1 }}>
+      <span style={{ fontSize: '1.25em', lineHeight: 1 }}>√</span>
+      <span style={{ borderTop: '1.5px solid #94a3b8', paddingTop: 2, paddingLeft: 2, paddingRight: 2 }}>{children}</span>
+    </span>
+  )
+}
+
 // ── SurgeMath ──────────────────────────────────────────────────────────────────
 function SurgeMath() {
   const [tab, setTab] = useState<"barometer" | "surge">("barometer")
@@ -1783,13 +1801,21 @@ function SurgeMath() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
           <div style={{ padding: "16px 20px", background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.2)", borderRadius: 12 }}>
             <div style={{ fontSize: "0.6rem", color: CYAN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Formula</div>
-            <div style={{ fontFamily: "monospace", fontSize: "0.88rem", color: "#e2e8f0", lineHeight: 2, marginBottom: 12 }}>
-              <div>delay = (Q / A) x 10 x (1 + p)</div>
-              <div style={{ color: "#64748b", fontSize: "0.78rem" }}>
-                Q = queue depth, A = active views
+            <div style={{ fontSize: "1rem", color: "#e2e8f0", lineHeight: 2.2, marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span>delay</span>
+                <span>=</span>
+                <MF n="Q" d="A" />
+                <span>×</span>
+                <span>10</span>
+                <span>×</span>
+                <span>(1 + p)</span>
+              </div>
+              <div style={{ color: "#64748b", fontSize: "0.78rem", marginTop: 6 }}>
+                Q = queue depth &nbsp;·&nbsp; A = active views
               </div>
               <div style={{ color: "#64748b", fontSize: "0.78rem" }}>
-                p = patience factor = 1 - (sentiment + 1) / 4
+                p = patience factor = 1 − (sentiment + 1) / 4
               </div>
             </div>
             <div style={{ paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", fontFamily: "monospace", fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.8 }}>
@@ -1820,10 +1846,10 @@ function SurgeMath() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
           <div style={{ padding: "16px 20px", background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.2)", borderRadius: 12 }}>
             <div style={{ fontSize: "0.6rem", color: CYAN, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Formula</div>
-            <div style={{ fontFamily: "monospace", fontSize: "0.88rem", color: "#e2e8f0", lineHeight: 2 }}>
-              <div>surge_fee = base_fee x multiplier</div>
-              <div>expert_bonus = surge_fee x bonus_rate</div>
-              <div>platform_margin = surge_fee - bonus</div>
+            <div style={{ fontSize: "0.95rem", color: "#e2e8f0", lineHeight: 2.4, marginBottom: 12 }}>
+              <div>surge fee = base fee × multiplier</div>
+              <div>expert bonus = surge fee × bonus rate</div>
+              <div>platform margin = surge fee − bonus</div>
             </div>
             <div style={{ marginTop: 12, padding: "10px 12px", background: "rgba(6,182,212,0.06)", borderRadius: 8 }}>
               <div style={{ fontSize: "0.72rem", color: CYAN, marginBottom: 4 }}>Self-financing condition</div>
@@ -2165,14 +2191,14 @@ export default function Page() {
         <div style={{ maxWidth: 860, margin: '0 auto', position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}12`, border: `1px solid ${CYAN}30`, borderRadius: 20, padding: '6px 14px', marginBottom: 32 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
-            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Expert Marketplace, Singapore 2024</span>
+            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Expert Marketplace · Live Operations</span>
           </div>
           <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.12, marginBottom: 28, letterSpacing: '-0.02em' }}>
             When Demand Exceeds Supply<br />
             <span style={{ color: CYAN }}>in an Online Marketplace</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: '#94a3b8', lineHeight: 1.8, maxWidth: 700, marginBottom: 40 }}>
-            I built the live operations framework for a two-sided expert marketplace from the ground up. When demand spikes and supply can&apos;t keep pace — customers queue, experts miss the signal, and the platform absorbs the cost in silence. I designed a system that detects the imbalance in real time, responds with tiered incentives that pay for themselves through surge pricing, and routes every session intelligently based on complexity and expert quality. Five modules, one automated loop, shipped before the engineering team had capacity to build anything.
+            I built the live operations framework for a two-sided expert marketplace from the ground up. When demand spikes and supply can&apos;t keep pace — customers queue, experts miss the signal, and the platform absorbs the cost in silence. I designed a system that detects the imbalance in real time, responds with tiered incentives that pay for themselves through surge pricing, and routes every session intelligently based on complexity and expert quality. Five modules. One automated loop. No engineering team when I started.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {[['3M+', 'App downloads'], ['300+', 'Vetted experts · 30% acceptance'], ['5', 'Core modules'], ['Self-financing', 'Surge model'], ['4', 'Marketplace presets']].map(([v, l]) => (
@@ -2453,7 +2479,7 @@ export default function Page() {
           </div>
           <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Surge Pricing: the money that funds its own response</h2>
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 36 }}>
-            Surge fees collected from customers are ring-fenced and used to fund the expert bonuses on the other side. The system is entirely self-financing. The platform never carries the cost of a supply response, at any scale.
+            Surge fees collected from customers fund the expert bonuses on the supply side. The platform never carries the cost of a supply response. At any scale, any severity — the system pays for itself.
           </p>
           {/* Self-financing flow */}
           <div style={{ marginBottom: 36 }}>
@@ -2470,7 +2496,7 @@ export default function Page() {
           <div style={{ padding: '18px 22px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12 }}>
             <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>My design decision</div>
             <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
-              I designed this to be self-financing from day one, not as a constraint, but as a first principle. If the system ever costs the platform money to run, operators will turn it off when they need it most. Making the incentives funded by the surge fees that caused them means the system is always affordable, regardless of how bad the spike gets.
+              I designed this to be self-financing from day one — not as a constraint, but a survival condition. If it ever costs the platform money to run, operators will switch it off the moment they need it most. Funding the bonuses from the surge fees that caused them means the system is always affordable. Even during the worst spikes.
             </p>
           </div>
         </div>
@@ -2493,7 +2519,7 @@ export default function Page() {
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>AI or human? The routing decision</h2>
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 40 }}>
-            When supply is under pressure, you can&apos;t route every customer to a human expert, there aren&apos;t enough. The router decides which sessions go to Joy (the AI companion) and which go to the expert queue, based on four signals: supply health, query complexity, customer tier, and category. One rule overrides all of them.
+            When supply is under pressure, you can&apos;t route every customer to a human expert, there aren&apos;t enough. The router decides which sessions go to the AI agent and which go to the expert queue, based on four signals: supply health, query complexity, customer tier, and category. One rule overrides all of them.
           </p>
           <div style={{ background: 'rgba(6,182,212,0.04)', borderLeft: '3px solid #06b6d4', borderRadius: '0 10px 10px 0', padding: '16px 20px', marginBottom: 24 }}>
             <div style={{ fontSize: '0.68rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>The rule I would not compromise on</div>
@@ -2505,9 +2531,9 @@ export default function Page() {
           <SessionDistribution />
           {/* Joy connection */}
           <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(236,72,153,0.06)', border: '1px solid rgba(236,72,153,0.22)', borderRadius: 12 }}>
-            <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.9rem', marginBottom: 8 }}>This logic is how Joy was designed</div>
+            <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.9rem', marginBottom: 8 }}>This logic shaped how the AI routing layer was designed</div>
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
-              The platform&apos;s AI companion, trained on 3 million minutes of real expert conversations, uses a version of this routing architecture to decide when it can handle a session and when it surfaces a human expert instead. The Expert Readiness Score (built in <a href="https://rank-reward-retain.vercel.app" style={{ color: '#8b5cf6', textDecoration: 'none', fontWeight: 600 }}>Rank, Reward, Retain</a>) feeds into the routing layer: top-scoring experts are reserved for the highest-urgency escalations, keeping AI-routed sessions from degrading CSAT.
+              The platform&apos;s AI-powered agent, trained on 3 million minutes of real expert conversations, uses a version of this routing architecture to decide when it can handle a session and when it surfaces a human expert instead. The Expert Readiness Score (built in <a href="https://rank-reward-retain.vercel.app" style={{ color: '#8b5cf6', textDecoration: 'none', fontWeight: 600 }}>Rank, Reward, Retain</a>) feeds into the routing layer: top-scoring experts are reserved for the highest-urgency escalations, keeping AI-routed sessions from degrading CSAT.
             </p>
           </div>
         </div>
@@ -2567,7 +2593,7 @@ export default function Page() {
             {[
               { stat: '3M+', label: 'App downloads', desc: 'Astrology, mental health, reproductive health, financial coaching, relationship coaching, India, MENA, and global diaspora markets. The platform the ops layer was built to serve.', color: CYAN },
               { stat: '300+', label: 'Vetted experts · 30% acceptance rate', desc: 'Rigorous category-specific KYC and credential verification. Only 3 in 10 applicants accepted. The incentive system I designed had to work for a constrained, high-quality supply pool.', color: '#22c55e' },
-              { stat: 'Joy', label: 'AI companion, trained on 3M minutes of real expert conversations', desc: 'Belief-adaptive. Multilingual (Hindi, Punjabi, Gujarati, Tamil, Telugu). Handles the first layer of every session; escalates to human when complexity or sensitivity warrants it.', color: '#ec4899' },
+              { stat: 'AI-powered agent', label: 'trained on 3M+ minutes of real expert conversations', desc: 'Belief-adaptive. Multilingual (Hindi, Punjabi, Gujarati, Tamil, Telugu). Handles the first layer of every session; escalates to human when complexity or sensitivity warrants it.', color: '#ec4899' },
               { stat: '$4-5/min', label: 'Pay-per-minute · Pay Only When Happy', desc: '"Pay Only When Happy" removes demand-side risk for new users. The surge and incentive model I designed had to work within a pricing structure where customers could walk away if dissatisfied.', color: '#f59e0b' },
             ].map(o => (
               <div key={o.label} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${o.color}20`, borderRadius: 14, padding: '22px' }}>
