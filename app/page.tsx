@@ -1855,15 +1855,37 @@ function SurgeMath() {
 }
 
 // ── DemandTimelineChart ────────────────────────────────────────────────────────
-const TIMELINE_FULL = [
-  [0,22,2,'green'],[5,25,3,'green'],[10,28,3,'green'],[15,30,4,'green'],[20,32,4,'green'],
-  [25,35,5,'green'],[30,38,5,'green'],[35,42,7,'green'],[38,58,12,'yellow'],[40,74,16,'yellow'],
-  [42,95,22,'red'],[44,112,28,'red'],[46,108,25,'red'],[48,91,18,'yellow'],[50,70,11,'yellow'],
-  [52,55,6,'green'],[55,44,4,'green'],[58,36,3,'green'],[60,28,2,'green'],
-] as [number, number, number, string][]
+const TIMELINE_FULL: [number, number, number, string, string][] = [
+  [0,  22,  2,  'green',  'Platform idle — healthy supply-demand ratio, no action needed.'],
+  [5,  25,  3,  'green',  'Light evening traffic. Barometer reads green across all categories.'],
+  [10, 28,  3,  'green',  'Steady climb. Queue depth nominal. No intervention required.'],
+  [15, 30,  4,  'green',  'Traffic growing. Health engine monitoring — still within threshold.'],
+  [20, 32,  4,  'green',  'Volume up 45% from baseline. Barometer still green — buffer intact.'],
+  [25, 35,  5,  'green',  'First sustained uptick. Pre-surge monitoring window opens.'],
+  [30, 38,  5,  'green',  'Continued growth. Health engine flags: "approaching yellow threshold."'],
+  [35, 42,  7,  'green',  'Late green — queue growing faster than visitors. Transition imminent.'],
+  [38, 58, 12, 'yellow', 'Yellow threshold crossed. Soft incentive push sent to online experts.'],
+  [40, 74, 16, 'yellow', 'Queue depth: 16. Second soft push. Acceptance rate tracking at 34%.'],
+  [42, 95, 22,  'red',   'Red state triggered. Surge pricing active. Expert bonuses: +$4 per session.'],
+  [44,112, 28,  'red',   'Peak: 112 concurrent visitors. Queue depth 28. Surge multiplier: 1.8×.'],
+  [46,108, 25,  'red',   'Plateau. Surge is self-financing — added session revenue covers bonus cost.'],
+  [48, 91, 18, 'yellow', 'Supply responding. Queue falling. Surge multiplier steps down to 1.4×.'],
+  [50, 70, 11, 'yellow', 'Recovery underway. Incentive tier drops. Yellow push suspended.'],
+  [52, 55,  6, 'green',  'Auto-stop fires. Surge halted. Queue cleared below threshold.'],
+  [55, 44,  4, 'green',  'Normalising. Health engine returns green. No further action.'],
+  [58, 36,  3, 'green',  'Late-evening decay. All experts available. Platform operating at rest.'],
+  [60, 28,  2, 'green',  'End of spike window. Fully recovered. Zero manual intervention throughout.'],
+]
+
+const TIMELINE_ANNOTATIONS = [
+  { minute: 38, label: 'Yellow threshold', color: '#f59e0b' },
+  { minute: 42, label: 'Red — surge fires', color: '#ef4444' },
+  { minute: 44, label: 'Peak demand', color: '#ef4444' },
+  { minute: 52, label: 'Auto-stop', color: '#22c55e' },
+]
 
 function DemandTimelineChart() {
-  const [hovIdx, setHovIdx] = useState<number | null>(null)
+  const [activeIdx, setActiveIdx] = useState<number>(TIMELINE_FULL.length - 1)
   const [signal, setSignal] = useState<'visitors' | 'queue'>('visitors')
   const [visCount, setVisCount] = useState(TIMELINE_FULL.length)
   const [playing, setPlaying] = useState(false)
@@ -1871,16 +1893,22 @@ function DemandTimelineChart() {
   useEffect(() => {
     if (!playing) return
     if (visCount >= TIMELINE_FULL.length) { setPlaying(false); return }
-    const t = setTimeout(() => setVisCount(c => c + 1), 140)
+    const t = setTimeout(() => {
+      setVisCount(c => c + 1)
+      setActiveIdx(visCount)
+    }, 160)
     return () => clearTimeout(t)
   }, [playing, visCount])
 
-  const handlePlay = () => { setVisCount(1); setPlaying(true) }
+  const handlePlay = () => { setVisCount(1); setActiveIdx(0); setPlaying(true) }
+  const handlePause = () => setPlaying(false)
+
   const data = TIMELINE_FULL.slice(0, visCount)
   const vals = data.map(d => signal === 'visitors' ? d[1] : d[2])
+  const focused = TIMELINE_FULL[Math.min(activeIdx, data.length - 1)]
 
-  const VB_W = 800, VB_H = 300
-  const pad = { l: 52, r: 24, t: 40, b: 56 }
+  const VB_W = 900, VB_H = 420
+  const pad = { l: 58, r: 32, t: 52, b: 64 }
   const pW = VB_W - pad.l - pad.r
   const pH = VB_H - pad.t - pad.b
   const maxV = signal === 'visitors' ? 130 : 35
@@ -1888,7 +1916,9 @@ function DemandTimelineChart() {
   const yS = (v: number) => pH - Math.min(v / maxV, 1) * pH
 
   const stateColors: Record<string, string> = { green: '#22c55e', yellow: '#f59e0b', red: '#ef4444' }
-  const stateBg: Record<string, string> = { green: 'rgba(34,197,94,0.06)', yellow: 'rgba(245,158,11,0.09)', red: 'rgba(239,68,68,0.12)' }
+  const stateBg: Record<string, string> = {
+    green: 'rgba(34,197,94,0.055)', yellow: 'rgba(245,158,11,0.10)', red: 'rgba(239,68,68,0.13)',
+  }
 
   const regions = data.slice(0, -1).map((d, i) => ({
     x: xS(d[0]), w: xS(data[i + 1][0]) - xS(d[0]), state: d[3] as string,
@@ -1899,136 +1929,199 @@ function DemandTimelineChart() {
     ? `M ${ptStr.replace(/ /g, ' L ')} L ${pad.l + xS(data[data.length - 1][0])},${pad.t + pH} L ${pad.l + xS(data[0][0])},${pad.t + pH} Z`
     : ''
 
+  const cursorX = pad.l + xS(focused[0])
+  const cursorY = pad.t + yS(signal === 'visitors' ? focused[1] : focused[2])
+  const stateColor = stateColors[focused[3] as string]
+
   return (
-    <div style={{ marginTop: 32, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 28px' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+    <div style={{ marginTop: 36, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '28px 32px' }}>
+
+      {/* Header row */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
         <div>
-          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
-            Demand timeline · simulated evening spike (21:00 - 22:00)
+          <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
+            Demand timeline · simulated evening spike (21:00 – 22:00)
           </div>
-          <p style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.55, margin: 0, maxWidth: 520 }}>
-            Background bands show barometer state. Demand crosses Yellow at 21:38, Red at 21:42. Auto-stop fires at 21:52 as supply responds and queue clears.
+          <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.6, margin: 0, maxWidth: 560 }}>
+            Background bands show barometer state in real time. Hover any data point — or hit Replay to watch the spike unfold from scratch.
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: 4 }}>
             {(['visitors', 'queue'] as const).map(s => (
               <button key={s} onClick={() => setSignal(s)} style={{
-                padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: '0.7rem', fontWeight: 600,
-                border: `1.5px solid ${signal === s ? CYAN : 'rgba(255,255,255,0.08)'}`,
-                background: signal === s ? 'rgba(6,182,212,0.1)' : 'rgba(255,255,255,0.02)',
+                padding: '6px 12px', borderRadius: 7, cursor: 'pointer', fontSize: '0.72rem', fontWeight: 600,
+                border: `1.5px solid ${signal === s ? CYAN : 'rgba(255,255,255,0.1)'}`,
+                background: signal === s ? 'rgba(6,182,212,0.12)' : 'rgba(255,255,255,0.02)',
                 color: signal === s ? CYAN : '#64748b', transition: 'all 0.15s',
               }}>
                 {s === 'visitors' ? 'Unique visitors' : 'Queue depth'}
               </button>
             ))}
           </div>
-          <button onClick={handlePlay} disabled={playing} style={{
-            padding: '5px 14px', borderRadius: 6, cursor: playing ? 'default' : 'pointer', fontSize: '0.7rem', fontWeight: 700,
-            border: `1.5px solid ${CYAN}`, background: 'rgba(6,182,212,0.08)', color: CYAN,
-            opacity: playing ? 0.5 : 1, transition: 'opacity 0.15s',
-          }}>
-            {playing ? 'Playing...' : '▶  Replay'}
+          <button
+            onClick={playing ? handlePause : handlePlay}
+            style={{
+              padding: '6px 16px', borderRadius: 7, cursor: 'pointer', fontSize: '0.72rem', fontWeight: 700,
+              border: `1.5px solid ${CYAN}`, background: 'rgba(6,182,212,0.1)', color: CYAN,
+              transition: 'opacity 0.15s',
+            }}>
+            {playing ? '⏸ Pause' : '▶ Replay'}
           </button>
         </div>
       </div>
 
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} width="100%" style={{ overflow: 'visible', display: 'block' }}>
+      {/* Main SVG chart */}
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} width="100%" style={{ overflow: 'visible', display: 'block', cursor: 'crosshair' }}>
         <defs>
-          <linearGradient id="tlGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={CYAN} stopOpacity="0.20" />
+          <linearGradient id="tlGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={CYAN} stopOpacity="0.22" />
             <stop offset="100%" stopColor={CYAN} stopOpacity="0" />
           </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+            <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
         </defs>
 
+        {/* State bands */}
         {regions.map((r, i) => (
           <rect key={i} x={pad.l + r.x} y={pad.t} width={r.w} height={pH} fill={stateBg[r.state]} />
         ))}
 
-        {[0, 0.25, 0.5, 0.75, 1].map(t => (
+        {/* Grid lines */}
+        {[0, 0.2, 0.4, 0.6, 0.8, 1].map(t => (
           <line key={t} x1={pad.l} y1={pad.t + t * pH} x2={pad.l + pW} y2={pad.t + t * pH}
             stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
         ))}
 
+        {/* Axes */}
         <line x1={pad.l} y1={pad.t} x2={pad.l} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
         <line x1={pad.l} y1={pad.t + pH} x2={pad.l + pW} y2={pad.t + pH} stroke="#334155" strokeWidth="1.5" />
 
-        {areaPath && <path d={areaPath} fill="url(#tlGrad)" />}
-
-        {data.length > 1 && (
-          <polyline points={ptStr} fill="none" stroke={CYAN} strokeWidth="2.8"
-            strokeLinejoin="round" strokeLinecap="round" />
-        )}
-
-        {data.map((d, i) => {
-          const cx = pad.l + xS(d[0])
-          const cy = pad.t + yS(vals[i])
-          const isHov = hovIdx === i
+        {/* Annotation markers */}
+        {TIMELINE_ANNOTATIONS.map(a => {
+          const ax = pad.l + xS(a.minute)
+          const shown = data.some(d => d[0] >= a.minute)
+          if (!shown) return null
           return (
-            <g key={i}>
-              <circle cx={cx} cy={cy} r={16} fill="transparent" style={{ cursor: 'pointer' }}
-                onMouseEnter={() => setHovIdx(i)} onMouseLeave={() => setHovIdx(null)} />
-              <circle cx={cx} cy={cy} r={isHov ? 8 : 5}
-                fill={stateColors[d[3] as string]} stroke="#0a0a0f" strokeWidth="2.5"
-                style={{ transition: 'r 0.12s', pointerEvents: 'none' }} />
+            <g key={a.minute}>
+              <line x1={ax} y1={pad.t} x2={ax} y2={pad.t + pH} stroke={a.color} strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+              <text x={ax} y={pad.t - 8} textAnchor="middle" fill={a.color} fontSize="9.5" fontWeight="700" opacity="0.85">{a.label}</text>
             </g>
           )
         })}
 
-        {hovIdx !== null && hovIdx < data.length && (() => {
-          const d = data[hovIdx]
+        {/* Area fill */}
+        {areaPath && <path d={areaPath} fill="url(#tlGrad2)" />}
+
+        {/* Line */}
+        {data.length > 1 && (
+          <polyline points={ptStr} fill="none" stroke={CYAN} strokeWidth="3"
+            strokeLinejoin="round" strokeLinecap="round" />
+        )}
+
+        {/* Data points */}
+        {data.map((d, i) => {
           const cx = pad.l + xS(d[0])
-          const cy = pad.t + yS(vals[hovIdx])
-          const tipW = 180, tipH = 66
-          const tipX = cx + tipW + 16 > VB_W - pad.r ? cx - tipW - 12 : cx + 12
-          const tipY = Math.max(pad.t, Math.min(cy - tipH / 2, pad.t + pH - tipH))
+          const cy = pad.t + yS(signal === 'visitors' ? d[1] : d[2])
+          const isActive = activeIdx === i
           return (
-            <g style={{ pointerEvents: 'none' }}>
-              <rect x={tipX} y={tipY} width={tipW} height={tipH} rx="8"
-                fill="#1e293b" stroke={stateColors[d[3] as string]} strokeWidth="1.5" opacity="0.97" />
-              <text x={tipX + 12} y={tipY + 18} fill={stateColors[d[3] as string]} fontSize="12" fontWeight="700">
-                21:{String(d[0]).padStart(2, '0')} · {(d[3] as string).toUpperCase()}
-              </text>
-              <text x={tipX + 12} y={tipY + 36} fill="#94a3b8" fontSize="11">
-                Visitors: {d[1]}   Queue: {d[2]}
-              </text>
-              <text x={tipX + 12} y={tipY + 54} fill="#64748b" fontSize="10">
-                {d[3] === 'red' ? 'Surge active · expert bonuses firing' : d[3] === 'yellow' ? 'Soft incentive push sent' : 'No intervention needed'}
-              </text>
+            <g key={i}>
+              <circle cx={cx} cy={cy} r={18} fill="transparent" style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setActiveIdx(i)} />
+              <circle cx={cx} cy={cy} r={isActive ? 9 : 4.5}
+                fill={stateColors[d[3] as string]} stroke="#0a0a0f" strokeWidth="2.5"
+                filter={isActive ? 'url(#glow)' : undefined}
+                style={{ transition: 'r 0.15s', pointerEvents: 'none' }} />
             </g>
           )
-        })()}
+        })}
 
-        <text x={pad.l + xS(18)} y={pad.t + 16} textAnchor="middle" fill="#22c55e" fontSize="11" fontWeight="700" opacity="0.7">GREEN</text>
-        <text x={pad.l + xS(39)} y={pad.t + 16} textAnchor="middle" fill="#f59e0b" fontSize="11" fontWeight="700" opacity="0.85">YELLOW</text>
-        <text x={pad.l + xS(44)} y={pad.t + 32} textAnchor="middle" fill="#ef4444" fontSize="11" fontWeight="700">RED</text>
-        <text x={pad.l + xS(57)} y={pad.t + 16} textAnchor="middle" fill="#22c55e" fontSize="11" fontWeight="700" opacity="0.7">GREEN</text>
+        {/* Active cursor line */}
+        {data.length > 0 && (
+          <line x1={cursorX} y1={pad.t} x2={cursorX} y2={pad.t + pH}
+            stroke={stateColor} strokeWidth="1.5" strokeDasharray="5 3" opacity="0.7"
+            style={{ pointerEvents: 'none' }} />
+        )}
 
-        {[0, 10, 20, 30, 38, 42, 52, 60].map(m => (
-          <text key={m} x={pad.l + xS(m)} y={pad.t + pH + 20} textAnchor="middle" fill="#475569" fontSize="10">
+        {/* State labels */}
+        <text x={pad.l + xS(18)} y={pad.t + 20} textAnchor="middle" fill="#22c55e" fontSize="11" fontWeight="700" opacity="0.65">GREEN</text>
+        <text x={pad.l + xS(39)} y={pad.t + 20} textAnchor="middle" fill="#f59e0b" fontSize="12" fontWeight="700" opacity="0.9">YELLOW</text>
+        <text x={pad.l + xS(43)} y={pad.t + 36} textAnchor="middle" fill="#ef4444" fontSize="12" fontWeight="800">RED</text>
+        <text x={pad.l + xS(56)} y={pad.t + 20} textAnchor="middle" fill="#22c55e" fontSize="11" fontWeight="700" opacity="0.65">GREEN</text>
+
+        {/* X axis labels */}
+        {[0, 10, 20, 30, 38, 42, 50, 60].map(m => (
+          <text key={m} x={pad.l + xS(m)} y={pad.t + pH + 22} textAnchor="middle" fill="#475569" fontSize="10.5">
             {`21:${String(m).padStart(2, '0')}`}
           </text>
         ))}
 
-        {[0, 25, 50, 75, 100, 125].filter(v => v <= maxV + 5).map(v => (
-          <text key={v} x={pad.l - 8} y={pad.t + yS(v) + 4} textAnchor="end" fill="#475569" fontSize="10">{v}</text>
+        {/* Y axis labels */}
+        {(signal === 'visitors' ? [0,25,50,75,100,125] : [0,10,20,30]).map(v => (
+          <text key={v} x={pad.l - 10} y={pad.t + yS(v) + 4} textAnchor="end" fill="#475569" fontSize="10.5">{v}</text>
         ))}
 
-        <text x={16} y={pad.t + pH / 2} textAnchor="middle" fill="#475569" fontSize="11"
-          transform={`rotate(-90,16,${pad.t + pH / 2})`}>
+        {/* Y axis title */}
+        <text x={18} y={pad.t + pH / 2} textAnchor="middle" fill="#475569" fontSize="11"
+          transform={`rotate(-90,18,${pad.t + pH / 2})`}>
           {signal === 'visitors' ? 'Unique visitors' : 'Queue depth'}
         </text>
       </svg>
 
-      <div style={{ display: 'flex', gap: 20, marginTop: 14, flexWrap: 'wrap', alignItems: 'center' }}>
-        {[['green','#22c55e','Healthy (no action)'],['yellow','#f59e0b','Yellow push sent'],['red','#ef4444','Red response active']].map(([s, color, label]) => (
-          <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#475569' }}>
-            <div style={{ width: 10, height: 10, borderRadius: 2, background: color as string }} />
+      {/* Scrubber */}
+      <div style={{ marginTop: 16, padding: '0 4px' }}>
+        <input
+          type="range" min={0} max={TIMELINE_FULL.length - 1} value={Math.min(activeIdx, data.length - 1)}
+          onChange={e => {
+            const i = Number(e.target.value)
+            if (i < data.length) setActiveIdx(i)
+          }}
+          style={{ width: '100%', accentColor: CYAN, cursor: 'pointer', height: 4 }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#475569', marginTop: 4 }}>
+          <span>21:00</span><span>21:15</span><span>21:30</span><span>21:45</span><span>22:00</span>
+        </div>
+      </div>
+
+      {/* Focused moment panel */}
+      <div style={{
+        marginTop: 20, padding: '18px 22px', borderRadius: 12,
+        background: `${stateColor}0c`,
+        border: `1px solid ${stateColor}30`,
+        transition: 'background 0.3s, border-color 0.3s',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
+          <div style={{
+            padding: '3px 10px', borderRadius: 5, fontSize: '0.7rem', fontWeight: 800,
+            background: `${stateColor}20`, color: stateColor, letterSpacing: '0.06em',
+          }}>
+            {(focused[3] as string).toUpperCase()} STATE
+          </div>
+          <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#e2e8f0' }}>
+            21:{String(focused[0]).padStart(2, '0')}
+          </div>
+          <div style={{ fontSize: '0.78rem', color: '#64748b', marginLeft: 'auto' }}>
+            {signal === 'visitors' ? `${focused[1]} concurrent visitors` : `${focused[2]} sessions queued`}
+            {' · '}Queue depth: {focused[2]}
+          </div>
+        </div>
+        <p style={{ margin: 0, fontSize: '0.83rem', color: '#94a3b8', lineHeight: 1.65 }}>
+          {focused[4]}
+        </p>
+      </div>
+
+      {/* Legend */}
+      <div style={{ display: 'flex', gap: 20, marginTop: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        {[['green','#22c55e','Healthy — no action'],['yellow','#f59e0b','Yellow push sent'],['red','#ef4444','Surge active']].map(([s, color, label]) => (
+          <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#64748b' }}>
+            <div style={{ width: 10, height: 10, borderRadius: 3, background: color as string }} />
             {label}
           </div>
         ))}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#475569' }}>
-          <div style={{ width: 20, height: 2.5, background: CYAN, borderRadius: 1 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#64748b' }}>
+          <div style={{ width: 22, height: 2.5, background: CYAN, borderRadius: 1 }} />
           {signal === 'visitors' ? 'Unique visitors' : 'Queue depth'}
         </div>
       </div>
