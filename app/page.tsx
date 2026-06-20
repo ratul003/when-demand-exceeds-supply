@@ -371,26 +371,41 @@ function useCountUp(target: number, duration = 1400, trigger: boolean) {
 
 // ── SectionNav ─────────────────────────────────────────────────────────────────
 function SectionNav() {
+  const LABELS: Record<string, string> = Object.fromEntries(NAV_SECTIONS.map((s) => [s.id, s.label]))
+  const prettify = (id: string) => id.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+  const [items, setItems] = useState<{ id: string; label: string }[]>([])
   const [active, setActive] = useState('')
-  const [hov, setHov] = useState('')
   useEffect(() => {
+    const found: { id: string; label: string }[] = []
+    document.querySelectorAll<HTMLElement>('section[id]').forEach((sec) => {
+      if (sec.dataset.rail === 'skip') return
+      const h = sec.querySelector('h1, h2, h3')
+      const heading = (h?.textContent || '').replace(/\s+/g, ' ').trim()
+      const label = sec.dataset.rail || LABELS[sec.id] || heading || prettify(sec.id)
+      if (label) found.push({ id: sec.id, label })
+    })
+    setItems(found)
+    if (found[0]) setActive(found[0].id)
     const obs = new IntersectionObserver(
       (entries) => { for (const e of entries) if (e.isIntersecting) setActive(e.target.id) },
-      { rootMargin: '-40% 0px -55% 0px' }
+      { rootMargin: '-45% 0px -50% 0px' }
     )
-    NAV_SECTIONS.forEach(({ id }) => { const el = document.getElementById(id); if (el) obs.observe(el) })
+    found.forEach((s) => { const el = document.getElementById(s.id); if (el) obs.observe(el) })
     return () => obs.disconnect()
   }, [])
+  if (items.length === 0) return null
   return (
-    <nav className="hidden xl:flex" style={{ position: 'fixed', right: 24, top: '50%', transform: 'translateY(-50%)', zIndex: 50, flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
-      {NAV_SECTIONS.map(({ id, label }) => (
-        <a key={id} href={`#${id}`} title={label}
-          onMouseEnter={() => setHov(id)} onMouseLeave={() => setHov('')}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-          {hov === id && <span style={{ fontSize: '0.68rem', color: CYAN, whiteSpace: 'nowrap' }}>{label}</span>}
-          <div style={{ width: active === id ? 10 : 7, height: active === id ? 10 : 7, borderRadius: '50%', background: active === id ? CYAN : 'rgba(255,255,255,0.2)', transition: 'all 0.2s' }} />
-        </a>
-      ))}
+    <nav aria-label="Section navigation" className="hidden xl:flex" style={{ position: 'fixed', right: 26, top: '50%', transform: 'translateY(-50%)', zIndex: 50, flexDirection: 'column', gap: 5, maxHeight: '86vh', overflowY: 'auto' }}>
+      {items.map((s) => {
+        const on = active === s.id
+        return (
+          <a key={s.id} href={`#${s.id}`} aria-current={on ? 'true' : undefined}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, textDecoration: 'none', padding: '3px 0' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: on ? 700 : 500, color: on ? CYAN : 'var(--foreground-subtle, #475569)', whiteSpace: 'nowrap', transition: 'color .2s' }}>{s.label}</span>
+            <span style={{ width: on ? 24 : 12, height: 3, borderRadius: 2, background: on ? CYAN : 'var(--border, rgba(255,255,255,0.15))', transition: 'all .2s', flexShrink: 0 }} />
+          </a>
+        )
+      })}
     </nav>
   )
 }
@@ -2646,40 +2661,27 @@ export default function Page() {
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '48px 32px', background: '#060609' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: '0.72rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Portfolio</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-              {[
-                { label: 'Product Intelligence Platform', color: '#6366f1', href: 'https://product-intelligence-platform.vercel.app' },
-                { label: 'Data Engineering Foundation',  color: '#10b981', href: 'https://data-engineering-foundation.vercel.app' },
-                { label: 'The Experiment Playbook',      color: '#f59e0b', href: 'https://experimentation-science.vercel.app' },
-                { label: 'Systems Architecture',         color: '#f43f5e', href: 'https://systems-architecture.vercel.app' },
-                { label: 'Rank, Reward, Retain',         color: '#8b5cf6', href: '#' },
-              ].map(link => (
-                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
-                  style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: '0.82rem', color: '#64748b', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = link.color)} onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}>
-                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: link.color }} />{link.label}
-                </a>
-              ))}
-            </div>
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '40px 32px 56px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+          <div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 5 }}>Wahid Tawsif Ratul</div>
+            <div style={{ fontSize: '0.8rem', color: '#64748b' }}>© 2026 · Data Scientist · Product Manager</div>
           </div>
-          <p style={{ fontSize: '0.76rem', color: '#334155', lineHeight: 1.65, marginBottom: 24, maxWidth: 700 }}>
-            Written case study, all system design, thresholds, incentive logic, and architecture described from first-hand freelance work at an expert marketplace (Singapore, 2024). No internal proprietary data reproduced. Methodology and design are original and publishable.
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-            <div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#f1f5f9' }}>Wahid Tawsif Ratul</div>
-              <div style={{ fontSize: '0.75rem', color: CYAN, marginTop: 2 }}>Data Scientist · Product Manager</div>
-            </div>
-            <a href="https://github.com/ratul003" target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: '0.78rem', color: '#475569', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, transition: 'color 0.15s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = CYAN)} onMouseLeave={e => (e.currentTarget.style.color = '#475569')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-              github.com/ratul003
-            </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            {[
+              { label: 'LinkedIn', href: 'https://linkedin.com/in/wahidratul112296', path: 'M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05C20.5 8.59 22 11 22 14.4V21h-4v-5.86c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9z' },
+              { label: 'GitHub', href: 'https://github.com/ratul003', path: 'M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z' },
+              { label: 'Medium', href: 'https://medium.com/@wahidtratul', path: 'M2.5 5.5l1.7 2v9.7l-2 2.3h5.4l-2-2.3V8.4l4.9 11.1h.1l4.3-10.5v8.2l-1.3 1.3v.2h6.4v-.2l-1.3-1.3V6.9l1.3-1.3v-.1h-4.5L13 13.9 9.3 5.5z' },
+              { label: 'Email', href: 'mailto:wahidtratul@gmail.com', path: '' },
+            ].map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} style={{ color: '#64748b', display: 'inline-flex' }}>
+                {s.label === 'Email' ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d={s.path} /></svg>
+                )}
+              </a>
+            ))}
           </div>
         </div>
       </footer>
