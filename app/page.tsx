@@ -7,7 +7,7 @@ const CYAN = '#06b6d4'
 // ── Types ──────────────────────────────────────────────────────────────────────
 type BarometerState = 'green' | 'yellow' | 'red'
 type ModuleId = 'signals' | 'health' | 'surge' | 'incentive' | 'routing'
-type PresetId = 'coto_wellness' | 'telehealth' | 'tutoring' | 'freelance'
+type PresetId = 'wellness' | 'telehealth' | 'tutoring' | 'freelance'
 
 // ── Data ───────────────────────────────────────────────────────────────────────
 const WIN_METRICS = [
@@ -216,7 +216,7 @@ const PIPELINE_MODULES: { id: ModuleId; label: string; sub: string; color: strin
 
 const PRESETS: { id: PresetId; label: string; color: string; desc: string; tag: string; highlights: string[] }[] = [
   {
-    id: 'coto_wellness', label: 'coto_wellness', color: CYAN, tag: 'Default · Origin',
+    id: 'wellness', label: 'wellness', color: CYAN, tag: 'Default · Origin',
     desc: 'Origin configuration. Five wellness categories, 30/60-min delay thresholds, 5/10% dropout thresholds. Sentiment calibration on. Mental health always routed to human experts.',
     highlights: ['30 / 60 min delay thresholds', 'Sentiment-calibrated barometer', 'Mental health: always human'],
   },
@@ -1186,13 +1186,13 @@ function DashboardPreview() {
 
 // ── ConfigPresets ──────────────────────────────────────────────────────────────
 function ConfigPresets() {
-  const [active, setActive] = useState<PresetId>('coto_wellness')
+  const [active, setActive] = useState<PresetId>('wellness')
   const preset = PRESETS.find(p => p.id === active)!
   const yaml = `equilibrium:
   preset: ${preset.id}
 
   categories:
-    - name: ${preset.id === 'coto_wellness' ? 'astrology' : preset.id === 'telehealth' ? 'primary_care' : preset.id === 'tutoring' ? 'mathematics' : 'design'}
+    - name: ${preset.id === 'wellness' ? 'astrology' : preset.id === 'telehealth' ? 'primary_care' : preset.id === 'tutoring' ? 'mathematics' : 'design'}
       delay_thresholds:
         yellow: ${preset.id === 'telehealth' ? 15 : preset.id === 'tutoring' ? 45 : 30}
         red:    ${preset.id === 'telehealth' ? 30 : preset.id === 'tutoring' ? 90 : 60}
@@ -1201,7 +1201,7 @@ function ConfigPresets() {
         red:    ${preset.id === 'telehealth' ? 7 : preset.id === 'tutoring' ? 15 : 10}
 
   ai_escalation:
-    always_human: ${preset.id === 'coto_wellness' ? '[mental_health_crisis]' : preset.id === 'telehealth' ? '[urgent_care, crisis]' : '[]'}
+    always_human: ${preset.id === 'wellness' ? '[mental_health_crisis]' : preset.id === 'telehealth' ? '[urgent_care, crisis]' : '[]'}
     complexity_threshold: ${preset.id === 'tutoring' ? 0.5 : 0.7}
 
   webhooks:
