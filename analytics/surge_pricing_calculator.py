@@ -40,9 +40,9 @@ class SurgeMatrix:
         return self.base_session_fee * self.get_multiplier(delay_min)
 
 
-# ── Coto wellness default matrices ────────────────────────────────────────────
+# ── Wellness default matrices ─────────────────────────────────────────────────
 
-COTO_SURGE_MATRICES: list[SurgeMatrix] = [
+WELLNESS_SURGE_MATRICES: list[SurgeMatrix] = [
     SurgeMatrix("astrology",          [(30, 0.00), (45, 0.05), (60, 0.10), (999, 0.15)], base_session_fee=400),
     SurgeMatrix("relationship",       [(30, 0.00), (45, 0.08), (60, 0.12), (999, 0.20)], base_session_fee=500),
     SurgeMatrix("mental_health",      [(20, 0.00), (35, 0.10), (45, 0.18), (999, 0.25)], base_session_fee=600),
@@ -162,10 +162,10 @@ def simulate_demand_spike(
 # ── Demo ─────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    print("Surge Pricing Calculator — Coto Wellness Preset\n")
+    print("Surge Pricing Calculator — Wellness Preset\n")
 
     # 1. Surge matrix lookup
-    mental = next(m for m in COTO_SURGE_MATRICES if m.category == "mental_health")
+    mental = next(m for m in WELLNESS_SURGE_MATRICES if m.category == "mental_health")
     print("Mental Health — surge multiplier by delay time:")
     print(f"{'Delay':>8}  {'Multiplier':>12}  {'Surge fee (base 600)':>22}")
     print("-" * 48)
@@ -193,7 +193,7 @@ def main() -> None:
         "reproductive":       7,
     }
     df = simulate_demand_spike(
-        COTO_SURGE_MATRICES, scenario_delays, scenario_demand,
+        WELLNESS_SURGE_MATRICES, scenario_delays, scenario_demand,
         expert_bonus=80.0, acceptance_rate=0.60,
     )
     print(df.to_string(index=False))

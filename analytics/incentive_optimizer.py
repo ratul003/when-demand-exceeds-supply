@@ -1,7 +1,7 @@
 """
 incentive_optimizer.py
 
-Expert incentive optimizer for Coto marketplace.
+Expert incentive optimizer for an on-demand expert marketplace.
 Models acceptance rate curves for each incentive tier and computes
 the optimal tier needed to close a supply gap at minimum cost.
 

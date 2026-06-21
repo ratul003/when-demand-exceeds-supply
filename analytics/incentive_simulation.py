@@ -63,7 +63,7 @@ class IncentiveResponse:
     incentive_cost: float
 
 
-# ── Default incentive tiers (Coto wellness) ───────────────────────────────────
+# ── Default incentive tiers (wellness) ────────────────────────────────────────
 
 YELLOW_TIER = IncentiveTier(
     state=BarometerState.YELLOW,
@@ -200,7 +200,7 @@ def main() -> None:
     experts = build_expert_pool(60, rng)
     sim = IncentiveSimulator(experts, rng)
 
-    print("Incentive Simulation — Coto Wellness, 11pm Demand Spike\n")
+    print("Incentive Simulation — Wellness, 11pm Demand Spike\n")
     print(f"Expert pool: {len(experts)} total")
 
     status_counts = {}

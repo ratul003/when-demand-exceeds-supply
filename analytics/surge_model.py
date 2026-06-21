@@ -1,7 +1,7 @@
 """
 surge_model.py
 
-Surge pricing calculator for Coto marketplace.
+Surge pricing calculator for an on-demand expert marketplace.
 Computes surge multipliers from category x delay matrix and models
 the revenue split between platform margin and expert bonuses.
 
@@ -78,7 +78,7 @@ def print_matrix() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Coto Surge Model")
+    parser = argparse.ArgumentParser(description="Surge Model")
     parser.add_argument("--category", choices=list(SURGE_CONFIGS), default="mental_health")
     parser.add_argument("--state",    choices=["yellow", "red"], default="red")
     parser.add_argument("--sessions", type=int, default=20)

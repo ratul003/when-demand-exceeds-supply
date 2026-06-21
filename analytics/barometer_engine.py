@@ -1,7 +1,7 @@
 """
 barometer_engine.py
 
-Real-time demand-supply health engine for Coto marketplace.
+Real-time demand-supply health engine for an on-demand expert marketplace.
 Models the Green/Yellow/Red barometer: five demand signals evaluated
 against per-category thresholds determine the supply-side response tier.
 
@@ -119,7 +119,7 @@ def simulate_timeline(category: str, duration: int = 60, seed: int = 42) -> list
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Coto Barometer Health Engine")
+    parser = argparse.ArgumentParser(description="Barometer Health Engine")
     parser.add_argument("--category", choices=list(CATEGORY_THRESHOLDS), default="mental_health")
     parser.add_argument("--simulate", action="store_true")
     parser.add_argument("--duration", type=int, default=60)

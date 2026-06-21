@@ -208,7 +208,7 @@ const PIPELINE_MODULES: { id: ModuleId; label: string; sub: string; color: strin
   },
   {
     id: 'routing', label: 'AI Escalation Router', sub: 'Routing layer', color: '#ec4899',
-    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how the platform\'s AI agent → expert escalation was designed.',
+    desc: 'Rules-based routing for every incoming session: AI companion or human expert. Four signals: supply health score, NLP complexity (0–1), customer tier, category. Hard rules override signals for sensitive categories. Informed directly by how the platform\'s AI companion → expert escalation was designed.',
     metrics: ['Supply availability score', 'Query complexity (NLP, 0–1)', 'Customer tier', 'Category routing rules', 'Always-human overrides'],
     ai: 'Escalation feedback tightens complexity thresholds over time, poor CSAT on AI-handled sessions → router becomes more conservative.',
   },
@@ -1565,7 +1565,7 @@ function SessionDistribution() {
   const hbColor = hb ? ZONE_COLORS[hb.zone as keyof typeof ZONE_COLORS] : CYAN
 
   const routingNote: Record<string, string> = {
-    ai:    'Low complexity (< 0.4). The AI agent handles these instantly, freeing human experts for harder cases.',
+    ai:    'Low complexity (< 0.4). The AI companion handles these instantly, freeing human experts for harder cases.',
     mid:   'Supply state decides. Green: AI handles. Yellow/Red: queued for human if complexity warrants it.',
     human: 'High complexity (≥ 0.7). Always routed to a human expert, regardless of supply state.',
   }
@@ -1651,7 +1651,7 @@ const PIPELINE_NODES = [
   { id: 'incentive', label: 'Incentive Engine',      sub: 'Supply-side response', color: '#22c55e', icon: '💸',
     desc: 'Push to active, scheduled, and offline experts simultaneously. Revenue share boost, rating multiplier, priority badge. Auto-stop fires the moment the barometer returns to Green.' },
   { id: 'router',    label: 'AI Router',             sub: 'Routing layer',        color: '#ec4899', icon: '🤖',
-    desc: 'NLP classifies every queued session by complexity. Standard queries route to the AI agent, high-complexity to human queue by ERS score. Mental health: always human, no exceptions.' },
+    desc: 'NLP classifies every queued session by complexity. Standard queries route to the AI companion, high-complexity to human queue by ERS score. Mental health: always human, no exceptions.' },
 ]
 
 function PipelineFlow() {
@@ -2534,7 +2534,7 @@ export default function Page() {
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>AI or human? The routing decision</h2>
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 40 }}>
-            When supply is under pressure, you can&apos;t route every customer to a human expert, there aren&apos;t enough. The router decides which sessions go to the AI agent and which go to the expert queue, based on four signals: supply health, query complexity, customer tier, and category. One rule overrides all of them.
+            When supply is under pressure, you can&apos;t route every customer to a human expert, there aren&apos;t enough. The router decides which sessions go to the AI companion and which go to the expert queue, based on four signals: supply health, query complexity, customer tier, and category. One rule overrides all of them.
           </p>
           <div style={{ background: 'rgba(6,182,212,0.04)', borderLeft: '3px solid #06b6d4', borderRadius: '0 10px 10px 0', padding: '16px 20px', marginBottom: 24 }}>
             <div style={{ fontSize: '0.68rem', color: '#06b6d4', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>The rule I would not compromise on</div>
@@ -2544,7 +2544,7 @@ export default function Page() {
           </div>
           <RoutingMatrix />
           <SessionDistribution />
-          {/* Joy connection */}
+          {/* AI companion connection */}
           <div style={{ marginTop: 24, padding: '20px 24px', background: 'rgba(236,72,153,0.06)', border: '1px solid rgba(236,72,153,0.22)', borderRadius: 12 }}>
             <div style={{ fontWeight: 600, color: '#ec4899', fontSize: '0.9rem', marginBottom: 8 }}>This logic shaped how the AI routing layer was designed</div>
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>

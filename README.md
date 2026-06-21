@@ -2,7 +2,7 @@
 
 **Equilibrium** — an open-source real-time demand-supply intelligence engine for two-sided marketplaces.
 
-Built from first principles for [Coto](https://coto.world) (Singapore, 2024) — a live expert marketplace across wellness, mental health, astrology, financial coaching, and relationship coaching. Coto went on to complete 3M+ consultations and ship Joy, an AI companion trained on real expert conversations. This is the operational intelligence layer that made that scale manageable, open-sourced so any marketplace operator can start from where I left off.
+Built from first principles for an on-demand expert marketplace — a live marketplace across wellness, mental health, astrology, financial coaching, and relationship coaching. The marketplace went on to complete 3M+ consultations and ship an AI companion trained on real expert conversations. This is the operational intelligence layer that made that scale manageable, open-sourced so any marketplace operator can start from where I left off.
 
 **Live:** [when-demand-exceeds-supply.vercel.app](https://when-demand-exceeds-supply.vercel.app)  
 **Portfolio:** [Wahid Tawsif Ratul](https://github.com/ratul003)
@@ -37,7 +37,7 @@ Fires tiered notification payloads on state change:
 - **Auto-stop**: pauses automatically when supply recovers. No manual intervention.
 
 ### 4. AI Escalation Router
-Rules-based routing for every incoming session — AI companion or human expert. Four signals: supply health, NLP complexity (0–1), customer tier, category. Hard override rules for sensitive categories (mental health crisis: always human, no exceptions). Informed by Coto's Joy → Expert escalation architecture.
+Rules-based routing for every incoming session — AI companion or human expert. Four signals: supply health, NLP complexity (0–1), customer tier, category. Hard override rules for sensitive categories (mental health crisis: always human, no exceptions). Informed by the marketplace's AI companion → Expert escalation architecture.
 
 ### 5. Operator Dashboard
 WebSocket-pushed live panels: demand (unique visitors, chat requests, sentiment score), supply (utilisation, idle time, fill rate), matching (assigned / waiting / in session, cohort breakdown). Five visualisations: category demand heatmap, delay barometer, hourly D&S trend, sentiment chart, supply availability calendar.
@@ -69,7 +69,7 @@ Everything lives in one YAML file:
 
 ```yaml
 equilibrium:
-  preset: coto_wellness  # or telehealth, tutoring, freelance, custom
+  preset: wellness  # or telehealth, tutoring, freelance, custom
 
   categories:
     - name: astrology
@@ -102,7 +102,7 @@ equilibrium:
 
 | Preset | Vertical | Key difference |
 |---|---|---|
-| `coto_wellness` | Expert wellness (origin) | Sentiment-calibrated · mental health always human |
+| `wellness` | Expert wellness (origin) | Sentiment-calibrated · mental health always human |
 | `telehealth` | Healthcare | Stricter thresholds (15/30 min) · credential-weighted |
 | `tutoring` | EdTech | Looser thresholds (45/90 min) · subject-specific incentives |
 | `freelance` | Professional services | Response-time-weighted · no always-human categories |
@@ -143,7 +143,7 @@ python analytics/demand_supply_simulation.py
 
 ## Related
 
-**Project 6 — Rank, Reward, Retain:** The Expert Readiness Score (ERS) built for Coto feeds directly into Equilibrium's routing layer. Top-ERS experts are reserved for highest-urgency escalations. [→ github.com/ratul003/rank-reward-retain](https://github.com/ratul003/rank-reward-retain)
+**Project 6 — Rank, Reward, Retain:** The Expert Readiness Score (ERS) built for the marketplace feeds directly into Equilibrium's routing layer. Top-ERS experts are reserved for highest-urgency escalations. [→ github.com/ratul003/rank-reward-retain](https://github.com/ratul003/rank-reward-retain)
 
 ---
 
@@ -156,4 +156,4 @@ python analytics/demand_supply_simulation.py
 
 ---
 
-Written case study — all system design, thresholds, incentive logic, and architecture described from first-hand freelance work at Coto (Singapore, 2024). No internal proprietary data reproduced. Methodology and design are original and publishable.
+Written case study — all system design, thresholds, incentive logic, and architecture described from first-hand freelance work at an on-demand expert marketplace. No internal proprietary data reproduced. Methodology and design are original and publishable.

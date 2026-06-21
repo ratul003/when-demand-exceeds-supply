@@ -40,7 +40,7 @@ STATE_ICONS = {BarometerState.GREEN: "🟢", BarometerState.YELLOW: "🟡", Baro
 
 @dataclass
 class PlatformConfig:
-    name: str = "coto_wellness"
+    name: str = "wellness"
     delay_yellow_min: float = 30.0
     delay_red_min: float    = 60.0
     dropout_yellow_pct: float = 5.0

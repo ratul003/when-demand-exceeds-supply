@@ -54,9 +54,9 @@ class HealthScore:
     timestamp_min: float = 0.0
 
 
-# ── Default category configs (Coto wellness preset) ───────────────────────────
+# ── Default category configs (wellness preset) ────────────────────────────────
 
-COTO_WELLNESS_CATEGORIES: list[CategoryThresholds] = [
+WELLNESS_CATEGORIES: list[CategoryThresholds] = [
     CategoryThresholds("astrology",          delay_yellow=30, delay_red=60, dropout_yellow=5,  dropout_red=10),
     CategoryThresholds("mental_health",      delay_yellow=20, delay_red=40, dropout_yellow=3,  dropout_red=7),
     CategoryThresholds("relationship",       delay_yellow=30, delay_red=60, dropout_yellow=5,  dropout_red=10),
@@ -165,7 +165,7 @@ def adjust_thresholds_by_sentiment(
 # ── Demo ─────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    engine = HealthScoringEngine(COTO_WELLNESS_CATEGORIES)
+    engine = HealthScoringEngine(WELLNESS_CATEGORIES)
 
     test_signals = [
         DemandSignal("astrology",          delay_time_min=18,  dropout_rate_pct=3.2,  queue_depth=4,  sentiment_score=0.4,  timestamp_min=0),
@@ -178,7 +178,7 @@ def main() -> None:
 
     state_icons = {BarometerState.GREEN: "🟢", BarometerState.YELLOW: "🟡", BarometerState.RED: "🔴"}
 
-    print("Health Scoring Engine — Coto Wellness Preset\n")
+    print("Health Scoring Engine — Wellness Preset\n")
     print(f"{'Category':<22} {'T+min':>5}  {'Delay':>6}  {'Dropout':>7}  {'State':<8}  Trigger")
     print("-" * 72)
 
@@ -192,7 +192,7 @@ def main() -> None:
         )
 
     print("\n— Sentiment calibration example —")
-    base = COTO_WELLNESS_CATEGORIES[0]  # astrology
+    base = WELLNESS_CATEGORIES[0]  # astrology
     history_negative = [-0.3, -0.2, -0.1, 0.0, -0.4]
     adjusted = adjust_thresholds_by_sentiment(base, history_negative)
     print(f"Astrology base thresholds:     Yellow={base.delay_yellow}m / Red={base.delay_red}m")
