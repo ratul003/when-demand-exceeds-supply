@@ -1380,7 +1380,7 @@ function ThresholdHeatmap() {
 
   return (
     <div style={{ marginTop: 28 }}>
-      <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Barometer state by delay × dropout — hover any cell</div>
+      <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Barometer state by delay × dropout: hover any cell</div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div style={{ flex: 1, minWidth: 280 }}>
           {/* Column headers */}
@@ -1474,7 +1474,7 @@ function ExpertFunnel() {
 
   return (
     <div style={{ marginTop: 32, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px' }}>
-      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Expert response funnel — from push to online</div>
+      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Expert response funnel: from push to online</div>
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
         {(['yellow', 'red'] as const).map(t => (
           <button key={t} onClick={() => setTier(t)} style={{
@@ -1572,7 +1572,7 @@ function SessionDistribution() {
 
   return (
     <div style={{ marginTop: 32, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px' }}>
-      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Session complexity distribution — what the router sees</div>
+      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Session complexity distribution: what the router sees</div>
       <p style={{ fontSize: '0.84rem', color: '#94a3b8', lineHeight: 1.65, marginBottom: 20, maxWidth: 600 }}>
         Every incoming session is scored 0 to 1 by the NLP complexity model. The score determines where it routes: instant AI, human queue, or supply-state-dependent. Hover any bar to see its routing decision.
       </p>
@@ -1897,19 +1897,19 @@ function SurgeMath() {
 
 // ── DemandTimelineChart ────────────────────────────────────────────────────────
 const TIMELINE_FULL: [number, number, number, string, string][] = [
-  [0,  22,  2,  'green',  'Platform idle — healthy supply-demand ratio, no action needed.'],
+  [0,  22,  2,  'green',  'Platform idle. Healthy supply-demand ratio, no action needed.'],
   [5,  25,  3,  'green',  'Light evening traffic. Barometer reads green across all categories.'],
   [10, 28,  3,  'green',  'Steady climb. Queue depth nominal. No intervention required.'],
-  [15, 30,  4,  'green',  'Traffic growing. Health engine monitoring — still within threshold.'],
-  [20, 32,  4,  'green',  'Volume up 45% from baseline. Barometer still green — buffer intact.'],
+  [15, 30,  4,  'green',  'Traffic growing. Health engine monitoring, still within threshold.'],
+  [20, 32,  4,  'green',  'Volume up 45% from baseline. Barometer still green, buffer intact.'],
   [25, 35,  5,  'green',  'First sustained uptick. Pre-surge monitoring window opens.'],
   [30, 38,  5,  'green',  'Continued growth. Health engine flags: "approaching yellow threshold."'],
-  [35, 42,  7,  'green',  'Late green — queue growing faster than visitors. Transition imminent.'],
+  [35, 42,  7,  'green',  'Late green. Queue growing faster than visitors. Transition imminent.'],
   [38, 58, 12, 'yellow', 'Yellow threshold crossed. Soft incentive push sent to online experts.'],
   [40, 74, 16, 'yellow', 'Queue depth: 16. Second soft push. Acceptance rate tracking at 34%.'],
   [42, 95, 22,  'red',   'Red state triggered. Surge pricing active. Expert bonuses: +$4 per session.'],
   [44,112, 28,  'red',   'Peak: 112 concurrent visitors. Queue depth 28. Surge multiplier: 1.8×.'],
-  [46,108, 25,  'red',   'Plateau. Surge is self-financing — added session revenue covers bonus cost.'],
+  [46,108, 25,  'red',   'Plateau. Surge is self-financing: added session revenue covers bonus cost.'],
   [48, 91, 18, 'yellow', 'Supply responding. Queue falling. Surge multiplier steps down to 1.4×.'],
   [50, 70, 11, 'yellow', 'Recovery underway. Incentive tier drops. Yellow push suspended.'],
   [52, 55,  6, 'green',  'Auto-stop fires. Surge halted. Queue cleared below threshold.'],
@@ -1920,7 +1920,7 @@ const TIMELINE_FULL: [number, number, number, string, string][] = [
 
 const TIMELINE_ANNOTATIONS = [
   { minute: 38, label: 'Yellow threshold', color: '#f59e0b' },
-  { minute: 42, label: 'Red — surge fires', color: '#ef4444' },
+  { minute: 42, label: 'Red, surge fires', color: '#ef4444' },
   { minute: 44, label: 'Peak demand', color: '#ef4444' },
   { minute: 52, label: 'Auto-stop', color: '#22c55e' },
 ]
@@ -1984,7 +1984,7 @@ function DemandTimelineChart() {
             Demand timeline · simulated evening spike (21:00 – 22:00)
           </div>
           <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.6, margin: 0, maxWidth: 560 }}>
-            Background bands show barometer state in real time. Hover any data point — or hit Replay to watch the spike unfold from scratch.
+            Background bands show barometer state in real time. Hover any data point, or hit Replay to watch the spike unfold from scratch.
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, flexWrap: 'wrap' }}>
@@ -2155,7 +2155,7 @@ function DemandTimelineChart() {
 
       {/* Legend */}
       <div style={{ display: 'flex', gap: 20, marginTop: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-        {[['green','#22c55e','Healthy — no action'],['yellow','#f59e0b','Yellow push sent'],['red','#ef4444','Surge active']].map(([s, color, label]) => (
+        {[['green','#22c55e','Healthy, no action'],['yellow','#f59e0b','Yellow push sent'],['red','#ef4444','Surge active']].map(([s, color, label]) => (
           <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: '#64748b' }}>
             <div style={{ width: 10, height: 10, borderRadius: 3, background: color as string }} />
             {label}
@@ -2213,7 +2213,7 @@ export default function Page() {
             <span style={{ color: CYAN }}>in an Online Marketplace</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: '#94a3b8', lineHeight: 1.8, maxWidth: 700, marginBottom: 40 }}>
-            I built the live operations framework for a two-sided expert marketplace from the ground up. When demand spikes and supply can&apos;t keep pace — customers queue, experts miss the signal, and the platform absorbs the cost in silence. I designed a system that detects the imbalance in real time, responds with tiered incentives that pay for themselves through surge pricing, and routes every session intelligently based on complexity and expert quality. Five modules. One automated loop. No engineering team when I started.
+            I built the live operations framework for a two-sided expert marketplace from the ground up. When demand spikes and supply can&apos;t keep pace, customers queue, experts miss the signal, and the platform absorbs the cost in silence. I designed a system that detects the imbalance in real time, responds with tiered incentives that pay for themselves through surge pricing, and routes every session intelligently based on complexity and expert quality. Five modules. One automated loop. No engineering team when I started.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {[['3M+', 'App downloads'], ['300+', 'Vetted experts · 30% acceptance'], ['5', 'Core modules'], ['Self-financing', 'Surge model'], ['4', 'Marketplace presets']].map(([v, l]) => (
@@ -2494,7 +2494,7 @@ export default function Page() {
           </div>
           <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', marginBottom: 12, letterSpacing: '-0.01em' }}>Surge Pricing: the money that funds its own response</h2>
           <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 720, marginBottom: 36 }}>
-            Surge fees collected from customers fund the expert bonuses on the supply side. The platform never carries the cost of a supply response. At any scale, any severity — the system pays for itself.
+            Surge fees collected from customers fund the expert bonuses on the supply side. The platform never carries the cost of a supply response. At any scale, any severity, the system pays for itself.
           </p>
           {/* Self-financing flow */}
           <div style={{ marginBottom: 36 }}>
@@ -2511,7 +2511,7 @@ export default function Page() {
           <div style={{ padding: '18px 22px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12 }}>
             <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>My design decision</div>
             <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.65, margin: 0 }}>
-              I designed this to be self-financing from day one — not as a constraint, but a survival condition. If it ever costs the platform money to run, operators will switch it off the moment they need it most. Funding the bonuses from the surge fees that caused them means the system is always affordable. Even during the worst spikes.
+              I designed this to be self-financing from day one, not as a constraint, but a survival condition. If it ever costs the platform money to run, operators will switch it off the moment they need it most. Funding the bonuses from the surge fees that caused them means the system is always affordable. Even during the worst spikes.
             </p>
           </div>
         </div>
