@@ -59,3 +59,22 @@ main {
 /* Responsive containment: wide tables/code scroll inside their own box, never the page */
 table { display: block; width: max-content; max-width: 100%; overflow-x: auto; }
 pre { max-width: 100%; overflow-x: auto; }
+
+/* Incentive-engine notification block: 1fr + fixed 260px phone mockup on desktop.
+   On phone the fixed track + gap pushes past the viewport, so stack to one column
+   and let the phone mockup center and shrink within the column. Desktop unchanged. */
+@media (max-width: 767px) {
+  .notif-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .notif-phone {
+    position: static !important;
+    justify-self: center;
+    width: 100%;
+    max-width: 260px;
+  }
+  .notif-phone > div {
+    max-width: 100% !important;
+    margin: 0 auto;
+  }
+}

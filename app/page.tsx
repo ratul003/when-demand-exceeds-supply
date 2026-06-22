@@ -986,7 +986,7 @@ function NotificationMockup() {
   }
   const n = notifications[notifState]
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 32, alignItems: 'start' }}>
+    <div className="notif-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 32, alignItems: 'start' }}>
       {/* Left: toggles + payload */}
       <div>
         <div style={{ display: 'flex', gap: 10, marginBottom: 22 }}>
@@ -1029,7 +1029,7 @@ auto_stop:
         </div>
       </div>
       {/* Right: phone mockup */}
-      <div style={{ position: 'sticky', top: 80 }}>
+      <div className="notif-phone" style={{ position: 'sticky', top: 80 }}>
         <div style={{ background: '#111122', borderRadius: 28, padding: '14px', border: '2px solid rgba(255,255,255,0.1)', boxShadow: '0 24px 60px rgba(0,0,0,0.6)', maxWidth: 260 }}>
           {/* Status bar */}
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', color: '#475569', marginBottom: 14, padding: '0 4px' }}>
@@ -1140,8 +1140,8 @@ function DashboardPreview() {
   ]
   return (
     <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
-      <div style={{ padding: '10px 18px', background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{ display: 'flex', gap: 8 }}>
+      <div style={{ padding: '10px 18px', background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {[['#22c55e', 'Green'], ['#f59e0b', 'Yellow'], ['#ef4444', 'Red']].map(([c, l]) => (
             <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
