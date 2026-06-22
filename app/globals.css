@@ -55,3 +55,7 @@ main {
 }
 
 ::selection { background: rgba(6, 182, 212, 0.25); color: #fff; }
+
+/* Responsive containment: wide tables/code scroll inside their own box, never the page */
+table { display: block; width: max-content; max-width: 100%; overflow-x: auto; }
+pre { max-width: 100%; overflow-x: auto; }

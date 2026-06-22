@@ -2013,7 +2013,7 @@ function DemandTimelineChart() {
       </div>
 
       {/* Main SVG chart */}
-      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} width="100%" style={{ overflow: 'visible', display: 'block', cursor: 'crosshair' }}>
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} width="100%" style={{ overflow: 'visible', display: 'block', cursor: 'crosshair', maxWidth: '100%', height: 'auto' }}>
         <defs>
           <linearGradient id="tlGrad2" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={CYAN} stopOpacity="0.22" />
@@ -2191,7 +2191,7 @@ export default function Page() {
             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9' }}>Wahid Tawsif Ratul</span>
             <span style={{ fontSize: '0.7rem', color: CYAN }}>Data Scientist · Product Manager</span>
           </div>
-          <nav className="hidden md:flex" style={{ marginLeft: 'auto', display: 'flex', gap: 28 }}>
+          <nav className="hidden md:flex" style={{ marginLeft: 'auto', gap: 28 }}>
             {[['Barometer', '#barometer'], ['Surge Pricing', '#surge'], ['AI Routing', '#routing'], ['Dashboard', '#dashboard'], ['Configuration', '#presets']].map(([l, h]) => (
               <a key={l} href={h} style={{ fontSize: '0.82rem', color: '#64748b', textDecoration: 'none', transition: 'color 0.15s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = CYAN)} onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}>{l}</a>
