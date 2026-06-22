@@ -2214,12 +2214,14 @@ export default function Page() {
       </header>
 
       {/* ── Hero ── */}
-      <section style={{ position: 'relative', padding: '100px 32px 80px', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', padding: '100px 32px 80px', overflow: 'hidden', isolation: 'isolate' }}>
+        <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: -1, backgroundImage: 'url(/hero.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.4 }} />
+        <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'linear-gradient(90deg, #0a0a0f 0%, rgba(10,10,15,0.80) 46%, rgba(10,10,15,0.40) 100%), linear-gradient(180deg, rgba(10,10,15,0.30) 0%, rgba(10,10,15,0.92) 100%)' }} />
         <div style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 500, background: `radial-gradient(ellipse, ${CYAN}14 0%, transparent 68%)`, pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${CYAN}12`, border: `1px solid ${CYAN}30`, borderRadius: 20, padding: '6px 14px', marginBottom: 32 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px #22c55e' }} />
-            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Expert Marketplace · Live Operations</span>
+            <span style={{ fontSize: '0.75rem', color: CYAN, letterSpacing: '0.05em' }}>Expert Marketplace · Supply Intelligence</span>
           </div>
           <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.12, marginBottom: 28, letterSpacing: '-0.02em' }}>
             When Demand Exceeds Supply<br />
