@@ -2191,7 +2191,7 @@ export default function Page() {
             <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9', whiteSpace: 'nowrap' }}>Wahid Tawsif Ratul</span>
             <span className="hidden sm:inline" style={{ fontSize: '0.7rem', color: CYAN, whiteSpace: 'nowrap' }}>Data Scientist · Product Manager</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 16, flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', flexShrink: 0 }}>
             {[
               { label: 'Portfolio', href: 'https://wahid-ratul.vercel.app', path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z' },
               { label: 'LinkedIn', href: 'https://linkedin.com/in/wahidratul112296', path: 'M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05C20.5 8.59 22 11 22 14.4V21h-4v-5.86c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9z' },
@@ -2210,12 +2210,6 @@ export default function Page() {
               </a>
             ))}
           </div>
-          <nav className="hidden md:flex" style={{ marginLeft: 'auto', gap: 28 }}>
-            {[['Barometer', '#barometer'], ['Surge Pricing', '#surge'], ['AI Routing', '#routing'], ['Dashboard', '#dashboard'], ['Configuration', '#presets']].map(([l, h]) => (
-              <a key={l} href={h} style={{ fontSize: '0.82rem', color: '#64748b', textDecoration: 'none', transition: 'color 0.15s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = CYAN)} onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}>{l}</a>
-            ))}
-          </nav>
         </div>
       </header>
 
