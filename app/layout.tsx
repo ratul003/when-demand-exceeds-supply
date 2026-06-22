@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,7 +27,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">{children}
+        <Analytics />
+      </body>
     </html>
   );
 }
