@@ -2187,9 +2187,28 @@ export default function Page() {
       {/* ── Sticky nav ── */}
       <header style={{ position: 'sticky', top: 0, zIndex: 40, background: 'rgba(10,10,15,0.88)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '0 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', height: 60 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9' }}>Wahid Tawsif Ratul</span>
-            <span style={{ fontSize: '0.7rem', color: CYAN }}>Data Scientist · Product Manager</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0 }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9', whiteSpace: 'nowrap' }}>Wahid Tawsif Ratul</span>
+            <span className="hidden sm:inline" style={{ fontSize: '0.7rem', color: CYAN, whiteSpace: 'nowrap' }}>Data Scientist · Product Manager</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 16, flexShrink: 0 }}>
+            {[
+              { label: 'Portfolio', href: 'https://wahid-ratul.vercel.app', path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z' },
+              { label: 'LinkedIn', href: 'https://linkedin.com/in/wahidratul112296', path: 'M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05C20.5 8.59 22 11 22 14.4V21h-4v-5.86c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9z' },
+              { label: 'GitHub', href: 'https://github.com/ratul003', path: 'M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z' },
+              { label: 'Medium', href: 'https://medium.com/@wahidtratul', path: 'M2.5 5.5l1.7 2v9.7l-2 2.3h5.4l-2-2.3V8.4l4.9 11.1h.1l4.3-10.5v8.2l-1.3 1.3v.2h6.4v-.2l-1.3-1.3V6.9l1.3-1.3v-.1h-4.5L13 13.9 9.3 5.5z' },
+              { label: 'Email', href: 'mailto:wahidtratul@gmail.com', path: '' },
+            ].map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
+                style={{ color: '#64748b', display: 'inline-flex', transition: 'color 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = CYAN)} onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}>
+                {s.label === 'Email' ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d={s.path} /></svg>
+                )}
+              </a>
+            ))}
           </div>
           <nav className="hidden md:flex" style={{ marginLeft: 'auto', gap: 28 }}>
             {[['Barometer', '#barometer'], ['Surge Pricing', '#surge'], ['AI Routing', '#routing'], ['Dashboard', '#dashboard'], ['Configuration', '#presets']].map(([l, h]) => (
