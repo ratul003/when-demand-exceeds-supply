@@ -143,7 +143,9 @@ const browser = await chromium.launch({
 });
 const context = await browser.newContext({
   viewport: { width: 1920, height: 1080 },
-  deviceScaleFactor: 1,
+  // Rasterise at 2x. The camera scales the page up, and a 1x raster scaled
+  // by the compositor is what made the earlier cut look soft.
+  deviceScaleFactor: 2,
   recordVideo: { dir: OUT, size: { width: 1920, height: 1080 } },
 });
 const page = await context.newPage();

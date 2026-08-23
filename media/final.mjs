@@ -1,0 +1,17 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ channel: 'chrome' });
+const p = await b.newPage({ viewport: { width: 1000, height: 1150 }, deviceScaleFactor: 1.6 });
+await p.goto('https://wahid-ratul.vercel.app/writing/you-cannot-surge-price-a-therapist', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1200);
+await p.screenshot({ path: 'final-article.png' });
+const sx = await p.evaluate(() => { window.scrollTo(9999, 0); return window.scrollX; });
+console.log('article h-overflow:', sx);
+await p.setViewportSize({ width: 390, height: 844 });
+await p.waitForTimeout(600);
+const sxm = await p.evaluate(() => { window.scrollTo(9999, 0); return window.scrollX; });
+console.log('article h-overflow @390:', sxm);
+await p.goto('https://when-demand-exceeds-supply.vercel.app/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1000);
+const sxp = await p.evaluate(() => { window.scrollTo(9999, 0); return window.scrollX; });
+console.log('project h-overflow @390:', sxp);
+await b.close();

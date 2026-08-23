@@ -4,20 +4,24 @@
 Steps: find the sync flash and trim to it, transcode to CFR h264, synthesise a
 music bed with risers under each chapter card, duck the bed under the voice, mux.
 """
-import json, os, subprocess
+import json, os, subprocess, sys
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FFMPEG = "/opt/homebrew/bin/ffmpeg"
 FFPROBE = "/opt/homebrew/bin/ffprobe"
-RAW = os.path.join(HERE, "raw.webm")
-VO = os.path.join(HERE, "vo", "narration.mp3")
-BED = os.path.join(HERE, "bed.wav")
-MIX = os.path.join(HERE, "mix.m4a")
-VID = os.path.join(HERE, "video.mp4")
-OUT = os.path.join(HERE, "film.mp4")
 
-meta = json.load(open(os.path.join(HERE, "beats.json")))
+# `python3 build_film.py short` builds the 4:5 social cut from the -short files.
+SFX = "-" + sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else ""
+RAW = os.path.join(HERE, f"raw{SFX}.webm")
+VO = os.path.join(HERE, f"vo{SFX}", "narration.mp3")
+BED = os.path.join(HERE, f"bed{SFX}.wav")
+MIX = os.path.join(HERE, f"mix{SFX}.m4a")
+VID = os.path.join(HERE, f"video{SFX}.mp4")
+OUT = os.path.join(HERE, f"film{SFX}.mp4")
+POSTER = os.path.join(HERE, f"poster{SFX}.jpg")
+
+meta = json.load(open(os.path.join(HERE, f"beats{SFX}.json")))
 T = meta["total"]
 CARDS = [b[0] for b in meta["beats"] if b[1] == "card"]
 
@@ -33,14 +37,18 @@ def dur(p):
 
 
 # ── 1. Locate the sync flash ──────────────────────────────────────────────────
+# The marker is a full-frame magenta flash. Matching on its colour signature
+# rather than on brightness is what keeps it from being confused with the white
+# page the browser paints before the site's own background lands.
 probe = subprocess.run([FFMPEG, "-v", "error", "-i", RAW, "-t", "25",
-                        "-vf", "fps=60,scale=16:9,format=gray",
+                        "-vf", "fps=60,scale=16:9,format=rgb24",
                         "-f", "rawvideo", "-"], capture_output=True, check=True)
-frames = np.frombuffer(probe.stdout, dtype=np.uint8).reshape(-1, 9 * 16)
-means = frames.mean(axis=1)
-hits = np.flatnonzero(means > 200)
+frames = np.frombuffer(probe.stdout, dtype=np.uint8).reshape(-1, 9 * 16, 3)
+r, g, b = (frames[:, :, i].mean(axis=1) for i in range(3))
+hits = np.flatnonzero((r > 190) & (b > 190) & (g < 90))
 if len(hits) == 0:
-    raise SystemExit(f"no sync flash found (max brightness {means.max():.0f})")
+    raise SystemExit("no magenta sync flash found; was the capture made with the "
+                     "current director.js?")
 # The director flashes, waits 130ms for the flash to clear, then waits 500ms
 # more before beat zero. Trim to that instant so picture and voice line up.
 head = hits[0] / 60.0 + 0.63
@@ -55,7 +63,7 @@ if os.environ.get("SKIP_VIDEO") and os.path.exists(VID):
 else:
   run([FFMPEG, "-y", "-ss", f"{head:.3f}", "-i", RAW, "-t", f"{T:.3f}",
        "-vf", f"setpts=PTS-STARTPTS,fps=30,format=yuv420p,fade=t=out:st={T - 1.6:.2f}:d=1.6",
-       "-c:v", "libx264", "-preset", "veryslow", "-crf", "26",
+       "-c:v", "libx264", "-preset", "veryslow", "-crf", "21",
        "-an", "-movflags", "+faststart", VID])
 print(f"video.mp4  {dur(VID):.1f}s")
 
@@ -116,8 +124,8 @@ run([FFMPEG, "-y", "-i", VID, "-i", MIX, "-c:v", "copy", "-c:a", "copy",
 
 # Poster: the queue at 5.6x, where the barometer has gone red. Richer than the
 # cold open, and it shows the captions burned in.
-run([FFMPEG, "-y", "-i", OUT, "-ss", "41.4", "-frames:v", "1", "-q:v", "3",
-     os.path.join(HERE, "poster.jpg")])
+poster_at = "12.5" if SFX else "41.4"
+run([FFMPEG, "-y", "-i", OUT, "-ss", poster_at, "-frames:v", "1", "-q:v", "3", POSTER])
 
 size = os.path.getsize(OUT) / 1e6
-print(f"\nfilm.mp4   {dur(OUT):.1f}s   {size:.1f} MB")
+print(f"\n{os.path.basename(OUT)}   {dur(OUT):.1f}s   {size:.1f} MB")

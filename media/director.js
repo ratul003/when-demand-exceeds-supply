@@ -17,7 +17,15 @@ window.FILM = (function () {
   const stage = document.createElement('div');
   stage.id = 'film-stage';
   while (document.body.firstChild) stage.appendChild(document.body.firstChild);
-  document.body.appendChild(stage);
+
+  // In the 4:5 social frame the page is clipped into a centred band, with a
+  // headline above it and room for big captions below. A wide UI component
+  // dropped into a tall frame otherwise leaves two thirds of the shot showing
+  // unrelated page, which reads as clutter in a feed.
+  const win = document.createElement('div');
+  win.id = 'film-window';
+  win.appendChild(stage);
+  document.body.appendChild(win);
 
   // Sticky/fixed chrome fights a transformed ancestor, and the film supplies its
   // own framing anyway.
@@ -30,7 +38,11 @@ window.FILM = (function () {
   css.textContent = `
     html, body { overflow: hidden !important; height: 100%; margin: 0; background: #06060b; }
     * { scroll-behavior: auto !important; }
+    #film-window { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; overflow: hidden; }
     #film-stage { position: absolute; top: 0; left: 0; width: 100vw; transform-origin: 0 0; }
+    #film-band { position: absolute; left: 0; top: 0; width: 100%; display: flex;
+      flex-direction: column; justify-content: center; padding: 0 54px; opacity: 0;
+      transition: opacity .5s; }
     #film-ui { position: fixed; inset: 0; z-index: 2147483647; pointer-events: none;
                font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
     #film-vignette { position: absolute; inset: 0;
@@ -74,12 +86,43 @@ window.FILM = (function () {
     <div id="film-cursor"></div><div id="film-ripple"></div>
     <div id="film-chapter"><span class="n"></span><span class="r"></span><span class="l"></span></div>
     <div id="film-mark"><div class="a">Wahid Tawsif Ratul</div><div class="b">Product · Data Science</div></div>
+    <div id="film-band">
+      <div style="font-size:15px;letter-spacing:.3em;color:${CYAN};font-weight:800">EQUILIBRIUM</div>
+      <div style="font-size:46px;font-weight:800;color:#f1f5f9;letter-spacing:-0.025em;line-height:1.1;margin-top:14px">
+        You cannot surge-price<br>a therapist.</div>
+      <div style="font-size:17px;color:#64748b;margin-top:16px">Wahid Tawsif Ratul · Product &amp; Data Science</div>
+    </div>
     <div id="film-caption"></div>
     <div id="film-veil"></div>
     <div id="film-scene"></div>
     <div id="film-card"></div>
     <div id="film-bar"></div>`;
   document.body.appendChild(ui);
+
+  // A 4:5 social frame is barely half the width of the film frame, so type has
+  // to GROW rather than scale down with it, or captions are unreadable on a
+  // phone. K scales the display type; captions are set outright.
+  const SOCIAL = vw() < 1400;
+  const K = SOCIAL ? 0.60 : 1;
+
+  /** The rectangle the camera frames into. Full viewport for the film, a
+   *  centred band for the social cut. */
+  const FRAME = SOCIAL ? { top: 300, h: 660 } : { top: 0, h: vh() };
+  win.style.top = FRAME.top + 'px';
+  win.style.height = FRAME.h + 'px';
+
+  if (SOCIAL) {
+    const s = document.createElement('style');
+    s.textContent = `
+      #film-caption { font-size: 34px; bottom: 118px; max-width: 92%;
+                      padding: 0; border: none; background: none; backdrop-filter: none;
+                      line-height: 1.34; color: #f1f5f9; font-weight: 500; }
+      #film-band { height: 300px; }
+      #film-chapter, #film-mark { display: none; }
+      #film-bar { height: 5px; }
+    `;
+    document.head.appendChild(s);
+  }
 
   const $ = (id) => document.getElementById(id);
   const veil = $('film-veil'), scene = $('film-scene'), card = $('film-card');
@@ -113,8 +156,10 @@ window.FILM = (function () {
     const el = typeof sel === 'string' ? document.querySelector(sel) : sel;
     if (!el) { console.warn('[film] missing target', sel); return null; }
     const r = el.getBoundingClientRect();
+    // Rects are viewport-relative; the stage lives inside the framing window,
+    // so subtract the window's offset to get true stage coordinates.
     return {
-      x: (r.left + cam.x) / cam.s, y: (r.top + cam.y) / cam.s,
+      x: (r.left + cam.x) / cam.s, y: (r.top - FRAME.top + cam.y) / cam.s,
       w: r.width / cam.s, h: r.height / cam.s,
     };
   }
@@ -124,10 +169,10 @@ window.FILM = (function () {
     if (!r) return;
     const fill = opts.fill ?? 0.82;
     const maxS = opts.maxScale ?? 1.9;
-    let s = Math.min((vw() * fill) / r.w, (vh() * (opts.fillY ?? 0.78)) / r.h);
+    let s = Math.min((vw() * fill) / r.w, (FRAME.h * (opts.fillY ?? 0.78)) / r.h);
     s = Math.max(opts.minScale ?? 0.75, Math.min(maxS, s)) * (opts.scale ?? 1);
     const cx = r.x + r.w / 2, cy = r.y + r.h / 2 + (opts.offsetY ?? 0);
-    const to = { x: cx * s - vw() / 2, y: cy * s - vh() / 2, s };
+    const to = { x: cx * s - vw() / 2, y: cy * s - FRAME.h / 2, s };
     const from = { ...cam };
     tween(opts.dur ?? 1300, (e) => {
       cam.x = from.x + (to.x - from.x) * e;
@@ -212,16 +257,19 @@ window.FILM = (function () {
       chapEl.style.opacity = '1';
     },
 
-    mark: (on) => { markEl.style.opacity = on ? '1' : '0'; },
+    mark: (on) => {
+      markEl.style.opacity = on ? '1' : '0';
+      $('film-band').style.opacity = on ? '1' : '0';
+    },
 
     veil: (to, dur) => fade(veil, to, dur),
 
     /** Full-screen chapter card. */
     card(kicker, title, sub, hold = 1500) {
       card.innerHTML = `
-        <div style="font-size:13px;letter-spacing:.34em;color:${CYAN};font-weight:800;margin-bottom:22px">${kicker}</div>
-        <div style="font-size:66px;font-weight:800;color:#f1f5f9;letter-spacing:-0.028em;text-align:center;line-height:1.06">${title}</div>
-        ${sub ? `<div style="font-size:22px;color:#8ea0b5;margin-top:20px;text-align:center;max-width:760px;line-height:1.45">${sub}</div>` : ''}`;
+        <div style="font-size:${Math.round(13 / K * 0.72)}px;letter-spacing:.34em;color:${CYAN};font-weight:800;margin-bottom:22px">${kicker}</div>
+        <div style="font-size:${Math.round(66 * K)}px;font-weight:800;color:#f1f5f9;letter-spacing:-0.028em;text-align:center;line-height:1.06;max-width:90%">${title}</div>
+        ${sub ? `<div style="font-size:${Math.round(22 * K)}px;color:#8ea0b5;margin-top:20px;text-align:center;max-width:80%;line-height:1.45">${sub}</div>` : ''}`;
       fade(card, 1, 420);
       setTimeout(() => fade(card, 0, 520), hold);
     },
@@ -230,17 +278,17 @@ window.FILM = (function () {
     open(step) {
       if (step === 1) {
         scene.innerHTML = `
-          <div style="font-size:14px;letter-spacing:.4em;color:rgba(255,255,255,0.42);margin-bottom:44px">23:08 · ANY TUESDAY</div>
-          <div id="ko-n" style="font-size:190px;font-weight:800;color:#f1f5f9;line-height:0.9;letter-spacing:-0.045em">0</div>
-          <div style="font-size:19px;letter-spacing:.28em;color:${CYAN};margin-top:26px">PEOPLE WAITING TO TALK TO SOMEONE</div>
-          <div id="ko-rows" style="margin-top:64px;display:flex;flex-direction:column;gap:15px;align-items:center"></div>`;
+          <div style="font-size:${Math.round(14 / K * 0.78)}px;letter-spacing:.4em;color:rgba(255,255,255,0.42);margin-bottom:${Math.round(44 * K)}px">23:08 · ANY TUESDAY</div>
+          <div id="ko-n" style="font-size:${Math.round(190 * K)}px;font-weight:800;color:#f1f5f9;line-height:0.9;letter-spacing:-0.045em">0</div>
+          <div style="font-size:${Math.round(19 / K * 0.78)}px;letter-spacing:.24em;color:${CYAN};margin-top:26px;text-align:center;max-width:88%">PEOPLE WAITING TO TALK TO SOMEONE</div>
+          <div id="ko-rows" style="margin-top:${Math.round(64 * K)}px;display:flex;flex-direction:column;gap:15px;align-items:center"></div>`;
         fade(scene, 1, 700);
         const n = document.getElementById('ko-n');
         tween(2400, (e) => { n.textContent = String(Math.round(47 * e)); });
       }
       if (step === 2) {
         const row = document.createElement('div');
-        row.style.cssText = 'font-size:27px;color:#e2e8f0;opacity:0;display:flex;gap:16px;align-items:center';
+        row.style.cssText = `font-size:${Math.round(27 / K * 0.72)}px;color:#e2e8f0;opacity:0;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:92%`;
         row.innerHTML = `<span style="color:#22c55e;font-weight:800">3</span>
           <span style="color:#8ea0b5">experts online</span>
           <span style="color:#3d4a5c">·</span>
@@ -250,7 +298,7 @@ window.FILM = (function () {
       }
       if (step === 3) {
         const row = document.createElement('div');
-        row.style.cssText = 'font-size:27px;color:#e2e8f0;opacity:0;display:flex;gap:16px;align-items:center';
+        row.style.cssText = `font-size:${Math.round(27 / K * 0.72)}px;color:#e2e8f0;opacity:0;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:92%`;
         row.innerHTML = `<span style="color:#ef4444;font-weight:800">12</span>
           <span style="color:#8ea0b5">experts offline</span>
           <span style="color:#3d4a5c">·</span>
@@ -263,14 +311,14 @@ window.FILM = (function () {
 
     endcard() {
       card.innerHTML = `
-        <div style="font-size:13px;letter-spacing:.34em;color:${CYAN};font-weight:800;margin-bottom:24px">EQUILIBRIUM</div>
-        <div style="font-size:60px;font-weight:800;color:#f1f5f9;letter-spacing:-0.028em;text-align:center;line-height:1.08">
+        <div style="font-size:${Math.round(13 / K * 0.72)}px;letter-spacing:.34em;color:${CYAN};font-weight:800;margin-bottom:24px">EQUILIBRIUM</div>
+        <div style="font-size:${Math.round(60 * K)}px;font-weight:800;color:#f1f5f9;letter-spacing:-0.028em;text-align:center;line-height:1.08;max-width:90%">
           When Demand Exceeds Supply</div>
-        <div style="font-size:21px;color:#8ea0b5;margin-top:20px;text-align:center;max-width:720px;line-height:1.5">
-          A live operations layer for two-sided marketplaces. Every module in this film is playable.</div>
-        <div style="margin-top:46px;padding:13px 30px;border:1px solid ${CYAN}55;border-radius:999px;color:${CYAN};font-size:20px">
+        <div style="font-size:${Math.round(21 / K * 0.80)}px;color:#8ea0b5;margin-top:20px;text-align:center;max-width:82%;line-height:1.5">
+          A live operations layer for two-sided marketplaces. Every module here is playable.</div>
+        <div style="margin-top:${Math.round(46 * K)}px;padding:13px 26px;border:1px solid ${CYAN}55;border-radius:999px;color:${CYAN};font-size:${Math.round(20 / K * 0.82)}px;text-align:center">
           when-demand-exceeds-supply.vercel.app</div>
-        <div style="margin-top:30px;font-size:15px;color:rgba(255,255,255,0.42)">Wahid Tawsif Ratul</div>`;
+        <div style="margin-top:26px;font-size:${Math.round(15 / K * 0.82)}px;color:rgba(255,255,255,0.42)">Wahid Tawsif Ratul</div>`;
       fade(card, 1, 700);
     },
 
@@ -283,8 +331,10 @@ window.FILM = (function () {
      * instead of the head offset being guesswork.
      */
     async run(beats, totalMs) {
+      // Magenta, not white: the browser paints a white page before the site's
+      // own background lands, and a white marker is indistinguishable from it.
       const flash = document.createElement('div');
-      flash.style.cssText = 'position:absolute;inset:0;background:#fff';
+      flash.style.cssText = 'position:absolute;inset:0;background:#ff00ff';
       ui.appendChild(flash);
       await new Promise((r) => setTimeout(r, 130));
       flash.remove();

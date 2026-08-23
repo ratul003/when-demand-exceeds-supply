@@ -1,0 +1,62 @@
+{
+  "total": 47.412,
+  "provider": "edge",
+  "lines": [
+    {
+      "id": "s1",
+      "chapter": 0,
+      "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call.",
+      "start": 0.6,
+      "end": 6.192,
+      "dur": 5.592
+    },
+    {
+      "id": "s2",
+      "chapter": 0,
+      "text": "Twelve more are offline. Nobody told them.",
+      "start": 6.542,
+      "end": 9.374,
+      "dur": 2.832
+    },
+    {
+      "id": "s3",
+      "chapter": 0,
+      "text": "Supply is fixed. Push demand past it and the queue compounds. At five and a half times, the wait is over an hour.",
+      "start": 10.074,
+      "end": 17.922,
+      "dur": 7.848
+    },
+    {
+      "id": "s4",
+      "chapter": 0,
+      "text": "So it surges by category, and ring fences every dollar to pay the experts who come back online. The response funds itself.",
+      "start": 18.422,
+      "end": 26.39,
+      "dur": 7.968
+    },
+    {
+      "id": "s5",
+      "chapter": 0,
+      "text": "Without it the queue peaks at sixty five and stays there. With it, nine experts accept and the delay halves.",
+      "start": 26.89,
+      "end": 34.042,
+      "dur": 7.152
+    },
+    {
+      "id": "s6",
+      "chapter": 0,
+      "text": "Four hundred and twenty dollars in. Three hundred and eighty out. Net cost, forty dollars.",
+      "start": 34.492,
+      "end": 40.036,
+      "dur": 5.544
+    },
+    {
+      "id": "s7",
+      "chapter": 0,
+      "text": "You cannot surge price a therapist. But you can make sure nobody finds out too late.",
+      "start": 40.636,
+      "end": 45.412,
+      "dur": 4.776
+    }
+  ]
+}
