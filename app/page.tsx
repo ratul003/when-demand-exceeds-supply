@@ -2355,6 +2355,22 @@ export default function Page() {
             quiet evening to a critical shortfall.
           </p>
           <FilmPlayer />
+          <div style={{ marginTop: 18 }}>
+            <a
+              href="https://wahid-ratul.vercel.app/writing/you-cannot-surge-price-a-therapist"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none',
+                fontSize: '0.85rem', color: CYAN, border: `1px solid ${CYAN}40`,
+                borderRadius: 999, padding: '9px 18px', transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = `${CYAN}12` }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+            >
+              Read the essay: You Cannot Surge-Price a Therapist ↗
+            </a>
+          </div>
         </div>
       </section>
 
