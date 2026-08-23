@@ -1,0 +1,165 @@
+{
+  "total": 137.732,
+  "lines": [
+    {
+      "id": "c0-1",
+      "chapter": 0,
+      "text": "Eleven oh eight at night. Forty seven people are waiting to talk to someone.",
+      "start": 0.9,
+      "end": 5.364,
+      "dur": 4.464
+    },
+    {
+      "id": "c0-2",
+      "chapter": 0,
+      "text": "Three experts are online. All three are already on a call.",
+      "start": 5.864,
+      "end": 9.584,
+      "dur": 3.72
+    },
+    {
+      "id": "c0-3",
+      "chapter": 0,
+      "text": "Twelve more are offline, and none of them know any of this is happening.",
+      "start": 9.984,
+      "end": 14.28,
+      "dur": 4.296
+    },
+    {
+      "id": "c1-1",
+      "chapter": 1,
+      "text": "This is where a two sided marketplace quietly loses money, and most of them cannot see it happen.",
+      "start": 15.88,
+      "end": 22.312,
+      "dur": 6.432
+    },
+    {
+      "id": "c1-2",
+      "chapter": 1,
+      "text": "Supply is fixed at eighteen sessions an hour. Push demand past that and the queue does not grow. It compounds.",
+      "start": 22.812,
+      "end": 30.492,
+      "dur": 7.68
+    },
+    {
+      "id": "c1-3",
+      "chapter": 1,
+      "text": "At three times demand, the wait crosses thirty minutes. Yellow.",
+      "start": 31.092,
+      "end": 35.748,
+      "dur": 4.656
+    },
+    {
+      "id": "c1-4",
+      "chapter": 1,
+      "text": "At five and a half, it is over an hour. Red. By the time tomorrow's report shows it, those customers are gone.",
+      "start": 36.248,
+      "end": 43.52,
+      "dur": 7.272
+    },
+    {
+      "id": "c2-1",
+      "chapter": 2,
+      "text": "So I built the layer that watches for it.",
+      "start": 45.02,
+      "end": 47.372,
+      "dur": 2.352
+    },
+    {
+      "id": "c2-2",
+      "chapter": 2,
+      "text": "Delay time and dropout rate are the two triggers. When either one crosses, the system answers on both sides at once.",
+      "start": 48.072,
+      "end": 55.848,
+      "dur": 7.776
+    },
+    {
+      "id": "c2-3",
+      "chapter": 2,
+      "text": "Prices surge by category. Ten percent on astrology, eighteen on mental health.",
+      "start": 56.348,
+      "end": 62.276,
+      "dur": 5.928
+    },
+    {
+      "id": "c2-4",
+      "chapter": 2,
+      "text": "And every dollar of that surge is ring fenced. It does not go to margin. It funds the bonus that brings experts back online.",
+      "start": 62.776,
+      "end": 70.816,
+      "dur": 8.04
+    },
+    {
+      "id": "c2-5",
+      "chapter": 2,
+      "text": "Then the push fires. Tiered, and it names the number of people waiting and what three sessions are worth tonight.",
+      "start": 71.316,
+      "end": 78.204,
+      "dur": 6.888
+    },
+    {
+      "id": "c3-1",
+      "chapter": 3,
+      "text": "With no incentive, eight percent of experts respond. At sixteen dollars a session, fifty five percent do.",
+      "start": 79.704,
+      "end": 86.928,
+      "dur": 7.224
+    },
+    {
+      "id": "c3-2",
+      "chapter": 3,
+      "text": "That gap is the entire system.",
+      "start": 87.328,
+      "end": 89.608,
+      "dur": 2.28
+    },
+    {
+      "id": "c3-3",
+      "chapter": 3,
+      "text": "Without the engine, the queue peaks at sixty five and stays there.",
+      "start": 90.508,
+      "end": 94.78,
+      "dur": 4.272
+    },
+    {
+      "id": "c3-4",
+      "chapter": 3,
+      "text": "With it, nine experts accept, the delay drops from thirty four minutes to eighteen, and the engine switches itself off.",
+      "start": 95.28,
+      "end": 103.224,
+      "dur": 7.944
+    },
+    {
+      "id": "c3-5",
+      "chapter": 3,
+      "text": "Four hundred and twenty dollars of surge collected. Three hundred and eighty paid out. The whole response cost the platform forty dollars.",
+      "start": 103.724,
+      "end": 111.62,
+      "dur": 7.896
+    },
+    {
+      "id": "c4-1",
+      "chapter": 4,
+      "text": "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human actually needs to handle.",
+      "start": 113.22,
+      "end": 123.06,
+      "dur": 9.84
+    },
+    {
+      "id": "c4-2",
+      "chapter": 4,
+      "text": "One config file. Four marketplace presets.",
+      "start": 123.56,
+      "end": 126.848,
+      "dur": 3.288
+    },
+    {
+      "id": "c4-3",
+      "chapter": 4,
+      "text": "I built it as a product manager, without an engineering team, because the alternative was watching the queue and doing nothing.",
+      "start": 127.548,
+      "end": 135.132,
+      "dur": 7.584
+    }
+  ]
+}

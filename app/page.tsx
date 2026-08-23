@@ -339,6 +339,7 @@ const STACK_TOOLS = [
 ]
 
 const NAV_SECTIONS = [
+  { id: 'film',         label: 'The Film'      },
   { id: 'problem',      label: 'The Problem'   },
   { id: 'industry',     label: 'Industry'      },
   { id: 'architecture', label: 'Architecture'  },
@@ -410,6 +411,104 @@ function SectionNav() {
   )
 }
 
+// ── FilmPlayer ─────────────────────────────────────────────────────────────────
+// Chapter marks are the same beats the film was cut on (media/capture.mjs).
+const FILM_CHAPTERS: { t: number; stamp: string; label: string; num: string }[] = [
+  { t: 0,     stamp: '0:00', num: '',   label: 'The night it breaks' },
+  { t: 15.5,  stamp: '0:15', num: '01', label: 'The Problem'        },
+  { t: 43.7,  stamp: '0:44', num: '02', label: 'The Response'       },
+  { t: 78.5,  stamp: '1:18', num: '03', label: 'The Payoff'         },
+  { t: 112.0, stamp: '1:52', num: '04', label: 'The System'         },
+]
+
+function FilmPlayer() {
+  const ref = useRef<HTMLVideoElement>(null)
+  const [started, setStarted] = useState(false)
+  const [active, setActive] = useState(0)
+
+  const start = (t = 0) => {
+    const v = ref.current
+    if (!v) return
+    v.muted = false
+    v.currentTime = t
+    void v.play()
+    setStarted(true)
+  }
+
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    const onTime = () => {
+      let i = 0
+      FILM_CHAPTERS.forEach((c, k) => { if (v.currentTime >= c.t) i = k })
+      setActive(i)
+    }
+    v.addEventListener('timeupdate', onTime)
+    return () => v.removeEventListener('timeupdate', onTime)
+  }, [])
+
+  return (
+    <div>
+      <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${CYAN}22`, background: '#06060b', aspectRatio: '16 / 9' }}>
+        <video
+          ref={ref}
+          poster="/film-poster.jpg"
+          preload="none"
+          playsInline
+          controls={started}
+          style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }}
+        >
+          <source src="/film.mp4" type="video/mp4" />
+        </video>
+
+        {!started && (
+          <button
+            onClick={() => start(0)}
+            aria-label="Play the film with sound"
+            style={{
+              position: 'absolute', inset: 0, border: 'none', cursor: 'pointer',
+              background: 'radial-gradient(ellipse 52% 62% at 50% 48%, rgba(6,6,11,0.86) 0%, rgba(6,6,11,0.55) 55%, rgba(6,6,11,0.72) 100%)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18,
+            }}
+          >
+            <span style={{
+              width: 74, height: 74, borderRadius: '50%', background: `${CYAN}1f`,
+              border: `2px solid ${CYAN}`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: `0 0 34px ${CYAN}55`,
+            }}>
+              <svg width="26" height="30" viewBox="0 0 26 30" fill={CYAN}><path d="M0 0l26 15L0 30z" /></svg>
+            </span>
+            <span style={{ fontSize: '0.95rem', color: '#e2e8f0', fontWeight: 600 }}>Play with sound</span>
+            <span style={{ fontSize: '0.78rem', color: '#64748b' }}>2 min 21 sec · narrated</span>
+          </button>
+        )}
+      </div>
+
+      {/* Chapter rail, doubles as a scrubber */}
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(150px, 1fr))`, gap: 8, marginTop: 12 }}>
+        {FILM_CHAPTERS.map((c, i) => (
+          <button
+            key={c.stamp}
+            onClick={() => start(c.t)}
+            style={{
+              textAlign: 'left', padding: '11px 13px', borderRadius: 10, cursor: 'pointer',
+              transition: 'all 0.2s',
+              background: started && active === i ? `${CYAN}12` : 'rgba(255,255,255,0.02)',
+              border: `1px solid ${started && active === i ? CYAN + '55' : 'rgba(255,255,255,0.07)'}`,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 4 }}>
+              {c.num && <span style={{ fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.12em', color: CYAN }}>{c.num}</span>}
+              <span style={{ fontSize: '0.68rem', color: '#475569', fontFamily: 'ui-monospace, monospace' }}>{c.stamp}</span>
+            </div>
+            <div style={{ fontSize: '0.82rem', fontWeight: 600, color: started && active === i ? '#f1f5f9' : '#94a3b8' }}>{c.label}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── AnimatedMetric ─────────────────────────────────────────────────────────────
 function AnimatedMetric({ raw, label }: { raw: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -475,12 +574,12 @@ function LiveScenario() {
   const [step, setStep] = useState(0)
   const s = SCENARIO_STEPS[step]
   return (
-    <div>
+    <div data-film="scenario">
       {/* Step selector timeline */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 28, overflowX: 'auto' }}>
         {SCENARIO_STEPS.map((st, i) => (
           <React.Fragment key={i}>
-            <button onClick={() => setStep(i)} style={{
+            <button data-film={`scenario-${i}`} onClick={() => setStep(i)} style={{
               flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
               background: 'none', border: 'none', cursor: 'pointer', padding: '8px 12px',
             }}>
@@ -526,7 +625,7 @@ function BarometerEngine() {
   const [state, setState] = useState<BarometerState>('green')
   const cfg = BAROMETER_CONFIG[state]
   return (
-    <div>
+    <div data-film="barometer">
       {/* Gauge + state selector side by side */}
       <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 32, alignItems: 'center', marginBottom: 28 }}>
         <BarometerGauge state={state} />
@@ -534,7 +633,7 @@ function BarometerEngine() {
           {(['green', 'yellow', 'red'] as BarometerState[]).map(s => {
             const c = BAROMETER_CONFIG[s]
             return (
-              <button key={s} onClick={() => setState(s)} style={{
+              <button key={s} data-film={`baro-${s}`} onClick={() => setState(s)} style={{
                 padding: '14px 18px', borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
                 border: `2px solid ${state === s ? c.color : 'rgba(255,255,255,0.08)'}`,
                 background: state === s ? `${c.color}12` : 'rgba(255,255,255,0.02)',
@@ -649,7 +748,7 @@ function SelfFinancingFlow() {
     { label: 'Supply recovers', sub: 'Pool depletes to zero', color: '#22c55e', icon: '✅' },
   ]
   return (
-    <div>
+    <div data-film="self-financing">
       <div style={{ display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto', padding: '8px 0' }}>
         {nodes.map((n, i) => (
           <React.Fragment key={n.label}>
@@ -686,7 +785,7 @@ function SurgeMatrix() {
   const delayColors = ['#22c55e', '#f59e0b', '#ef4444']
   const delayDescs  = ['Green zone, light pressure', 'Yellow zone, surge active', 'Red zone, max multiplier']
   return (
-    <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid rgba(255,255,255,0.07)' }}>
+    <div data-film="surge-matrix" style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid rgba(255,255,255,0.07)' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -755,13 +854,13 @@ function SurgePricingImpact() {
   ]
 
   return (
-    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px', marginBottom: 16 }}>
+    <div data-film="impact" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 26px', marginBottom: 16 }}>
       <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Surge pricing impact, statistical view</div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
         {TABS.map(([id, label]) => (
-          <button key={id} onClick={() => setPanel(id)} style={{
+          <button key={id} data-film={`impact-${id}`} onClick={() => setPanel(id)} style={{
             padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600,
             transition: 'all 0.15s',
             border: `2px solid ${panel === id ? CYAN : 'rgba(255,255,255,0.08)'}`,
@@ -986,14 +1085,14 @@ function NotificationMockup() {
   }
   const n = notifications[notifState]
   return (
-    <div className="notif-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 32, alignItems: 'start' }}>
+    <div data-film="notif" className="notif-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 32, alignItems: 'start' }}>
       {/* Left: toggles + payload */}
       <div>
         <div style={{ display: 'flex', gap: 10, marginBottom: 22 }}>
           {(['yellow', 'red'] as const).map(s => {
             const ns = notifications[s]
             return (
-              <button key={s} onClick={() => setNotifState(s)} style={{
+              <button key={s} data-film={`notif-${s}`} onClick={() => setNotifState(s)} style={{
                 flex: 1, padding: '12px 16px', borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
                 border: `2px solid ${notifState === s ? ns.stateColor : 'rgba(255,255,255,0.08)'}`,
                 background: notifState === s ? `${ns.stateColor}12` : 'rgba(255,255,255,0.02)',
@@ -1209,10 +1308,10 @@ function ConfigPresets() {
     surge_update:      https://your-service/surge`
 
   return (
-    <div>
+    <div data-film="presets">
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 8, marginBottom: 20 }}>
         {PRESETS.map(p => (
-          <button key={p.id} onClick={() => setActive(p.id)} style={{
+          <button key={p.id} data-film={`preset-${p.id}`} onClick={() => setActive(p.id)} style={{
             padding: '12px 14px', borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left',
             border: `2px solid ${active === p.id ? p.color : 'rgba(255,255,255,0.08)'}`,
             background: active === p.id ? `${p.color}12` : 'rgba(255,255,255,0.02)',
@@ -1284,7 +1383,7 @@ function QueuePressureSimulator() {
   const areaPts = `${xs(0)},${ys(0)} ${linePts} ${xs(15)},${ys(0)}`
 
   return (
-    <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${sc}22`, borderRadius: 16, padding: '24px 26px', marginTop: 32, transition: 'border-color 0.4s' }}>
+    <div data-film="queue" style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${sc}22`, borderRadius: 16, padding: '24px 26px', marginTop: 32, transition: 'border-color 0.4s' }}>
       <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>Try it yourself: drag the demand slider</div>
       <div style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -1294,11 +1393,11 @@ function QueuePressureSimulator() {
             <span style={{ fontSize: '0.76rem', color: '#64748b' }}>{demand.toFixed(0)} sessions/hr arriving</span>
           </div>
         </div>
-        <input type="range" min={1} max={4} step={0.1} value={mult}
+        <input data-film="queue-slider" type="range" min={1} max={6} step={0.1} value={mult}
           onChange={e => setMult(parseFloat(e.target.value))}
           style={{ width: '100%', accentColor: sc, cursor: 'pointer' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: '#334155', marginTop: 4 }}>
-          <span>1× · quiet evening</span><span>4× · 11pm spike</span>
+          <span>1× · quiet evening</span><span>6× · 11pm spike</span>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 8, marginBottom: 20 }}>
@@ -1659,7 +1758,7 @@ function PipelineFlow() {
   const active = PIPELINE_NODES.find(n => n.id === activeNode)
 
   return (
-    <div style={{ marginTop: 48, marginBottom: 48 }}>
+    <div data-film="pipeline" style={{ marginTop: 48, marginBottom: 48 }}>
       <div style={{ fontSize: '0.68rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>System architecture - click any module to expand</div>
       <p style={{ fontSize: '0.84rem', color: '#64748b', lineHeight: 1.6, marginBottom: 28, maxWidth: 620 }}>
         Five modules, one loop. Demand signals trigger the health engine, which fires the surge calculator and incentive engine simultaneously, while the AI router redirects load in real time.
@@ -1667,7 +1766,7 @@ function PipelineFlow() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
         {PIPELINE_NODES.map((node, i) => (
           <React.Fragment key={node.id}>
-            <button onClick={() => setActiveNode(activeNode === node.id ? null : node.id)} style={{
+            <button data-film={`node-${node.id}`} onClick={() => setActiveNode(activeNode === node.id ? null : node.id)} style={{
               padding: '16px 18px', borderRadius: 12, cursor: 'pointer', textAlign: 'center', minWidth: 120,
               border: `2px solid ${activeNode === node.id ? node.color : `${node.color}30`}`,
               background: activeNode === node.id ? `${node.color}12` : 'rgba(255,255,255,0.02)',
@@ -2238,6 +2337,24 @@ export default function Page() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── The film ── */}
+      <section id="film" style={{ padding: '0 32px 72px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
+            <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', fontWeight: 700, color: '#f1f5f9', margin: 0, letterSpacing: '-0.01em' }}>
+              Watch the system run
+            </h2>
+            <span style={{ fontSize: '0.78rem', color: '#475569' }}>2:21 · narrated · captioned</span>
+          </div>
+          <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.7, maxWidth: 700, marginBottom: 24 }}>
+            Nothing in the film is a mockup. Every number, chart and state change is the same component
+            you can drive yourself further down this page, recorded live while the queue is pushed from a
+            quiet evening to a critical shortfall.
+          </p>
+          <FilmPlayer />
         </div>
       </section>
 

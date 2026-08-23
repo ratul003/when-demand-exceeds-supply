@@ -44,3 +44,20 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+
+# film build: the scripts are tracked so the film is reproducible,
+# the heavy intermediates are not
+/media/node_modules
+/media/raw/
+/media/raw.webm
+/media/video.mp4
+/media/film.mp4
+/media/bed.wav
+/media/mix.m4a
+/media/poster.jpg
+/media/vo/
+/media/frames/
+/media/f2/
+/media/f3/
+/media/contact*.jpg
+/media/server.log

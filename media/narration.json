@@ -1,0 +1,52 @@
+{
+  "voice": "en-US-AndrewNeural",
+  "rate": "-6%",
+  "pitch": "-2Hz",
+  "leadIn": 900,
+  "lines": [
+    { "id": "c0-1", "chapter": 0, "gap": 500,
+      "text": "Eleven oh eight at night. Forty seven people are waiting to talk to someone." },
+    { "id": "c0-2", "chapter": 0, "gap": 400,
+      "text": "Three experts are online. All three are already on a call." },
+    { "id": "c0-3", "chapter": 0, "gap": 1600,
+      "text": "Twelve more are offline, and none of them know any of this is happening." },
+
+    { "id": "c1-1", "chapter": 1, "gap": 500,
+      "text": "This is where a two sided marketplace quietly loses money, and most of them cannot see it happen." },
+    { "id": "c1-2", "chapter": 1, "gap": 600,
+      "text": "Supply is fixed at eighteen sessions an hour. Push demand past that and the queue does not grow. It compounds." },
+    { "id": "c1-3", "chapter": 1, "gap": 500,
+      "text": "At three times demand, the wait crosses thirty minutes. Yellow." },
+    { "id": "c1-4", "chapter": 1, "gap": 1500,
+      "text": "At five and a half, it is over an hour. Red. By the time tomorrow's report shows it, those customers are gone." },
+
+    { "id": "c2-1", "chapter": 2, "gap": 700,
+      "text": "So I built the layer that watches for it." },
+    { "id": "c2-2", "chapter": 2, "gap": 500,
+      "text": "Delay time and dropout rate are the two triggers. When either one crosses, the system answers on both sides at once." },
+    { "id": "c2-3", "chapter": 2, "gap": 500,
+      "text": "Prices surge by category. Ten percent on astrology, eighteen on mental health." },
+    { "id": "c2-4", "chapter": 2, "gap": 500,
+      "text": "And every dollar of that surge is ring fenced. It does not go to margin. It funds the bonus that brings experts back online." },
+    { "id": "c2-5", "chapter": 2, "gap": 1500,
+      "text": "Then the push fires. Tiered, and it names the number of people waiting and what three sessions are worth tonight." },
+
+    { "id": "c3-1", "chapter": 3, "gap": 400,
+      "text": "With no incentive, eight percent of experts respond. At sixteen dollars a session, fifty five percent do." },
+    { "id": "c3-2", "chapter": 3, "gap": 900,
+      "text": "That gap is the entire system." },
+    { "id": "c3-3", "chapter": 3, "gap": 500,
+      "text": "Without the engine, the queue peaks at sixty five and stays there." },
+    { "id": "c3-4", "chapter": 3, "gap": 500,
+      "text": "With it, nine experts accept, the delay drops from thirty four minutes to eighteen, and the engine switches itself off." },
+    { "id": "c3-5", "chapter": 3, "gap": 1600,
+      "text": "Four hundred and twenty dollars of surge collected. Three hundred and eighty paid out. The whole response cost the platform forty dollars." },
+
+    { "id": "c4-1", "chapter": 4, "gap": 500,
+      "text": "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human actually needs to handle." },
+    { "id": "c4-2", "chapter": 4, "gap": 700,
+      "text": "One config file. Four marketplace presets." },
+    { "id": "c4-3", "chapter": 4, "gap": 2600,
+      "text": "I built it as a product manager, without an engineering team, because the alternative was watching the queue and doing nothing." }
+  ]
+}

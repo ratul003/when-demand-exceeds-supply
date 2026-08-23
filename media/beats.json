@@ -1,0 +1,690 @@
+{
+ "total": 141.432,
+ "beats": [
+  [
+   0,
+   "veil",
+   1,
+   0
+  ],
+  [
+   0.4,
+   "open",
+   1
+  ],
+  [
+   0.78,
+   "caption",
+   "23:08. Forty-seven people are waiting to talk to someone."
+  ],
+  [
+   5.664,
+   "caption",
+   null
+  ],
+  [
+   5.744,
+   "caption",
+   "Three experts are online. All three are already on a call."
+  ],
+  [
+   5.914,
+   "open",
+   2
+  ],
+  [
+   9.834,
+   "caption",
+   null
+  ],
+  [
+   9.864,
+   "caption",
+   "Twelve more are offline, and none of them know any of this is happening."
+  ],
+  [
+   10.034,
+   "open",
+   3
+  ],
+  [
+   13.28,
+   "open",
+   0
+  ],
+  [
+   13.68,
+   "card",
+   "EQUILIBRIUM",
+   "When Demand Exceeds Supply",
+   "A live operations layer for a two-sided expert marketplace",
+   1500
+  ],
+  [
+   14.58,
+   "caption",
+   null
+  ],
+  [
+   14.98,
+   "cam",
+   "[data-film=\"queue\"]",
+   {
+    "dur": 10,
+    "fill": 0.6,
+    "fillY": 0.52
+   }
+  ],
+  [
+   15.18,
+   "veil",
+   0,
+   950
+  ],
+  [
+   15.48,
+   "mark",
+   true
+  ],
+  [
+   15.58,
+   "chapter",
+   "01",
+   "The Problem"
+  ],
+  [
+   15.760000000000002,
+   "caption",
+   "This is where a two-sided marketplace quietly loses money, and most of them cannot see it happen."
+  ],
+  [
+   15.93,
+   "cam",
+   "[data-film=\"queue\"]",
+   {
+    "dur": 3200,
+    "fill": 0.9,
+    "fillY": 0.86
+   }
+  ],
+  [
+   22.612000000000002,
+   "caption",
+   null
+  ],
+  [
+   22.692,
+   "caption",
+   "Supply is fixed at 18 sessions an hour. Push demand past that and the queue does not grow. It compounds."
+  ],
+  [
+   23.212,
+   "point",
+   "[data-film=\"queue-slider\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   24.412,
+   "slider",
+   "[data-film=\"queue-slider\"]",
+   1.6,
+   {
+    "dur": 2600
+   }
+  ],
+  [
+   28.012,
+   "slider",
+   "[data-film=\"queue-slider\"]",
+   2.2,
+   {
+    "dur": 1900
+   }
+  ],
+  [
+   30.792,
+   "caption",
+   null
+  ],
+  [
+   30.971999999999998,
+   "caption",
+   "At 3× demand, the wait crosses 30 minutes. Yellow."
+  ],
+  [
+   31.392,
+   "slider",
+   "[data-film=\"queue-slider\"]",
+   3,
+   {
+    "dur": 1800
+   }
+  ],
+  [
+   33.692,
+   "cam",
+   "[data-film=\"queue\"]",
+   {
+    "dur": 1600,
+    "fill": 0.94,
+    "fillY": 0.9
+   }
+  ],
+  [
+   36.047999999999995,
+   "caption",
+   null
+  ],
+  [
+   36.128,
+   "caption",
+   "At 5.5×, it is over an hour. Red. By the time tomorrow’s report shows it, those customers are gone."
+  ],
+  [
+   36.648,
+   "slider",
+   "[data-film=\"queue-slider\"]",
+   5.6,
+   {
+    "dur": 2900
+   }
+  ],
+  [
+   40.148,
+   "hideCursor"
+  ],
+  [
+   40.448,
+   "cam",
+   "[data-film=\"queue\"]",
+   {
+    "dur": 2200,
+    "fill": 0.98,
+    "fillY": 0.95
+   }
+  ],
+  [
+   43.72,
+   "card",
+   "CHAPTER 02",
+   "The Response",
+   "",
+   1150
+  ],
+  [
+   43.82,
+   "caption",
+   null
+  ],
+  [
+   44.12,
+   "chapter",
+   "02",
+   "The Response"
+  ],
+  [
+   44.42,
+   "cam",
+   "[data-film=\"barometer\"]",
+   {
+    "dur": 10,
+    "fill": 0.72,
+    "fillY": 0.66
+   }
+  ],
+  [
+   44.900000000000006,
+   "caption",
+   "So I built the layer that watches for it."
+  ],
+  [
+   45.52,
+   "cam",
+   "[data-film=\"barometer\"]",
+   {
+    "dur": 2400,
+    "fill": 0.9,
+    "fillY": 0.86
+   }
+  ],
+  [
+   47.672,
+   "caption",
+   null
+  ],
+  [
+   47.952000000000005,
+   "caption",
+   "Delay time and dropout rate are the two triggers. When either one crosses, the system answers on both sides at once."
+  ],
+  [
+   49.972,
+   "press",
+   "[data-film=\"baro-yellow\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   53.172,
+   "press",
+   "[data-film=\"baro-red\"]",
+   {
+    "dur": 650
+   }
+  ],
+  [
+   55.172,
+   "hideCursor"
+  ],
+  [
+   56.147999999999996,
+   "caption",
+   null
+  ],
+  [
+   56.228,
+   "caption",
+   "Prices surge by category. +10% on astrology, +18% on mental health."
+  ],
+  [
+   56.748,
+   "cam",
+   "[data-film=\"surge-matrix\"]",
+   {
+    "dur": 1700,
+    "fill": 0.88,
+    "fillY": 0.8
+   }
+  ],
+  [
+   62.576,
+   "caption",
+   null
+  ],
+  [
+   62.656000000000006,
+   "caption",
+   "Every dollar of that surge is ring-fenced. It does not go to margin. It funds the bonus that brings experts back online."
+  ],
+  [
+   63.176,
+   "cam",
+   "[data-film=\"self-financing\"]",
+   {
+    "dur": 1700,
+    "fill": 0.96,
+    "fillY": 0.68
+   }
+  ],
+  [
+   71.116,
+   "caption",
+   null
+  ],
+  [
+   71.196,
+   "caption",
+   "Then the push fires. Tiered, naming how many people are waiting and what three sessions are worth tonight."
+  ],
+  [
+   71.616,
+   "cam",
+   "[data-film=\"notif\"]",
+   {
+    "dur": 1700,
+    "fill": 0.9,
+    "fillY": 0.82
+   }
+  ],
+  [
+   74.816,
+   "press",
+   "[data-film=\"notif-red\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   77.216,
+   "hideCursor"
+  ],
+  [
+   78.454,
+   "card",
+   "CHAPTER 03",
+   "The Payoff",
+   "",
+   1100
+  ],
+  [
+   78.50399999999999,
+   "caption",
+   null
+  ],
+  [
+   78.754,
+   "chapter",
+   "03",
+   "The Payoff"
+  ],
+  [
+   79.054,
+   "cam",
+   "[data-film=\"impact\"]",
+   {
+    "dur": 10,
+    "fill": 0.74,
+    "fillY": 0.68
+   }
+  ],
+  [
+   79.58399999999999,
+   "caption",
+   "With no incentive, 8% of experts respond. At $16 a session, 55% do."
+  ],
+  [
+   79.954,
+   "cam",
+   "[data-film=\"impact\"]",
+   {
+    "dur": 2100,
+    "fill": 0.9,
+    "fillY": 0.86
+   }
+  ],
+  [
+   80.004,
+   "press",
+   "[data-film=\"impact-response\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   82.304,
+   "hideCursor"
+  ],
+  [
+   87.178,
+   "caption",
+   null
+  ],
+  [
+   87.208,
+   "caption",
+   "That gap is the entire system."
+  ],
+  [
+   87.478,
+   "cam",
+   "[data-film=\"impact\"]",
+   {
+    "dur": 1900,
+    "fill": 0.96,
+    "fillY": 0.92
+   }
+  ],
+  [
+   89.908,
+   "caption",
+   null
+  ],
+  [
+   90.38799999999999,
+   "caption",
+   "Without the engine, the queue peaks at 65 and stays there."
+  ],
+  [
+   90.558,
+   "press",
+   "[data-film=\"impact-timeline\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   92.758,
+   "hideCursor"
+  ],
+  [
+   95.08,
+   "caption",
+   null
+  ],
+  [
+   95.16,
+   "caption",
+   "With it, nine experts accept, the delay drops from 34 minutes to 18, and the engine switches itself off."
+  ],
+  [
+   99.98,
+   "cam",
+   "[data-film=\"scenario\"]",
+   {
+    "dur": 1800,
+    "fill": 0.9,
+    "fillY": 0.8
+   }
+  ],
+  [
+   101.98,
+   "press",
+   "[data-film=\"scenario-5\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   103.524,
+   "caption",
+   null
+  ],
+  [
+   103.604,
+   "caption",
+   "$420 of surge collected. $380 paid out. The whole response cost the platform $40."
+  ],
+  [
+   103.974,
+   "cam",
+   "[data-film=\"impact\"]",
+   {
+    "dur": 1700,
+    "fill": 0.9,
+    "fillY": 0.86
+   }
+  ],
+  [
+   105.174,
+   "press",
+   "[data-film=\"impact-pnl\"]",
+   {
+    "dur": 700
+   }
+  ],
+  [
+   107.374,
+   "hideCursor"
+  ],
+  [
+   107.774,
+   "cam",
+   "[data-film=\"self-financing\"]",
+   {
+    "dur": 2100,
+    "fill": 0.96,
+    "fillY": 0.68
+   }
+  ],
+  [
+   111.92,
+   "caption",
+   null
+  ],
+  [
+   112.02,
+   "card",
+   "CHAPTER 04",
+   "The System",
+   "",
+   1100
+  ],
+  [
+   112.32,
+   "chapter",
+   "04",
+   "The System"
+  ],
+  [
+   112.62,
+   "cam",
+   "[data-film=\"pipeline\"]",
+   {
+    "dur": 10,
+    "fill": 0.74,
+    "fillY": 0.66
+   }
+  ],
+  [
+   113.1,
+   "caption",
+   "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human actually needs to handle."
+  ],
+  [
+   113.47,
+   "cam",
+   "[data-film=\"pipeline\"]",
+   {
+    "dur": 2000,
+    "fill": 0.9,
+    "fillY": 0.78
+   }
+  ],
+  [
+   115.07,
+   "press",
+   "[data-film=\"node-signals\"]",
+   {
+    "dur": 600
+   }
+  ],
+  [
+   116.57,
+   "press",
+   "[data-film=\"node-health\"]",
+   {
+    "dur": 520
+   }
+  ],
+  [
+   117.97,
+   "press",
+   "[data-film=\"node-surge\"]",
+   {
+    "dur": 520
+   }
+  ],
+  [
+   119.37,
+   "press",
+   "[data-film=\"node-incentive\"]",
+   {
+    "dur": 520
+   }
+  ],
+  [
+   120.77,
+   "press",
+   "[data-film=\"node-router\"]",
+   {
+    "dur": 520
+   }
+  ],
+  [
+   122.27,
+   "hideCursor"
+  ],
+  [
+   123.36,
+   "caption",
+   null
+  ],
+  [
+   123.44,
+   "caption",
+   "One config file. Four marketplace presets."
+  ],
+  [
+   123.86,
+   "cam",
+   "[data-film=\"presets\"]",
+   {
+    "dur": 1600,
+    "fill": 0.9,
+    "fillY": 0.8
+   }
+  ],
+  [
+   125.46,
+   "press",
+   "[data-film=\"preset-telehealth\"]",
+   {
+    "dur": 600
+   }
+  ],
+  [
+   127.148,
+   "press",
+   "[data-film=\"preset-tutoring\"]",
+   {
+    "dur": 600
+   }
+  ],
+  [
+   127.148,
+   "caption",
+   null
+  ],
+  [
+   127.428,
+   "caption",
+   "I built it as a product manager, without an engineering team, because the alternative was watching the queue and doing nothing."
+  ],
+  [
+   128.548,
+   "hideCursor"
+  ],
+  [
+   128.948,
+   "cam",
+   "[data-film=\"pipeline\"]",
+   {
+    "dur": 3600,
+    "fill": 0.46,
+    "fillY": 0.42
+   }
+  ],
+  [
+   133.632,
+   "chapter",
+   null
+  ],
+  [
+   133.832,
+   "mark",
+   false
+  ],
+  [
+   135.43200000000002,
+   "caption",
+   null
+  ],
+  [
+   135.532,
+   "endcard"
+  ]
+ ]
+}
