@@ -107,6 +107,13 @@ for line in spec["lines"]:
             duration(mp3)
         except Exception:
             stale = True
+    if stale and "--require-cached" in sys.argv:
+        # Guards the real-voice build: without this, one missing clip would be
+        # quietly filled in by the TTS voice and the film would switch speakers
+        # mid-sentence.
+        raise SystemExit(f"--require-cached: no usable clip for '{line['id']}'. "
+                         "Re-run ingest_voice.py; do not mix synthesised lines "
+                         "into a recorded narration.")
     if stale:
         (say_eleven(line["text"], mp3, key) if provider == "elevenlabs"
          else say_edge(line["text"], mp3))
