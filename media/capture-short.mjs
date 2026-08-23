@@ -25,7 +25,7 @@ const CAPTIONS = {
   s1: '23:08. Forty-seven people waiting. Three experts online, all on a call.',
   s2: 'Twelve more are offline. Nobody told them.',
   s3: 'Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour.',
-  s4: 'It surges by category and ring-fences every dollar to pay the experts who come back online.',
+  s4: 'It surges by category and ring-fences every dollar to pay the experts who come back online. The response funds itself.',
   s5: 'Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves.',
   s6: '$420 in. $380 out. Net cost, $40.',
   s7: 'You cannot surge-price a therapist. But you can make sure nobody finds out too late.',
