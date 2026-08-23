@@ -272,7 +272,7 @@ window.FILM = (function () {
       card.innerHTML = `
         <div style="font-size:${Math.round(13 / K * 0.72)}px;letter-spacing:.34em;color:${CYAN};font-weight:800;margin-bottom:22px">${kicker}</div>
         <div style="font-size:${Math.round(66 * K)}px;font-weight:800;color:#f1f5f9;letter-spacing:-0.028em;text-align:center;line-height:1.06;max-width:90%">${title}</div>
-        ${sub ? `<div style="font-size:${Math.round(22 * K)}px;color:#8ea0b5;margin-top:20px;text-align:center;max-width:80%;line-height:1.45">${sub}</div>` : ''}`;
+        ${sub ? `<div style="font-size:${Math.round(SOCIAL ? 34 : 22)}px;color:${SOCIAL ? '#cbd5e1' : '#8ea0b5'};margin-top:${SOCIAL ? 22 : 20}px;text-align:center;max-width:86%;line-height:1.4">${sub}</div>` : ''}`;
       fade(card, 1, 420);
       setTimeout(() => fade(card, 0, 520), hold);
     },

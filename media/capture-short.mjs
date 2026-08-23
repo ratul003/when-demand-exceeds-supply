@@ -19,60 +19,63 @@ const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline-short.json
 const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
 const S = (id, off = 0) => +(L[id].start + off).toFixed(3);
 const E = (id, off = 0) => +(L[id].end + off).toFixed(3);
-const TOTAL = E('s9', 2.0);
+const TOTAL = E('s7', 2.0);
 
+// Exactly what he says, so the captions and the voice never disagree.
 const CAPTIONS = {
   s1: '23:08. Forty-seven people waiting. Three experts online, all on a call.',
   s2: 'Twelve more are offline. Nobody told them.',
-  s3: 'At foodpanda I raised the incentive and riders appeared.',
-  s4: 'That does not work on a therapist. You cannot price a credential into existence.',
-  s5: 'Those twelve never declined. Nobody asked. Supply is fixed. Information is not.',
-  s6: 'So I built Equilibrium. Five modules that watch both sides and ask, in seconds.',
-  s7: 'Surge on the customer side pays the bonus. The response funds itself.',
-  s8: 'Nine accept. The delay halves. Net cost to the platform, $40.',
-  s9: 'You cannot surge-price a therapist. You can make sure nobody finds out too late.',
+  s3: 'Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour.',
+  s4: 'So it surges by category, and ring-fences every dollar to pay the experts who come back online. The response funds itself.',
+  s5: 'Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves.',
+  s7: 'You cannot surge-price a therapist. But you can make sure nobody finds out too late.',
 };
 
 const F = (sel) => `[data-film="${sel}"]`;
 
+// Two title cards do the work the recording does not: card A states the thesis
+// so the closing line is earned, card B names the system so "it" in line 4 has
+// something to refer to. Cheaper than asking for another take, and a card reads
+// better than narration for a claim this short.
 const beats = [
   [0.0, 'veil', 1, 0],
   [0.3, 'open', 1],
   [S('s1', 3.20), 'open', 2],
   [S('s2', 0.05), 'open', 3],
-  [E('s2', -0.35), 'open', 0],
-  [E('s2', 0.25), 'cam', F('queue'), { dur: 10, fill: 0.66, fillY: 0.60 }],
-  [E('s2', 0.40), 'veil', 0, 700],
-  [E('s2', 0.60), 'mark', true],
+  [E('s2', 0.15), 'open', 0],
+  [E('s2', 0.35), 'card', 'WHY THIS ONE IS DIFFERENT',
+    'Raising the price<br>summons a driver.', 'It does not summon a licence.', 1350],
+  [E('s2', 1.45), 'cam', F('queue'), { dur: 10, fill: 0.97, fillY: 0.92 }],
+  [E('s2', 1.80), 'veil', 0, 600],
+  [E('s2', 2.00), 'mark', true],
 
-  // Demand climbs while he describes the lever that used to work...
-  [S('s3', 0.05), 'cam', F('queue'), { dur: 1800, fill: 0.97, fillY: 0.92 }],
+  // The queue goes critical while he describes it.
   [S('s3', 1.00), 'point', F('queue-slider'), { dur: 550 }],
-  [S('s3', 1.70), 'slider', F('queue-slider'), 2.6, { dur: 2000 }],
-  // ...and goes critical exactly as he says it does not work here.
-  [S('s4', 0.20), 'slider', F('queue-slider'), 5.6, { dur: 3000 }],
-  [S('s4', 3.50), 'hideCursor'],
+  [S('s3', 1.80), 'slider', F('queue-slider'), 5.6, { dur: 4400 }],
+  [S('s3', 6.50), 'hideCursor'],
 
-  // The push nobody sent.
-  [S('s5', 0.10), 'cam', F('notif'), { dur: 1500, fill: 0.92, fillY: 0.92 }],
+  [E('s3', 0.35), 'card', 'SO I BUILT', 'Equilibrium',
+    'Five modules that watch both sides and answer in seconds', 1550],
+  [E('s3', 1.50), 'cam', F('pipeline'), { dur: 10, fill: 0.97, fillY: 0.92 }],
 
-  // The project itself: five modules, lighting up as he names them.
-  [S('s6', 0.10), 'cam', F('pipeline'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
-  [S('s6', 2.10), 'press', F('node-signals'), { dur: 450 }],
-  [S('s6', 2.90), 'press', F('node-health'), { dur: 400 }],
-  [S('s6', 3.60), 'press', F('node-surge'), { dur: 400 }],
-  [S('s6', 4.30), 'press', F('node-incentive'), { dur: 400 }],
-  [S('s6', 5.00), 'press', F('node-router'), { dur: 400 }],
-  [S('s6', 5.70), 'hideCursor'],
+  // Card B claims five modules; this shows them.
+  [S('s4', 0.20), 'press', F('node-signals'), { dur: 420 }],
+  [S('s4', 0.90), 'press', F('node-health'), { dur: 380 }],
+  [S('s4', 1.60), 'press', F('node-surge'), { dur: 380 }],
+  [S('s4', 2.30), 'press', F('node-incentive'), { dur: 380 }],
+  [S('s4', 3.00), 'press', F('node-router'), { dur: 380 }],
+  [S('s4', 3.70), 'hideCursor'],
+  [S('s4', 4.10), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
 
-  [S('s7', 0.10), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
+  [S('s5', 0.10), 'cam', F('impact'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
+  // The line about the money was recorded but dropped; this panel states it
+  // better than saying it, and it lands while he is still on the result.
+  [S('s5', 5.00), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+  [S('s5', 6.30), 'press', F('scenario-5'), { dur: 520 }],
 
-  [S('s8', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
-  [S('s8', 1.50), 'press', F('scenario-5'), { dur: 550 }],
-
-  [S('s9', -0.50), 'hideCursor'],
-  [S('s9', -0.30), 'mark', false],
-  [S('s9', 0.90), 'endcard'],
+  [S('s7', -0.50), 'hideCursor'],
+  [S('s7', -0.30), 'mark', false],
+  [S('s7', 0.90), 'endcard'],
 ];
 
 timeline.lines.forEach((l, i) => {

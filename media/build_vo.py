@@ -98,6 +98,10 @@ timeline, parts = [], []
 t = spec["leadIn"] / 1000.0
 
 for line in spec["lines"]:
+    if line.get("skip"):
+        # Recorded, deliberately unused: the picture already carries it.
+        print(f"  {line['id']:6s}  (skipped)")
+        continue
     mp3 = os.path.join(VO, f"{line['id']}.mp3")
     # A failed run can leave a truncated file behind, and "it exists" is not the
     # same as "it decodes". Probe the cached clip before trusting it.

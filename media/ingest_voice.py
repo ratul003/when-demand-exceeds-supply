@@ -118,9 +118,10 @@ if dry:
 
 # ── Work out the stretch this particular read needs ───────────────────────────
 PAD = 0.06   # just enough not to clip the consonant at either end
-speech = sum(b - a for a, b in segs) + 2 * PAD * len(segs)
+used = [i for i, l in enumerate(spec["lines"]) if not l.get("skip")]
+speech = sum(segs[i][1] - segs[i][0] + 2 * PAD for i in used)
 overhead = (spec["leadIn"] / 1000.0
-            + sum(l["gap"] for l in spec["lines"][:-1]) / 1000.0
+            + sum(l["gap"] for l in spec["lines"][:-1] if not l.get("skip")) / 1000.0
             + END_CARD)
 room = TARGET_TOTAL - overhead
 tempo = max(1.0, min(1.12, speech / room)) if room > 0 else 1.0
