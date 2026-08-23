@@ -16,9 +16,18 @@ spec = json.load(open(os.path.join(HERE, spec_name)))
 W = 74
 BAR = "=" * W
 
+n = len(spec["lines"])
+label = ("48 second social cut, for LinkedIn" if n < 12
+         else "full film, 2 minutes 20, for the project site")
+
+pace = ("Aim for roughly 40 to 45 seconds of speech, pauses excluded."
+        if n < 12 else
+        "This one is longer, about 2 minutes of speech. Take a sip of water\n  between chapters. If you need a break, stop the recording and start a\n  second one; just tell me, and I will ingest them in order.")
+
 head = f"""{BAR}
   NARRATION SCRIPT
-  "When Demand Exceeds Supply" - 48 second social cut
+  "When Demand Exceeds Supply" - {label}
+  {n} lines
 {BAR}
 
   HOW TO RECORD
@@ -28,7 +37,7 @@ head = f"""{BAR}
   Phone    Voice Memos. About 20cm away, slightly OFF TO THE SIDE of your
            mouth, not straight on.
   Quiet    Fans and AC off, windows shut, Do Not Disturb on.
-  Take     Read all {len(spec['lines'])} lines in ONE recording.
+  Take     Read all {n} lines in ONE recording.
 
   THE ONLY RULE THAT MATTERS
 
@@ -41,9 +50,9 @@ head = f"""{BAR}
 
   Talk to one person across a table. Do not announce it. A touch slower
   than normal conversation. Let the last word of each line land instead
-  of trailing off. Line {len(spec['lines'])} is the one to under-play.
+  of trailing off. The last line is the one to under-play.
 
-  Aim for roughly 40 to 45 seconds of actual speech, pauses excluded.
+  {pace}
 
 {BAR}
 """

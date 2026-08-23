@@ -22,6 +22,12 @@ CLEAN = (
     "highpass=f=75,"              # handling noise and desk rumble
     "afftdn=nf=-28:tn=1,"         # spectral denoise for room hiss
     "adeclip,"
+    # Keep a quarter second of every breath and drop the rest. Tightens the read
+    # without touching pitch or the pace of the words themselves, which is what
+    # a blanket speed-up would do. Runs before the compressor, which would
+    # otherwise lift the noise floor above the threshold.
+    "silenceremove=stop_periods=-1:stop_duration=0.28:stop_threshold=-38dB:detection=rms,"
+    "atempo=1.04,"            # pitch-preserving, to land the cut under 50s
     "equalizer=f=180:t=q:w=1.2:g=-2.5,"   # cut small-room boxiness
     "equalizer=f=3200:t=q:w=1.8:g=2.5,"   # presence, so it cuts through the bed
     "deesser=i=0.35,"
@@ -53,42 +59,55 @@ total = float(subprocess.check_output([
     "-of", "default=nw=1:nk=1", src]).strip())
 
 # ── Find the pauses ───────────────────────────────────────────────────────────
-det = subprocess.run(
-    [FFMPEG, "-hide_banner", "-i", src, "-af",
-     "silencedetect=noise=-32dB:d=0.55", "-f", "null", "-"],
-    capture_output=True, text=True).stderr
-starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", det)]
-ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", det)]
-if len(ends) < len(starts):
-    ends.append(total)
+def split_at(min_gap: float):
+    """Speech segments, treating any silence >= min_gap as a line break."""
+    det = subprocess.run(
+        [FFMPEG, "-hide_banner", "-i", src, "-af",
+         f"silencedetect=noise=-32dB:d={min_gap}", "-f", "null", "-"],
+        capture_output=True, text=True).stderr
+    starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", det)]
+    ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", det)]
+    if len(ends) < len(starts):
+        ends.append(total)
+    segs, cur = [], 0.0
+    for s, e in zip(starts, ends):
+        if s - cur > 0.35:
+            segs.append((cur, s))
+        cur = e
+    if total - cur > 0.35:
+        segs.append((cur, total))
+    return segs
 
-# Speech lives between the silences.
-segs, cur = [], 0.0
-for s, e in zip(starts, ends):
-    if s - cur > 0.55:
-        segs.append((cur, s))
-    cur = e
-if total - cur > 0.55:
-    segs.append((cur, total))
 
-print(f"recording: {total:.1f}s   pauses found: {len(starts)}   speech segments: {len(segs)}")
+# A reader breathes mid-sentence. Rather than demand an unnatural delivery,
+# widen the gap that counts as a line break until the split matches the script.
+segs, used = None, None
+for gap in (0.55, 0.7, 0.85, 1.0, 1.15, 1.3, 1.5, 1.7, 1.9):
+    cand = split_at(gap)
+    if len(cand) == len(ids):
+        segs, used = cand, gap
+        break
+    if segs is None:
+        segs, used = cand, gap   # keep the first attempt for the error report
+
+print(f"recording: {total:.1f}s   speech segments: {len(segs)}   "
+      f"(line break = silence >= {used}s)")
 for i, (a, b) in enumerate(segs):
     label = ids[i] if i < len(ids) else "EXTRA"
     print(f"  {label:6s} {a:6.2f} -> {b:6.2f}  ({b - a:4.1f}s)")
 
 if len(segs) != len(ids):
     raise SystemExit(
-        f"\nExpected {len(ids)} segments, found {len(segs)}.\n"
-        "Leave a clear ~1.5s pause between lines and none inside a line, then "
-        "re-run. If a segment boundary is only slightly off, adjust the "
-        "silencedetect threshold (-32dB) or duration (0.55) at the top of this "
-        "script. --dry shows the split without writing anything.")
+        f"\nExpected {len(ids)} segments, found {len(segs)}, and no line-break "
+        "threshold between 0.55s and 1.9s gave a clean split.\n"
+        "That usually means two lines ran together with no pause, or a pause "
+        "inside one line is longer than the pauses between lines.")
 
 if dry:
     raise SystemExit("\n--dry: nothing written.")
 
 # ── Cut, clean, write ─────────────────────────────────────────────────────────
-PAD = 0.12
+PAD = 0.06   # just enough not to clip the consonant at either end
 for (a, b), lid in zip(segs, ids):
     out = os.path.join(VO, f"{lid}.mp3")
     subprocess.run([

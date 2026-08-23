@@ -2,7 +2,7 @@
   "voice": "en-US-AndrewNeural",
   "rate": "-4%",
   "pitch": "-2Hz",
-  "leadIn": 600,
+  "leadIn": 350,
   "elevenlabs": {
     "model_id": "eleven_multilingual_v2",
     "voice_id": null,
@@ -14,37 +14,37 @@
   "lines": [
     {
       "id": "s1",
-      "gap": 350,
+      "gap": 250,
       "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call."
     },
     {
       "id": "s2",
-      "gap": 700,
+      "gap": 450,
       "text": "Twelve more are offline. Nobody told them."
     },
     {
       "id": "s3",
-      "gap": 500,
+      "gap": 350,
       "text": "Supply is fixed. Push demand past it and the queue compounds. At five and a half times, the wait is over an hour."
     },
     {
       "id": "s4",
-      "gap": 500,
+      "gap": 350,
       "text": "So it surges by category, and ring fences every dollar to pay the experts who come back online. The response funds itself."
     },
     {
       "id": "s5",
-      "gap": 450,
+      "gap": 350,
       "text": "Without it the queue peaks at sixty five and stays there. With it, nine experts accept and the delay halves."
     },
     {
       "id": "s6",
-      "gap": 600,
+      "gap": 400,
       "text": "Four hundred and twenty dollars in. Three hundred and eighty out. Net cost, forty dollars."
     },
     {
       "id": "s7",
-      "gap": 2000,
+      "gap": 1800,
       "text": "You cannot surge price a therapist. But you can make sure nobody finds out too late."
     }
   ]

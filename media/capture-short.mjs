@@ -19,7 +19,7 @@ const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline-short.json
 const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
 const S = (id, off = 0) => +(L[id].start + off).toFixed(3);
 const E = (id, off = 0) => +(L[id].end + off).toFixed(3);
-const TOTAL = E('s7', 2.6);
+const TOTAL = E('s7', 2.0);
 
 const CAPTIONS = {
   s1: '23:08. Forty-seven people waiting. Three experts online, all on a call.',

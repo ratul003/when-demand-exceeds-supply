@@ -62,7 +62,10 @@ window.FILM = (function () {
       max-width: 1180px; padding: 15px 30px; border-radius: 13px;
       background: rgba(6,8,14,0.80); border: 1px solid rgba(255,255,255,0.10);
       backdrop-filter: blur(14px); color: #eef2f7; font-size: 25px; line-height: 1.42;
-      letter-spacing: -0.011em; text-align: center; opacity: 0; transition: opacity .28s; }
+      letter-spacing: -0.011em; text-align: center; opacity: 0; transition: opacity .28s;
+      /* Above the card, so the closing line reads cleanly over the end card
+         instead of bleeding through it. */
+      z-index: 5; }
     #film-chapter { position: absolute; left: 54px; top: 46px; display: flex; align-items: center;
       gap: 12px; opacity: 0; transition: opacity .45s; }
     #film-chapter .n { font-size: 13px; font-weight: 800; letter-spacing: .22em; color: ${CYAN}; }
@@ -310,6 +313,7 @@ window.FILM = (function () {
     },
 
     endcard() {
+      card.style.background = '#06060b';   // fully opaque; nothing shows through
       card.innerHTML = `
         <div style="font-size:${Math.round(13 / K * 0.72)}px;letter-spacing:.34em;color:${CYAN};font-weight:800;margin-bottom:24px">EQUILIBRIUM</div>
         <div style="font-size:${Math.round(60 * K)}px;font-weight:800;color:#f1f5f9;letter-spacing:-0.028em;text-align:center;line-height:1.08;max-width:90%">
