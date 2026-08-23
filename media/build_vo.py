@@ -137,9 +137,18 @@ for i, mp3 in enumerate(parts):
     labels.append(f"[a{i}]")
 
 out = os.path.join(VO, "narration.mp3")
+# Synthesised narration is clean but thin. The same warm profile chosen for
+# the recorded voice keeps the two interchangeable and stops the TTS sounding
+# like a screen reader over a produced picture.
+POLISH = ("equalizer=f=150:t=q:w=1.0:g=2.0,"
+          "equalizer=f=430:t=q:w=1.4:g=-1.5,"
+          "equalizer=f=2800:t=q:w=2.0:g=1.0,"
+          "deesser=i=0.25,"
+          "acompressor=threshold=-22dB:ratio=2.4:attack=12:release=250:makeup=2,"
+          "alimiter=limit=0.95,")
 graph = ";".join(filters) + ";" + "".join(labels) + \
     f"amix=inputs={len(parts)}:duration=longest:normalize=0," \
-    f"apad=whole_dur={total:.3f},loudnorm=I=-16:TP=-1.5:LRA=11[out]"
+    f"apad=whole_dur={total:.3f},{POLISH}loudnorm=I=-16:TP=-1.5:LRA=11[out]"
 subprocess.run([FFMPEG, "-y", *inputs, "-filter_complex", graph,
                 "-map", "[out]", "-b:a", "192k", out], check=True, capture_output=True)
 
