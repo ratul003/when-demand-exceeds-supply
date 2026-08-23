@@ -1,5 +1,5 @@
 {
- "total": 49.636,
+ "total": 48.502,
  "beats": [
   [
    0,
@@ -18,32 +18,32 @@
    1
   ],
   [
-   3.25,
+   3.55,
    "open",
    2
   ],
   [
-   6.2829999999999995,
+   6.072,
    "caption",
    null
   ],
   [
-   6.2829999999999995,
+   6.072,
    "caption",
    "Twelve more are offline. Nobody told them."
   ],
   [
-   6.453,
+   6.242,
    "open",
    3
   ],
   [
-   9.731,
+   8.674,
    "open",
    0
   ],
   [
-   10.331,
+   9.274,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -53,69 +53,172 @@
    }
   ],
   [
-   10.381,
+   9.304,
    "caption",
    null
   ],
   [
-   10.411000000000001,
+   9.304,
    "caption",
-   "Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour."
+   "At foodpanda I raised the incentive and riders appeared."
   ],
   [
-   10.481,
+   9.424,
    "veil",
    0,
    700
   ],
   [
-   10.581,
+   9.474,
    "cam",
    "[data-film=\"queue\"]",
    {
-    "dur": 2200,
+    "dur": 1800,
     "fill": 0.97,
     "fillY": 0.92
    }
   ],
   [
-   10.681,
+   9.624,
    "mark",
    true
   ],
   [
-   12.131,
+   10.424,
    "point",
    "[data-film=\"queue-slider\"]",
    {
-    "dur": 600
+    "dur": 550
    }
   ],
   [
-   13.031,
+   11.124,
    "slider",
    "[data-film=\"queue-slider\"]",
-   5.6,
+   2.6,
    {
-    "dur": 4600
+    "dur": 2000
    }
   ],
   [
-   17.831,
-   "hideCursor"
-  ],
-  [
-   18.398,
+   13.346,
    "caption",
    null
   ],
   [
-   18.398,
+   13.346,
    "caption",
-   "It surges by category and ring-fences every dollar to pay the experts who come back online. The response funds itself."
+   "That does not work on a therapist. You cannot price a credential into existence."
   ],
   [
-   18.668,
+   13.666,
+   "slider",
+   "[data-film=\"queue-slider\"]",
+   5.6,
+   {
+    "dur": 3000
+   }
+  ],
+  [
+   16.966,
+   "hideCursor"
+  ],
+  [
+   18.614,
+   "caption",
+   null
+  ],
+  [
+   18.614,
+   "caption",
+   "Those twelve never declined. Nobody asked. Supply is fixed. Information is not."
+  ],
+  [
+   18.834,
+   "cam",
+   "[data-film=\"notif\"]",
+   {
+    "dur": 1500,
+    "fill": 0.92,
+    "fillY": 0.92
+   }
+  ],
+  [
+   25.058,
+   "caption",
+   null
+  ],
+  [
+   25.058,
+   "caption",
+   "So I built Equilibrium. Five modules that watch both sides and ask, in seconds."
+  ],
+  [
+   25.278,
+   "cam",
+   "[data-film=\"pipeline\"]",
+   {
+    "dur": 1500,
+    "fill": 0.97,
+    "fillY": 0.92
+   }
+  ],
+  [
+   27.278,
+   "press",
+   "[data-film=\"node-signals\"]",
+   {
+    "dur": 450
+   }
+  ],
+  [
+   28.078,
+   "press",
+   "[data-film=\"node-health\"]",
+   {
+    "dur": 400
+   }
+  ],
+  [
+   28.778,
+   "press",
+   "[data-film=\"node-surge\"]",
+   {
+    "dur": 400
+   }
+  ],
+  [
+   29.478,
+   "press",
+   "[data-film=\"node-incentive\"]",
+   {
+    "dur": 400
+   }
+  ],
+  [
+   30.178,
+   "press",
+   "[data-film=\"node-router\"]",
+   {
+    "dur": 400
+   }
+  ],
+  [
+   30.878,
+   "hideCursor"
+  ],
+  [
+   31.02,
+   "caption",
+   null
+  ],
+  [
+   31.02,
+   "caption",
+   "Surge on the customer side pays the bonus. The response funds itself."
+  ],
+  [
+   31.24,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -125,78 +228,58 @@
    }
   ],
   [
-   27.750999999999998,
+   35.998000000000005,
    "caption",
    null
   ],
   [
-   27.750999999999998,
+   35.998000000000005,
    "caption",
-   "Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves."
+   "Nine accept. The delay halves. Net cost to the platform, $40."
   ],
   [
-   27.971,
-   "cam",
-   "[data-film=\"impact\"]",
-   {
-    "dur": 1500,
-    "fill": 0.97,
-    "fillY": 0.92
-   }
-  ],
-  [
-   36.735,
-   "caption",
-   null
-  ],
-  [
-   36.735,
-   "caption",
-   "$420 in. $380 out. Net cost, $40."
-  ],
-  [
-   36.955,
+   36.218,
    "cam",
    "[data-film=\"scenario\"]",
    {
-    "dur": 1500,
+    "dur": 1400,
     "fill": 0.97,
     "fillY": 0.92
    }
   ],
   [
-   38.455,
+   37.618,
    "press",
    "[data-film=\"scenario-5\"]",
    {
-    "dur": 600
+    "dur": 550
    }
   ],
   [
-   42.798,
+   41.37,
    "hideCursor"
   ],
   [
-   42.998,
+   41.57,
    "mark",
    false
   ],
   [
-   43.178000000000004,
+   41.75,
    "caption",
    null
   ],
   [
-   43.178000000000004,
+   41.75,
    "caption",
-   "You cannot surge-price a therapist. But you can make sure nobody finds out too late."
+   "You cannot surge-price a therapist. You can make sure nobody finds out too late."
   ],
   [
-   44.198,
+   42.77,
    "endcard"
   ],
   [
-   47.936,
+   46.802,
    "caption",
    null
   ]

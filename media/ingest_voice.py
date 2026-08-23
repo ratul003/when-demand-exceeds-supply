@@ -18,7 +18,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FFMPEG = "/opt/homebrew/bin/ffmpeg"
 FFPROBE = "/opt/homebrew/bin/ffprobe"
 
-CLEAN = (
+TARGET_TOTAL = 49.0   # seconds of finished film
+END_CARD = 2.0
+
+
+def clean_chain(tempo: float) -> str:
+    return CLEAN_PRE + f"atempo={tempo:.4f}," + CLEAN_POST
+
+
+CLEAN_PRE = (
     # The "2-warm" treatment, chosen by ear from voice_variants.py. Filter order
     # matches that variant exactly, so the film sounds like the sample he picked.
     "adeclip,"                              # source peaks at 0.0 dB
@@ -27,7 +35,8 @@ CLEAN = (
     # Keep a quarter second of every breath and drop the rest. Tightens the read
     # without touching pitch or the pace of the words, which a speed-up would.
     "silenceremove=stop_periods=-1:stop_duration=0.28:stop_threshold=-38dB:detection=rms,"
-    "atempo=1.04,"                          # pitch-preserving, lands the cut under 50s
+)
+CLEAN_POST = (
     "equalizer=f=150:t=q:w=1.0:g=2.5,"      # body the phone mic never caught
     "equalizer=f=430:t=q:w=1.4:g=-1.5,"     # take the box out of the low mids
     "equalizer=f=2800:t=q:w=2.0:g=1.0,"     # articulation, gently
@@ -107,8 +116,19 @@ if len(segs) != len(ids):
 if dry:
     raise SystemExit("\n--dry: nothing written.")
 
-# ── Cut, clean, write ─────────────────────────────────────────────────────────
+# ── Work out the stretch this particular read needs ───────────────────────────
 PAD = 0.06   # just enough not to clip the consonant at either end
+speech = sum(b - a for a, b in segs) + 2 * PAD * len(segs)
+overhead = (spec["leadIn"] / 1000.0
+            + sum(l["gap"] for l in spec["lines"][:-1]) / 1000.0
+            + END_CARD)
+room = TARGET_TOTAL - overhead
+tempo = max(1.0, min(1.12, speech / room)) if room > 0 else 1.0
+print(f"\nspeech {speech:.1f}s + overhead {overhead:.1f}s -> "
+      f"stretch {tempo:.3f}x to land at {TARGET_TOTAL:.0f}s")
+if tempo >= 1.115:
+    print("⚠ at the stretch limit; the read is long enough that it may sound hurried.")
+CLEAN = clean_chain(tempo)
 for (a, b), lid in zip(segs, ids):
     out = os.path.join(VO, f"{lid}.mp3")
     subprocess.run([

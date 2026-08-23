@@ -19,16 +19,18 @@ const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline-short.json
 const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
 const S = (id, off = 0) => +(L[id].start + off).toFixed(3);
 const E = (id, off = 0) => +(L[id].end + off).toFixed(3);
-const TOTAL = E('s7', 2.0);
+const TOTAL = E('s9', 2.0);
 
 const CAPTIONS = {
   s1: '23:08. Forty-seven people waiting. Three experts online, all on a call.',
   s2: 'Twelve more are offline. Nobody told them.',
-  s3: 'Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour.',
-  s4: 'It surges by category and ring-fences every dollar to pay the experts who come back online. The response funds itself.',
-  s5: 'Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves.',
-  s6: '$420 in. $380 out. Net cost, $40.',
-  s7: 'You cannot surge-price a therapist. But you can make sure nobody finds out too late.',
+  s3: 'At foodpanda I raised the incentive and riders appeared.',
+  s4: 'That does not work on a therapist. You cannot price a credential into existence.',
+  s5: 'Those twelve never declined. Nobody asked. Supply is fixed. Information is not.',
+  s6: 'So I built Equilibrium. Five modules that watch both sides and ask, in seconds.',
+  s7: 'Surge on the customer side pays the bonus. The response funds itself.',
+  s8: 'Nine accept. The delay halves. Net cost to the platform, $40.',
+  s9: 'You cannot surge-price a therapist. You can make sure nobody finds out too late.',
 };
 
 const F = (sel) => `[data-film="${sel}"]`;
@@ -36,27 +38,41 @@ const F = (sel) => `[data-film="${sel}"]`;
 const beats = [
   [0.0, 'veil', 1, 0],
   [0.3, 'open', 1],
-  [S('s1', 2.9), 'open', 2],
+  [S('s1', 3.20), 'open', 2],
   [S('s2', 0.05), 'open', 3],
   [E('s2', -0.35), 'open', 0],
   [E('s2', 0.25), 'cam', F('queue'), { dur: 10, fill: 0.66, fillY: 0.60 }],
   [E('s2', 0.40), 'veil', 0, 700],
   [E('s2', 0.60), 'mark', true],
 
-  // One continuous drag from a quiet evening straight through to critical
-  [S('s3', 0.05), 'cam', F('queue'), { dur: 2200, fill: 0.97, fillY: 0.92 }],
-  [S('s3', 1.60), 'point', F('queue-slider'), { dur: 600 }],
-  [S('s3', 2.50), 'slider', F('queue-slider'), 5.6, { dur: 4600 }],
-  [S('s3', 7.30), 'hideCursor'],
+  // Demand climbs while he describes the lever that used to work...
+  [S('s3', 0.05), 'cam', F('queue'), { dur: 1800, fill: 0.97, fillY: 0.92 }],
+  [S('s3', 1.00), 'point', F('queue-slider'), { dur: 550 }],
+  [S('s3', 1.70), 'slider', F('queue-slider'), 2.6, { dur: 2000 }],
+  // ...and goes critical exactly as he says it does not work here.
+  [S('s4', 0.20), 'slider', F('queue-slider'), 5.6, { dur: 3000 }],
+  [S('s4', 3.50), 'hideCursor'],
 
-  [S('s4', 0.15), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
-  [S('s5', 0.10), 'cam', F('impact'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
-  [S('s6', 0.10), 'cam', F('scenario'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
-  [S('s6', 1.60), 'press', F('scenario-5'), { dur: 600 }],
+  // The push nobody sent.
+  [S('s5', 0.10), 'cam', F('notif'), { dur: 1500, fill: 0.92, fillY: 0.92 }],
 
-  [S('s7', -0.50), 'hideCursor'],
-  [S('s7', -0.30), 'mark', false],
-  [S('s7', 0.90), 'endcard'],
+  // The project itself: five modules, lighting up as he names them.
+  [S('s6', 0.10), 'cam', F('pipeline'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
+  [S('s6', 2.10), 'press', F('node-signals'), { dur: 450 }],
+  [S('s6', 2.90), 'press', F('node-health'), { dur: 400 }],
+  [S('s6', 3.60), 'press', F('node-surge'), { dur: 400 }],
+  [S('s6', 4.30), 'press', F('node-incentive'), { dur: 400 }],
+  [S('s6', 5.00), 'press', F('node-router'), { dur: 400 }],
+  [S('s6', 5.70), 'hideCursor'],
+
+  [S('s7', 0.10), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
+
+  [S('s8', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+  [S('s8', 1.50), 'press', F('scenario-5'), { dur: 550 }],
+
+  [S('s9', -0.50), 'hideCursor'],
+  [S('s9', -0.30), 'mark', false],
+  [S('s9', 0.90), 'endcard'],
 ];
 
 timeline.lines.forEach((l, i) => {
