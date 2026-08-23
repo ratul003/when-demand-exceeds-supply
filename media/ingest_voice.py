@@ -19,19 +19,20 @@ FFMPEG = "/opt/homebrew/bin/ffmpeg"
 FFPROBE = "/opt/homebrew/bin/ffprobe"
 
 CLEAN = (
-    "highpass=f=75,"              # handling noise and desk rumble
-    "afftdn=nf=-28:tn=1,"         # spectral denoise for room hiss
-    "adeclip,"
+    # The "2-warm" treatment, chosen by ear from voice_variants.py. Filter order
+    # matches that variant exactly, so the film sounds like the sample he picked.
+    "adeclip,"                              # source peaks at 0.0 dB
+    "highpass=f=72,"
+    "afftdn=nf=-26:tn=1,"                   # room hiss
     # Keep a quarter second of every breath and drop the rest. Tightens the read
-    # without touching pitch or the pace of the words themselves, which is what
-    # a blanket speed-up would do. Runs before the compressor, which would
-    # otherwise lift the noise floor above the threshold.
+    # without touching pitch or the pace of the words, which a speed-up would.
     "silenceremove=stop_periods=-1:stop_duration=0.28:stop_threshold=-38dB:detection=rms,"
-    "atempo=1.04,"            # pitch-preserving, to land the cut under 50s
-    "equalizer=f=180:t=q:w=1.2:g=-2.5,"   # cut small-room boxiness
-    "equalizer=f=3200:t=q:w=1.8:g=2.5,"   # presence, so it cuts through the bed
-    "deesser=i=0.35,"
-    "acompressor=threshold=-20dB:ratio=3.2:attack=8:release=200:makeup=3,"
+    "atempo=1.04,"                          # pitch-preserving, lands the cut under 50s
+    "equalizer=f=150:t=q:w=1.0:g=2.5,"      # body the phone mic never caught
+    "equalizer=f=430:t=q:w=1.4:g=-1.5,"     # take the box out of the low mids
+    "equalizer=f=2800:t=q:w=2.0:g=1.0,"     # articulation, gently
+    "deesser=i=0.25,"
+    "acompressor=threshold=-22dB:ratio=2.6:attack=12:release=250:makeup=3,"
     "alimiter=limit=0.95,"
     "loudnorm=I=-16:TP=-1.5:LRA=9"
 )

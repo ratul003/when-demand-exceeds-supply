@@ -1,5 +1,5 @@
 {
-  "total": 49.401,
+  "total": 49.436,
   "provider": "edge",
   "lines": [
     {
@@ -7,56 +7,56 @@
       "chapter": 0,
       "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call.",
       "start": 0.35,
-      "end": 6.152,
-      "dur": 5.802
+      "end": 6.153,
+      "dur": 5.803
     },
     {
       "id": "s2",
       "chapter": 0,
       "text": "Twelve more are offline. Nobody told them.",
-      "start": 6.402,
-      "end": 10.082,
-      "dur": 3.68
+      "start": 6.403,
+      "end": 10.081,
+      "dur": 3.678
     },
     {
       "id": "s3",
       "chapter": 0,
       "text": "Supply is fixed. Push demand past it and the queue compounds. At five and a half times, the wait is over an hour.",
-      "start": 10.532,
-      "end": 18.162,
-      "dur": 7.629
+      "start": 10.531,
+      "end": 18.168,
+      "dur": 7.637
     },
     {
       "id": "s4",
       "chapter": 0,
       "text": "So it surges by category, and ring fences every dollar to pay the experts who come back online. The response funds itself.",
-      "start": 18.512,
-      "end": 27.513,
-      "dur": 9.001
+      "start": 18.518,
+      "end": 27.521,
+      "dur": 9.003
     },
     {
       "id": "s5",
       "chapter": 0,
       "text": "Without it the queue peaks at sixty five and stays there. With it, nine experts accept and the delay halves.",
-      "start": 27.863,
-      "end": 36.487,
-      "dur": 8.624
+      "start": 27.871,
+      "end": 36.505,
+      "dur": 8.634
     },
     {
       "id": "s6",
       "chapter": 0,
       "text": "Four hundred and twenty dollars in. Three hundred and eighty out. Net cost, forty dollars.",
-      "start": 36.837,
-      "end": 42.866,
-      "dur": 6.029
+      "start": 36.855,
+      "end": 42.898,
+      "dur": 6.043
     },
     {
       "id": "s7",
       "chapter": 0,
       "text": "You cannot surge price a therapist. But you can make sure nobody finds out too late.",
-      "start": 43.266,
-      "end": 47.601,
-      "dur": 4.335
+      "start": 43.298,
+      "end": 47.636,
+      "dur": 4.338
     }
   ]
 }

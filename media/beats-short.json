@@ -1,5 +1,5 @@
 {
- "total": 49.601,
+ "total": 49.636,
  "beats": [
   [
    0,
@@ -23,27 +23,27 @@
    2
   ],
   [
-   6.282,
+   6.2829999999999995,
    "caption",
    null
   ],
   [
-   6.282,
+   6.2829999999999995,
    "caption",
    "Twelve more are offline. Nobody told them."
   ],
   [
-   6.452,
+   6.453,
    "open",
    3
   ],
   [
-   9.732,
+   9.731,
    "open",
    0
   ],
   [
-   10.332,
+   10.331,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -53,23 +53,23 @@
    }
   ],
   [
-   10.382000000000001,
+   10.381,
    "caption",
    null
   ],
   [
-   10.412,
+   10.411000000000001,
    "caption",
    "Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour."
   ],
   [
-   10.482,
+   10.481,
    "veil",
    0,
    700
   ],
   [
-   10.582,
+   10.581,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -79,12 +79,12 @@
    }
   ],
   [
-   10.682,
+   10.681,
    "mark",
    true
   ],
   [
-   12.132,
+   12.131,
    "point",
    "[data-film=\"queue-slider\"]",
    {
@@ -92,7 +92,7 @@
    }
   ],
   [
-   13.032,
+   13.031,
    "slider",
    "[data-film=\"queue-slider\"]",
    5.6,
@@ -101,21 +101,21 @@
    }
   ],
   [
-   17.832,
+   17.831,
    "hideCursor"
   ],
   [
-   18.392,
+   18.398,
    "caption",
    null
   ],
   [
-   18.392,
+   18.398,
    "caption",
    "It surges by category and ring-fences every dollar to pay the experts who come back online. The response funds itself."
   ],
   [
-   18.662,
+   18.668,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -125,17 +125,17 @@
    }
   ],
   [
-   27.743,
+   27.750999999999998,
    "caption",
    null
   ],
   [
-   27.743,
+   27.750999999999998,
    "caption",
    "Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves."
   ],
   [
-   27.963,
+   27.971,
    "cam",
    "[data-film=\"impact\"]",
    {
@@ -145,17 +145,17 @@
    }
   ],
   [
-   36.717000000000006,
+   36.735,
    "caption",
    null
   ],
   [
-   36.717000000000006,
+   36.735,
    "caption",
    "$420 in. $380 out. Net cost, $40."
   ],
   [
-   36.937,
+   36.955,
    "cam",
    "[data-film=\"scenario\"]",
    {
@@ -165,7 +165,7 @@
    }
   ],
   [
-   38.437,
+   38.455,
    "press",
    "[data-film=\"scenario-5\"]",
    {
@@ -173,30 +173,30 @@
    }
   ],
   [
-   42.766,
+   42.798,
    "hideCursor"
   ],
   [
-   42.966,
+   42.998,
    "mark",
    false
   ],
   [
-   43.146,
+   43.178000000000004,
    "caption",
    null
   ],
   [
-   43.146,
+   43.178000000000004,
    "caption",
    "You cannot surge-price a therapist. But you can make sure nobody finds out too late."
   ],
   [
-   44.166,
+   44.198,
    "endcard"
   ],
   [
-   47.900999999999996,
+   47.936,
    "caption",
    null
   ]
