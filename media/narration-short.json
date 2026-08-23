@@ -1,5 +1,5 @@
 {
-  "_note": "Text here is EXACTLY what Wahid recorded in 'Online Marketplace Sample.m4a'. Do not reword a line without asking him to re-record it. Gaps between lines are sized to hold the title cards that supply what the narration does not say.",
+  "_note": "Text here is EXACTLY what Wahid recorded in 'Online Marketplace Sample.m4a'. Do not reword a line without asking him to re-record it. The wide gaps after s2 and s3 hold the title cards.",
   "voice": "en-US-AndrewNeural",
   "rate": "-4%",
   "pitch": "-2Hz",
@@ -15,33 +15,32 @@
   "lines": [
     {
       "id": "s1",
-      "gap": 300,
+      "gap": 400,
       "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call."
     },
     {
       "id": "s2",
-      "gap": 2100,
+      "gap": 2200,
       "text": "Twelve more are offline. Nobody told them."
     },
     {
       "id": "s3",
-      "gap": 2300,
+      "gap": 2400,
       "text": "Supply is fixed. Push demand past it and the queue compounds. At five and a half times, the wait is over an hour."
     },
     {
       "id": "s4",
-      "gap": 300,
+      "gap": 450,
       "text": "So it surges by category, and ring fences every dollar to pay the experts who come back online. The response funds itself."
     },
     {
       "id": "s5",
-      "gap": 400,
+      "gap": 450,
       "text": "Without it the queue peaks at sixty five and stays there. With it, nine experts accept and the delay halves."
     },
     {
       "id": "s6",
-      "skip": true,
-      "gap": 300,
+      "gap": 500,
       "text": "Four hundred and twenty dollars in. Three hundred and eighty out. Net cost, forty dollars."
     },
     {

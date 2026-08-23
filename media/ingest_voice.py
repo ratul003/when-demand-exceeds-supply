@@ -18,7 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FFMPEG = "/opt/homebrew/bin/ffmpeg"
 FFPROBE = "/opt/homebrew/bin/ffprobe"
 
-TARGET_TOTAL = 49.0   # seconds of finished film
+TARGET_TOTAL = 60.0   # generous, so an unhurried read is never stretched
 END_CARD = 2.0
 
 

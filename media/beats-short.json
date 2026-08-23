@@ -1,5 +1,5 @@
 {
- "total": 47.729,
+ "total": 55.621,
  "beats": [
   [
    0,
@@ -23,32 +23,32 @@
    2
   ],
   [
-   6.46,
+   6.664,
    "caption",
    null
   ],
   [
-   6.46,
+   6.664,
    "caption",
    "Twelve more are offline. Nobody told them."
   ],
   [
-   6.63,
+   6.834,
    "open",
    3
   ],
   [
-   10.495,
+   10.751,
    "open",
    0
   ],
   [
-   10.645000000000001,
+   10.901000000000002,
    "caption",
    null
   ],
   [
-   10.695,
+   10.951,
    "card",
    "WHY THIS ONE IS DIFFERENT",
    "Raising the price<br>summons a driver.",
@@ -56,7 +56,7 @@
    1350
   ],
   [
-   11.795,
+   12.051,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -66,23 +66,23 @@
    }
   ],
   [
-   12.145,
+   12.401,
    "veil",
    0,
    600
   ],
   [
-   12.325000000000001,
-   "caption",
-   "Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour."
-  ],
-  [
-   12.345,
+   12.601,
    "mark",
    true
   ],
   [
-   13.445,
+   12.681000000000001,
+   "caption",
+   "Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour."
+  ],
+  [
+   13.801,
    "point",
    "[data-film=\"queue-slider\"]",
    {
@@ -90,7 +90,7 @@
    }
   ],
   [
-   14.245,
+   14.601,
    "slider",
    "[data-film=\"queue-slider\"]",
    5.6,
@@ -99,16 +99,16 @@
    }
   ],
   [
-   18.945,
+   19.301,
    "hideCursor"
   ],
   [
-   20.552,
+   21.029,
    "caption",
    null
   ],
   [
-   20.602,
+   21.079,
    "card",
    "SO I BUILT",
    "Equilibrium",
@@ -116,7 +116,7 @@
    1550
   ],
   [
-   21.752,
+   22.229,
    "cam",
    "[data-film=\"pipeline\"]",
    {
@@ -126,12 +126,12 @@
    }
   ],
   [
-   22.432,
+   23.009,
    "caption",
    "So it surges by category, and ring-fences every dollar to pay the experts who come back online. The response funds itself."
   ],
   [
-   22.752,
+   23.329,
    "press",
    "[data-film=\"node-signals\"]",
    {
@@ -139,7 +139,7 @@
    }
   ],
   [
-   23.452,
+   24.029,
    "press",
    "[data-film=\"node-health\"]",
    {
@@ -147,7 +147,7 @@
    }
   ],
   [
-   24.152,
+   24.729,
    "press",
    "[data-film=\"node-surge\"]",
    {
@@ -155,7 +155,7 @@
    }
   ],
   [
-   24.852,
+   25.429,
    "press",
    "[data-film=\"node-incentive\"]",
    {
@@ -163,7 +163,7 @@
    }
   ],
   [
-   25.552,
+   26.129,
    "press",
    "[data-film=\"node-router\"]",
    {
@@ -171,11 +171,11 @@
    }
   ],
   [
-   26.252,
+   26.829,
    "hideCursor"
   ],
   [
-   26.652,
+   27.229,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -185,17 +185,17 @@
    }
   ],
   [
-   31.944,
+   32.785999999999994,
    "caption",
    null
   ],
   [
-   31.944,
+   32.816,
    "caption",
    "Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves."
   ],
   [
-   32.164,
+   33.036,
    "cam",
    "[data-film=\"impact\"]",
    {
@@ -205,7 +205,17 @@
    }
   ],
   [
-   37.064,
+   42.199999999999996,
+   "caption",
+   null
+  ],
+  [
+   42.230000000000004,
+   "caption",
+   "$420 in. $380 out. Net cost, $40."
+  ],
+  [
+   42.45,
    "cam",
    "[data-film=\"scenario\"]",
    {
@@ -215,7 +225,7 @@
    }
   ],
   [
-   38.364,
+   43.75,
    "press",
    "[data-film=\"scenario-5\"]",
    {
@@ -223,30 +233,30 @@
    }
   ],
   [
-   40.788,
+   48.619,
    "hideCursor"
   ],
   [
-   40.988,
+   48.819,
    "mark",
    false
   ],
   [
-   41.168,
+   48.919,
    "caption",
    null
   ],
   [
-   41.168,
+   48.999,
    "caption",
    "You cannot surge-price a therapist. But you can make sure nobody finds out too late."
   ],
   [
-   42.188,
+   50.019,
    "endcard"
   ],
   [
-   46.028999999999996,
+   53.921,
    "caption",
    null
   ]

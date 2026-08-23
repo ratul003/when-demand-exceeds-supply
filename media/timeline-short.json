@@ -1,5 +1,5 @@
 {
-  "total": 47.529,
+  "total": 55.421,
   "provider": "edge",
   "lines": [
     {
@@ -7,48 +7,56 @@
       "chapter": 0,
       "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call.",
       "start": 0.35,
-      "end": 6.28,
-      "dur": 5.93
+      "end": 6.384,
+      "dur": 6.034
     },
     {
       "id": "s2",
       "chapter": 0,
       "text": "Twelve more are offline. Nobody told them.",
-      "start": 6.58,
-      "end": 10.345,
-      "dur": 3.765
+      "start": 6.784,
+      "end": 10.601,
+      "dur": 3.817
     },
     {
       "id": "s3",
       "chapter": 0,
       "text": "Supply is fixed. Push demand past it and the queue compounds. At five and a half times, the wait is over an hour.",
-      "start": 12.445,
-      "end": 20.252,
-      "dur": 7.807
+      "start": 12.801,
+      "end": 20.729,
+      "dur": 7.928
     },
     {
       "id": "s4",
       "chapter": 0,
       "text": "So it surges by category, and ring fences every dollar to pay the experts who come back online. The response funds itself.",
-      "start": 22.552,
-      "end": 31.764,
-      "dur": 9.212
+      "start": 23.129,
+      "end": 32.486,
+      "dur": 9.357
     },
     {
       "id": "s5",
       "chapter": 0,
       "text": "Without it the queue peaks at sixty five and stays there. With it, nine experts accept and the delay halves.",
-      "start": 32.064,
-      "end": 40.888,
-      "dur": 8.825
+      "start": 32.936,
+      "end": 41.9,
+      "dur": 8.964
+    },
+    {
+      "id": "s6",
+      "chapter": 0,
+      "text": "Four hundred and twenty dollars in. Three hundred and eighty out. Net cost, forty dollars.",
+      "start": 42.35,
+      "end": 48.619,
+      "dur": 6.269
     },
     {
       "id": "s7",
       "chapter": 0,
       "text": "You cannot surge price a therapist. But you can make sure nobody finds out too late.",
-      "start": 41.288,
-      "end": 45.729,
-      "dur": 4.441
+      "start": 49.119,
+      "end": 53.621,
+      "dur": 4.502
     }
   ]
 }

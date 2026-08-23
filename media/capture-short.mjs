@@ -28,6 +28,7 @@ const CAPTIONS = {
   s3: 'Supply is fixed. Push demand past it and the queue compounds. At 5.5×, the wait is over an hour.',
   s4: 'So it surges by category, and ring-fences every dollar to pay the experts who come back online. The response funds itself.',
   s5: 'Without it the queue peaks at 65 and stays there. With it, nine experts accept and the delay halves.',
+  s6: '$420 in. $380 out. Net cost, $40.',
   s7: 'You cannot surge-price a therapist. But you can make sure nobody finds out too late.',
 };
 
@@ -68,10 +69,10 @@ const beats = [
   [S('s4', 4.10), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
 
   [S('s5', 0.10), 'cam', F('impact'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
-  // The line about the money was recorded but dropped; this panel states it
-  // better than saying it, and it lands while he is still on the result.
-  [S('s5', 5.00), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
-  [S('s5', 6.30), 'press', F('scenario-5'), { dur: 520 }],
+
+  // Voice and picture state the same three numbers together.
+  [S('s6', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+  [S('s6', 1.40), 'press', F('scenario-5'), { dur: 520 }],
 
   [S('s7', -0.50), 'hideCursor'],
   [S('s7', -0.30), 'mark', false],
