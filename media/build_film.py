@@ -86,7 +86,21 @@ for pi, (freqs, env) in enumerate(pads):
                    f"volume='{env}':eval=frame[pad{pi}]")
     mixlabels.append(f"[pad{pi}]")
 
+SOOTHING = bool(SFX)   # the social cut is meant to feel calm, not urgent
+
 for ci, t in enumerate(CARDS):
+    if SOOTHING:
+        # A low sine swell rather than a noise riser. A riser builds tension;
+        # this just lifts the floor for a moment and settles.
+        inputs += ["-f", "lavfi", "-i",
+                   "sine=frequency=110:duration=2.2:sample_rate=48000"]
+        delay = max(0, int((t - 1.9) * 1000))
+        filters.append(
+            f"[{i}:a]volume='sin(PI*min(1,t/2.2))':eval=frame,lowpass=f=420,"
+            f"volume=0.11,adelay={delay}|{delay}[riser{ci}]")
+        mixlabels.append(f"[riser{ci}]")
+        i += 1
+        continue
     inputs += ["-f", "lavfi", "-i", f"anoisesrc=d=1.6:c=pink:r=48000:a=0.5"]
     delay = max(0, int((t - 1.6) * 1000))
     filters.append(
@@ -96,8 +110,10 @@ for ci, t in enumerate(CARDS):
     i += 1
 
 graph = ";".join(filters) + ";" + "".join(mixlabels) + \
-    f"amix=inputs={len(mixlabels)}:duration=longest:normalize=0," \
-    f"tremolo=f=0.11:d=0.26,lowpass=f=780,aecho=0.8:0.85:900:0.28,volume=0.085," \
+    f"amix=inputs={len(mixlabels)}:duration=longest:normalize=0," + \
+    ("tremolo=f=0.1:d=0.13,lowpass=f=620,aecho=0.85:0.9:1400:0.35,volume=0.075,"
+     if SOOTHING else
+     "tremolo=f=0.11:d=0.26,lowpass=f=780,aecho=0.8:0.85:900:0.28,volume=0.085,") + \
     f"afade=t=in:d=3,afade=t=out:st={T - 4.5:.2f}:d=4.5,apad=whole_dur={T:.2f},atrim=0:{T:.2f}[bed]"
 run([FFMPEG, "-y", *inputs, "-filter_complex", graph, "-map", "[bed]", BED])
 print(f"bed.wav    {dur(BED):.1f}s  ({len(CARDS)} risers)")
@@ -108,8 +124,11 @@ print(f"bed.wav    {dur(BED):.1f}s  ({len(CARDS)} risers)")
 graph = (
     f"[1:a]aresample=48000,asplit=2[vo_out][vo_sc];"
     f"[vo_sc]apad=whole_dur={T:.2f}[sc];"
-    f"[0:a][sc]sidechaincompress=threshold=0.05:ratio=9:attack=15:release=380:makeup=1[duck];"
-    f"[duck][vo_out]amix=inputs=2:duration=longest:normalize=0,"
+    # Ratio 9 pumps audibly, which reads as urgency. Ease it for the social cut.
+    + ("[0:a][sc]sidechaincompress=threshold=0.06:ratio=5:attack=25:release=520:makeup=1[duck];"
+       if SOOTHING else
+       "[0:a][sc]sidechaincompress=threshold=0.05:ratio=9:attack=15:release=380:makeup=1[duck];")
+    + f"[duck][vo_out]amix=inputs=2:duration=longest:normalize=0,"
     f"alimiter=limit=0.95,loudnorm=I=-15:TP=-1.5:LRA=11,"
     f"aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,"
     f"atrim=0:{T:.2f}[out]"

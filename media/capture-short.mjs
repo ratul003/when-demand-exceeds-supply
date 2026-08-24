@@ -19,6 +19,7 @@ const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline-short.json
 const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
 const S = (id, off = 0) => +(L[id].start + off).toFixed(3);
 const E = (id, off = 0) => +(L[id].end + off).toFixed(3);
+const has = (id) => Boolean(L[id]);   // a line can be recorded but skipped
 const TOTAL = E('s7', 2.0);
 
 // Exactly what he says, so the captions and the voice never disagree.
@@ -70,9 +71,13 @@ const beats = [
 
   [S('s5', 0.10), 'cam', F('impact'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
 
-  // Voice and picture state the same three numbers together.
-  [S('s6', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
-  [S('s6', 1.40), 'press', F('scenario-5'), { dur: 520 }],
+  // With the money line in, voice and picture state the same three numbers
+  // together. Without it, the panel carries them alone, later in the shot.
+  ...(has('s6')
+    ? [[S('s6', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+       [S('s6', 1.40), 'press', F('scenario-5'), { dur: 520 }]]
+    : [[S('s5', 5.00), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+       [S('s5', 6.30), 'press', F('scenario-5'), { dur: 520 }]]),
 
   [S('s7', -0.50), 'hideCursor'],
   [S('s7', -0.30), 'mark', false],
