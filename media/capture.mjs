@@ -58,7 +58,7 @@ const F = (sel) => `[data-film="${sel}"]`;
 const beats = [
   // COLD OPEN — the scene the rest of the film argues from
   [0.0, 'veil', 1, 0],
-  [0.4, 'open', 1],
+  [0.1, 'open', 1],
   [S('c0-2', 0.05), 'open', 2],
   [S('c0-3', 0.05), 'open', 3],
   [E('c0-3', -1.0), 'open', 0],

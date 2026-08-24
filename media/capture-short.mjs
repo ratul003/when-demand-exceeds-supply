@@ -41,7 +41,7 @@ const F = (sel) => `[data-film="${sel}"]`;
 // to show how much of the project there is, then hand over the address.
 const beats = [
   [0.0, 'veil', 1, 0],
-  [0.3, 'open', 1],
+  [0.05, 'open', 1],
   [S('s1', 3.60), 'open', 2],
   [S('s2', 0.05), 'open', 3],
   [E('s2', -0.35), 'open', 0],

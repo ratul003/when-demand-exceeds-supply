@@ -287,12 +287,12 @@ window.FILM = (function () {
       if (step === 1) {
         scene.innerHTML = `
           <div style="font-size:${Math.round(14 / K * 0.78)}px;letter-spacing:.4em;color:rgba(255,255,255,0.42);margin-bottom:${Math.round(44 * K)}px">23:08 · ANY TUESDAY</div>
-          <div id="ko-n" style="font-size:${Math.round(190 * K)}px;font-weight:800;color:#f1f5f9;line-height:0.9;letter-spacing:-0.045em">0</div>
+          <div id="ko-n" style="font-size:${Math.round(232 * K)}px;font-weight:800;color:#f1f5f9;line-height:0.9;letter-spacing:-0.045em">0</div>
           <div style="font-size:${Math.round(19 / K * 0.78)}px;letter-spacing:.24em;color:${CYAN};margin-top:26px;text-align:center;max-width:88%">PEOPLE WAITING TO TALK TO SOMEONE</div>
           <div id="ko-rows" style="margin-top:${Math.round(64 * K)}px;display:flex;flex-direction:column;gap:15px;align-items:center"></div>`;
-        fade(scene, 1, 700);
+        fade(scene, 1, 320);
         const n = document.getElementById('ko-n');
-        tween(2400, (e) => { n.textContent = String(Math.round(47 * e)); });
+        tween(700, (e) => { n.textContent = String(Math.round(47 * e)); });
       }
       if (step === 2) {
         const row = document.createElement('div');
