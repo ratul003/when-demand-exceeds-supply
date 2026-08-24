@@ -161,6 +161,29 @@ page.on('console', (m) => { if (m.text().includes('[film]')) console.log('  !', 
 
 await page.goto(URL_, { waitUntil: 'networkidle' });
 await page.waitForTimeout(1800); // hydrate before the page is lifted onto the stage
+// ── Hydration gate ────────────────────────────────────────────────────────────
+// Rebuilding the site while `next start` is already serving leaves the running
+// server with stale chunks: the page renders perfectly but the client JS never
+// attaches. Every camera move still works, so the film looks fine while the
+// sliders and panels do nothing. Prove the page is live before rolling.
+const hydrated = await page.evaluate(async () => {
+  const read = () => document.querySelector('[data-film="barometer"]')?.innerText || '';
+  const before = read();
+  document.querySelector('[data-film="baro-red"]')?.click();
+  await new Promise((r) => setTimeout(r, 350));
+  const changed = read() !== before;
+  document.querySelector('[data-film="baro-green"]')?.click();
+  await new Promise((r) => setTimeout(r, 250));
+  return changed;
+});
+if (!hydrated) {
+  console.error('PAGE IS NOT HYDRATED - clicks do nothing.');
+  console.error('Restart the server after any `next build`:');
+  console.error('  lsof -ti:4311 | xargs kill -9; npx next start -p 4311');
+  await browser.close();
+  process.exit(1);
+}
+
 await page.evaluate(fs.readFileSync(path.join(HERE, 'director.js'), 'utf8'));
 
 // Fail loudly on a stale selector rather than shooting a film with dead beats.
