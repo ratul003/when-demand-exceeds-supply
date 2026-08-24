@@ -21,28 +21,28 @@ const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
 const S = (id, off = 0) => +(L[id].start + off).toFixed(3);
 const E = (id, off = 0) => +(L[id].end + off).toFixed(3);
 const has = (id) => Boolean(L[id]);   // a line can be recorded but skipped
-const TOTAL = E('s9', 2.0);
+const TOTAL = E('s9', 2.2);
 
 const CAPTIONS = {
-  s1: '23:08. Forty-seven people waiting. Three experts online, all on a call.',
+  s1: '23:08 on an expert marketplace. Forty-seven waiting, three experts online, all on a call.',
   s2: 'Twelve more are offline. Nobody told them.',
   s3: 'At foodpanda I raised the incentive and riders appeared.',
   s4: 'That does not work on a therapist. You cannot price a credential into existence.',
-  s5: 'Those twelve never declined. Nobody asked. Supply is fixed. Information is not.',
+  s5: 'They never declined. Nobody asked. Supply is fixed. Information is not.',
   s6: 'So I built Equilibrium. Five modules that watch both sides and ask, in seconds.',
-  s7: 'Surge on the customer side pays the bonus. The response funds itself.',
-  s8: 'Nine accept. The delay halves. Net cost to the platform, $40.',
-  s9: 'You cannot surge-price a therapist. You can make sure nobody finds out too late.',
+  s7: 'The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform $40.',
+  s8: 'You cannot surge-price a therapist. You can make sure nobody finds out too late.',
+  s9: 'Every module in this film is live on the site. Go and drive it yourself.',
 };
 
 const F = (sel) => `[data-film="${sel}"]`;
 
-// No title cards: the script states the thesis at line 4 and names the project
-// at line 6, so the narration explains itself and the picture just shows it.
+// The film ends on an invitation, not a full stop: the last two beats pull back
+// to show how much of the project there is, then hand over the address.
 const beats = [
   [0.0, 'veil', 1, 0],
   [0.3, 'open', 1],
-  [S('s1', 3.20), 'open', 2],
+  [S('s1', 3.60), 'open', 2],
   [S('s2', 0.05), 'open', 3],
   [E('s2', -0.35), 'open', 0],
   [E('s2', 0.25), 'cam', F('queue'), { dur: 10, fill: 0.66, fillY: 0.60 }],
@@ -69,14 +69,17 @@ const beats = [
   [S('s6', 5.00), 'press', F('node-router'), { dur: 400 }],
   [S('s6', 5.70), 'hideCursor'],
 
+  // One line, two halves: the money, then the result.
   [S('s7', 0.10), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
+  [S('s7', 4.60), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+  [S('s7', 6.00), 'press', F('scenario-5'), { dur: 550 }],
+  [S('s7', 7.20), 'hideCursor'],
 
-  [S('s8', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
-  [S('s8', 1.50), 'press', F('scenario-5'), { dur: 550 }],
+  // Pull back so the closing line lands over the whole thing.
+  [S('s8', 0.20), 'cam', F('pipeline'), { dur: 2800, fill: 0.44, fillY: 0.42 }],
 
-  [S('s9', -0.50), 'hideCursor'],
   [S('s9', -0.30), 'mark', false],
-  [S('s9', 0.90), 'endcard'],
+  [S('s9', 0.20), 'endcard'],
 ];
 
 timeline.lines.forEach((l, i) => {

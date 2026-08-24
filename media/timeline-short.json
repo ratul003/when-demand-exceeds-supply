@@ -1,78 +1,78 @@
 {
-  "total": 48.302,
+  "total": 51.628,
   "provider": "edge",
   "lines": [
     {
       "id": "s1",
       "chapter": 0,
-      "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call.",
+      "text": "Eleven at night on an expert marketplace. Forty seven waiting, three experts online, all on a call.",
       "start": 0.35,
-      "end": 5.942,
-      "dur": 5.592
+      "end": 7.43,
+      "dur": 7.08
     },
     {
       "id": "s2",
       "chapter": 0,
       "text": "Twelve more are offline. Nobody told them.",
-      "start": 6.192,
-      "end": 9.024,
+      "start": 7.68,
+      "end": 10.512,
       "dur": 2.832
     },
     {
       "id": "s3",
       "chapter": 0,
       "text": "At foodpanda I raised the incentive and riders appeared.",
-      "start": 9.424,
-      "end": 13.216,
+      "start": 10.912,
+      "end": 14.704,
       "dur": 3.792
     },
     {
       "id": "s4",
       "chapter": 0,
       "text": "That does not work on a therapist. You cannot price a credential into existence.",
-      "start": 13.466,
-      "end": 18.434,
+      "start": 14.954,
+      "end": 19.922,
       "dur": 4.968
     },
     {
       "id": "s5",
       "chapter": 0,
-      "text": "Those twelve never declined. Nobody asked. Supply is fixed. Information is not.",
-      "start": 18.734,
-      "end": 24.878,
-      "dur": 6.144
+      "text": "They never declined. Nobody asked. Supply is fixed. Information is not.",
+      "start": 20.222,
+      "end": 25.814,
+      "dur": 5.592
     },
     {
       "id": "s6",
       "chapter": 0,
       "text": "So I built Equilibrium. Five modules that watch both sides and ask, in seconds.",
-      "start": 25.178,
-      "end": 30.89,
+      "start": 26.114,
+      "end": 31.826,
       "dur": 5.712
     },
     {
       "id": "s7",
       "chapter": 0,
-      "text": "Surge on the customer side pays the bonus. The response funds itself.",
-      "start": 31.14,
-      "end": 35.868,
-      "dur": 4.728
+      "text": "The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform forty dollars.",
+      "start": 32.076,
+      "end": 39.948,
+      "dur": 7.872
     },
     {
       "id": "s8",
       "chapter": 0,
-      "text": "Nine accept. The delay halves. Net cost to the platform, forty dollars.",
-      "start": 36.118,
-      "end": 41.47,
-      "dur": 5.352
+      "text": "You cannot surge price a therapist. You can make sure nobody finds out too late.",
+      "start": 40.248,
+      "end": 44.88,
+      "dur": 4.632
     },
     {
       "id": "s9",
       "chapter": 0,
-      "text": "You cannot surge price a therapist. You can make sure nobody finds out too late.",
-      "start": 41.87,
-      "end": 46.502,
-      "dur": 4.632
+      "text": "Every module in this film is live on the site. Go and drive it yourself.",
+      "start": 45.18,
+      "end": 50.028,
+      "dur": 4.848
     }
   ]
 }

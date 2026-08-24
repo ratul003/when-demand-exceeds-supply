@@ -1,5 +1,5 @@
 {
- "total": 48.502,
+ "total": 52.228,
  "beats": [
   [
    0,
@@ -10,7 +10,7 @@
   [
    0.22999999999999998,
    "caption",
-   "23:08. Forty-seven people waiting. Three experts online, all on a call."
+   "23:08 on an expert marketplace. Forty-seven waiting, three experts online, all on a call."
   ],
   [
    0.3,
@@ -18,32 +18,32 @@
    1
   ],
   [
-   3.55,
+   3.95,
    "open",
    2
   ],
   [
-   6.072,
+   7.56,
    "caption",
    null
   ],
   [
-   6.072,
+   7.56,
    "caption",
    "Twelve more are offline. Nobody told them."
   ],
   [
-   6.242,
+   7.73,
    "open",
    3
   ],
   [
-   8.674,
+   10.162,
    "open",
    0
   ],
   [
-   9.274,
+   10.762,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -53,23 +53,23 @@
    }
   ],
   [
-   9.304,
+   10.792000000000002,
    "caption",
    null
   ],
   [
-   9.304,
+   10.792000000000002,
    "caption",
    "At foodpanda I raised the incentive and riders appeared."
   ],
   [
-   9.424,
+   10.912,
    "veil",
    0,
    700
   ],
   [
-   9.474,
+   10.962,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -79,12 +79,12 @@
    }
   ],
   [
-   9.624,
+   11.112,
    "mark",
    true
   ],
   [
-   10.424,
+   11.912,
    "point",
    "[data-film=\"queue-slider\"]",
    {
@@ -92,7 +92,7 @@
    }
   ],
   [
-   11.124,
+   12.612,
    "slider",
    "[data-film=\"queue-slider\"]",
    2.6,
@@ -101,17 +101,17 @@
    }
   ],
   [
-   13.346,
+   14.834000000000001,
    "caption",
    null
   ],
   [
-   13.346,
+   14.834000000000001,
    "caption",
    "That does not work on a therapist. You cannot price a credential into existence."
   ],
   [
-   13.666,
+   15.154,
    "slider",
    "[data-film=\"queue-slider\"]",
    5.6,
@@ -120,21 +120,21 @@
    }
   ],
   [
-   16.966,
+   18.454,
    "hideCursor"
   ],
   [
-   18.614,
+   20.102,
    "caption",
    null
   ],
   [
-   18.614,
+   20.102,
    "caption",
-   "Those twelve never declined. Nobody asked. Supply is fixed. Information is not."
+   "They never declined. Nobody asked. Supply is fixed. Information is not."
   ],
   [
-   18.834,
+   20.322,
    "cam",
    "[data-film=\"notif\"]",
    {
@@ -144,17 +144,17 @@
    }
   ],
   [
-   25.058,
+   25.994,
    "caption",
    null
   ],
   [
-   25.058,
+   25.994,
    "caption",
    "So I built Equilibrium. Five modules that watch both sides and ask, in seconds."
   ],
   [
-   25.278,
+   26.214,
    "cam",
    "[data-film=\"pipeline\"]",
    {
@@ -164,7 +164,7 @@
    }
   ],
   [
-   27.278,
+   28.214,
    "press",
    "[data-film=\"node-signals\"]",
    {
@@ -172,7 +172,7 @@
    }
   ],
   [
-   28.078,
+   29.014,
    "press",
    "[data-film=\"node-health\"]",
    {
@@ -180,7 +180,7 @@
    }
   ],
   [
-   28.778,
+   29.714,
    "press",
    "[data-film=\"node-surge\"]",
    {
@@ -188,7 +188,7 @@
    }
   ],
   [
-   29.478,
+   30.414,
    "press",
    "[data-film=\"node-incentive\"]",
    {
@@ -196,7 +196,7 @@
    }
   ],
   [
-   30.178,
+   31.114,
    "press",
    "[data-film=\"node-router\"]",
    {
@@ -204,21 +204,21 @@
    }
   ],
   [
-   30.878,
+   31.814,
    "hideCursor"
   ],
   [
-   31.02,
+   31.956,
    "caption",
    null
   ],
   [
-   31.02,
+   31.956,
    "caption",
-   "Surge on the customer side pays the bonus. The response funds itself."
+   "The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform $40."
   ],
   [
-   31.24,
+   32.176,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -228,17 +228,7 @@
    }
   ],
   [
-   35.998000000000005,
-   "caption",
-   null
-  ],
-  [
-   35.998000000000005,
-   "caption",
-   "Nine accept. The delay halves. Net cost to the platform, $40."
-  ],
-  [
-   36.218,
+   36.676,
    "cam",
    "[data-film=\"scenario\"]",
    {
@@ -248,7 +238,7 @@
    }
   ],
   [
-   37.618,
+   38.076,
    "press",
    "[data-film=\"scenario-5\"]",
    {
@@ -256,30 +246,50 @@
    }
   ],
   [
-   41.37,
+   39.276,
    "hideCursor"
   ],
   [
-   41.57,
-   "mark",
-   false
-  ],
-  [
-   41.75,
+   40.128,
    "caption",
    null
   ],
   [
-   41.75,
+   40.128,
    "caption",
    "You cannot surge-price a therapist. You can make sure nobody finds out too late."
   ],
   [
-   42.77,
+   40.448,
+   "cam",
+   "[data-film=\"pipeline\"]",
+   {
+    "dur": 2800,
+    "fill": 0.44,
+    "fillY": 0.42
+   }
+  ],
+  [
+   44.88,
+   "mark",
+   false
+  ],
+  [
+   45.06,
+   "caption",
+   null
+  ],
+  [
+   45.06,
+   "caption",
+   "Every module in this film is live on the site. Go and drive it yourself."
+  ],
+  [
+   45.38,
    "endcard"
   ],
   [
-   46.802,
+   50.327999999999996,
    "caption",
    null
   ]

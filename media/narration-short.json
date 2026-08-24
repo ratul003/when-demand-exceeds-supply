@@ -1,5 +1,5 @@
 {
-  "_note": "Synthesised narration. The script is self-contained: line 3-4 carry the thesis and line 6 names the project, so the film needs no title cards to explain itself.",
+  "_note": "Synthesised narration for the social cut. Line 1 says what the marketplace is, line 6 names the project, and line 9 is the invitation: the film's job is to send people to something they can touch, not to close a story.",
   "voice": "en-US-AndrewNeural",
   "rate": "-4%",
   "pitch": "-2Hz",
@@ -16,7 +16,7 @@
     {
       "id": "s1",
       "gap": 250,
-      "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call."
+      "text": "Eleven at night on an expert marketplace. Forty seven waiting, three experts online, all on a call."
     },
     {
       "id": "s2",
@@ -36,7 +36,7 @@
     {
       "id": "s5",
       "gap": 300,
-      "text": "Those twelve never declined. Nobody asked. Supply is fixed. Information is not."
+      "text": "They never declined. Nobody asked. Supply is fixed. Information is not."
     },
     {
       "id": "s6",
@@ -45,18 +45,18 @@
     },
     {
       "id": "s7",
-      "gap": 250,
-      "text": "Surge on the customer side pays the bonus. The response funds itself."
+      "gap": 300,
+      "text": "The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform forty dollars."
     },
     {
       "id": "s8",
-      "gap": 400,
-      "text": "Nine accept. The delay halves. Net cost to the platform, forty dollars."
+      "gap": 300,
+      "text": "You cannot surge price a therapist. You can make sure nobody finds out too late."
     },
     {
       "id": "s9",
-      "gap": 1800,
-      "text": "You cannot surge price a therapist. You can make sure nobody finds out too late."
+      "gap": 1600,
+      "text": "Every module in this film is live on the site. Go and drive it yourself."
     }
   ]
 }
