@@ -12,7 +12,13 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const URL_ = process.env.FILM_URL || 'http://localhost:4311/';
-const OUT = path.join(HERE, 'raw');
+// FORMAT=tall renders the same beat sheet into a 4:5 frame for phone feeds.
+// The director letterboxes the page and enlarges the type on its own once the
+// viewport is narrow, so only the frame size changes here.
+const TALL = process.env.FORMAT === 'tall';
+const SFX = TALL ? '-tall' : '';
+const SIZE = TALL ? { width: 1080, height: 1350 } : { width: 1920, height: 1080 };
+const OUT = path.join(HERE, `raw${SFX}`);
 
 const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline.json'), 'utf8'));
 const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
@@ -142,11 +148,11 @@ const browser = await chromium.launch({
   args: ['--force-color-profile=srgb', '--hide-scrollbars'],
 });
 const context = await browser.newContext({
-  viewport: { width: 1920, height: 1080 },
+  viewport: SIZE,
   // Rasterise at 2x. The camera scales the page up, and a 1x raster scaled
   // by the compositor is what made the earlier cut look soft.
   deviceScaleFactor: 2,
-  recordVideo: { dir: OUT, size: { width: 1920, height: 1080 } },
+  recordVideo: { dir: OUT, size: SIZE },
 });
 const page = await context.newPage();
 page.on('console', (m) => { if (m.text().includes('[film]')) console.log('  !', m.text()); });
@@ -162,12 +168,12 @@ const targets = [...new Set(beats
 const missing = await page.evaluate((sels) => sels.filter((s) => !document.querySelector(s)), targets);
 if (missing.length) { console.error('MISSING TARGETS:', missing); await browser.close(); process.exit(1); }
 
-console.log(`rolling · ${beats.length} beats · ${targets.length} targets · ${TOTAL.toFixed(1)}s`);
+console.log(`rolling · ${beats.length} beats · ${SIZE.width}x${SIZE.height} · ${TOTAL.toFixed(1)}s`);
 await page.evaluate(({ beats, total }) => window.FILM.run(beats, total * 1000), { beats, total: TOTAL });
 
 await context.close();
 await browser.close();
 const file = fs.readdirSync(OUT).find((f) => f.endsWith('.webm'));
-fs.renameSync(path.join(OUT, file), path.join(HERE, 'raw.webm'));
-fs.writeFileSync(path.join(HERE, 'beats.json'), JSON.stringify({ total: TOTAL, beats }, null, 1));
-console.log('wrote raw.webm');
+fs.renameSync(path.join(OUT, file), path.join(HERE, `raw${SFX}.webm`));
+fs.writeFileSync(path.join(HERE, `beats${SFX}.json`), JSON.stringify({ total: TOTAL, beats }, null, 1));
+console.log(`wrote raw${SFX}.webm`);

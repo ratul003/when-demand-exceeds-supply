@@ -14,7 +14,7 @@ FFPROBE = "/opt/homebrew/bin/ffprobe"
 # `python3 build_film.py short` builds the 4:5 social cut from the -short files.
 SFX = "-" + sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else ""
 RAW = os.path.join(HERE, f"raw{SFX}.webm")
-VO = os.path.join(HERE, f"vo{SFX}", "narration.mp3")
+VO = os.path.join(HERE, os.environ.get("VO_DIR", f"vo{SFX}"), "narration.mp3")
 BED = os.path.join(HERE, f"bed{SFX}.wav")
 MIX = os.path.join(HERE, f"mix{SFX}.m4a")
 VID = os.path.join(HERE, f"video{SFX}.mp4")
@@ -64,6 +64,9 @@ else:
   run([FFMPEG, "-y", "-ss", f"{head:.3f}", "-i", RAW, "-t", f"{T:.3f}",
        "-vf", f"setpts=PTS-STARTPTS,fps=30,format=yuv420p,fade=t=out:st={T - 1.6:.2f}:d=1.6",
        "-c:v", "libx264", "-preset", "veryslow", "-crf", "21",
+       # High@4.1 + yuv420p + faststart is the combination every
+       # phone, browser and social player decodes without help.
+       "-profile:v", "high", "-level", "4.1",
        "-an", "-movflags", "+faststart", VID])
 print(f"video.mp4  {dur(VID):.1f}s")
 
