@@ -1,9 +1,9 @@
 {
-  "_note": "The LinkedIn cut. Lines 3-4 are the site's own 'What I was actually trying to solve' block, tightened for speech; line 6 folds the design brief into what was built. Covers business, why, what, how, impact, next step.",
+  "_note": "The 60-second LinkedIn cut. Every line carries more than one job: industry+scale, why+cost, insight+mechanism, what+how, impact, invitation. Domain vocabulary is used where it is accurate (two-sided, on-demand, inelastic supply, dropout rate, ring-fenced, self-financing, AI routing), not sprinkled.",
   "voice": "en-US-AndrewNeural",
-  "rate": "-4%",
+  "rate": "-2%",
   "pitch": "-2Hz",
-  "leadIn": 300,
+  "leadIn": 250,
   "elevenlabs": {
     "model_id": "eleven_multilingual_v2",
     "voice_id": null,
@@ -15,58 +15,43 @@
   "lines": [
     {
       "id": "s1",
-      "gap": 350,
-      "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call. Twelve more offline, and nobody told them."
+      "gap": 220,
+      "text": "Eleven at night. Forty seven customers waiting, three experts online, twelve offline and nobody told them."
     },
     {
       "id": "s2",
-      "gap": 300,
-      "text": "An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. Three million downloads, three hundred vetted experts."
+      "gap": 220,
+      "text": "A two-sided, on-demand marketplace for live expert sessions. Mental health, coaching, astrology. Three million downloads, three hundred experts."
     },
     {
       "id": "s3",
-      "gap": 250,
-      "text": "The marketplace had no mechanism for what happens when fifty customers arrive at eleven and three experts are free."
+      "gap": 220,
+      "text": "No mechanism for a demand spike. The queue compounds, customers drop out, and the platform absorbs the cost."
     },
     {
       "id": "s4",
-      "gap": 350,
-      "text": "The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust."
+      "gap": 220,
+      "text": "Expert supply is inelastic. You cannot surge price a credential. But nobody asked those twelve."
     },
     {
       "id": "s5",
-      "gap": 300,
-      "text": "At foodpanda I raised the incentive and riders appeared. You cannot do that to a therapist. But those twelve never declined. Nobody asked them."
+      "gap": 220,
+      "text": "So I designed Equilibrium. Five modules: demand signals, health scoring, surge pricing, incentive engine, AI routing."
     },
     {
       "id": "s6",
-      "gap": 250,
-      "text": "So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself, before the marketplace had an engineering team to build it."
+      "gap": 220,
+      "text": "Delay and dropout rate trigger it. Surge revenue is ring fenced to fund the bonus, so the response is self financing."
     },
     {
       "id": "s7",
-      "gap": 250,
-      "text": "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human has to handle."
+      "gap": 220,
+      "text": "Peak queue down forty eight percent. Delay halved. Net platform cost, forty dollars."
     },
     {
       "id": "s8",
-      "gap": 300,
-      "text": "Either trigger crossing prices the surge and pushes every expert who can help. Every dollar of that surge is ring fenced to pay them."
-    },
-    {
-      "id": "s9",
-      "gap": 350,
-      "text": "Replayed against a real evening: red at minute eight, supply closed within four minutes of detection."
-    },
-    {
-      "id": "s10",
-      "gap": 400,
-      "text": "Queue peak down forty eight percent. Delay from thirty four minutes to eighteen. Net cost to the platform, forty dollars."
-    },
-    {
-      "id": "s11",
-      "gap": 1600,
-      "text": "Watch the full film, then go and drive it yourself."
+      "gap": 1500,
+      "text": "Every module is live. Go and drive it."
     }
   ]
 }
