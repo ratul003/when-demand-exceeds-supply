@@ -1,5 +1,5 @@
 {
- "total": 48.852,
+ "total": 55.621,
  "beats": [
   [
    0,
@@ -205,7 +205,17 @@
    }
   ],
   [
-   37.936,
+   42.199999999999996,
+   "caption",
+   null
+  ],
+  [
+   42.230000000000004,
+   "caption",
+   "$420 in. $380 out. Net cost, $40."
+  ],
+  [
+   42.45,
    "cam",
    "[data-film=\"scenario\"]",
    {
@@ -215,7 +225,7 @@
    }
   ],
   [
-   39.236,
+   43.75,
    "press",
    "[data-film=\"scenario-5\"]",
    {
@@ -223,30 +233,30 @@
    }
   ],
   [
-   41.85,
+   48.619,
    "hideCursor"
   ],
   [
-   42.05,
+   48.819,
    "mark",
    false
   ],
   [
-   42.199999999999996,
+   48.919,
    "caption",
    null
   ],
   [
-   42.230000000000004,
+   48.999,
    "caption",
    "You cannot surge-price a therapist. But you can make sure nobody finds out too late."
   ],
   [
-   43.25,
+   50.019,
    "endcard"
   ],
   [
-   47.151999999999994,
+   53.921,
    "caption",
    null
   ]

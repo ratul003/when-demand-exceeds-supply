@@ -13,6 +13,19 @@ window.FILM = (function () {
   const vh = () => window.innerHeight;
   const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
+  // A 4:5 social frame is barely half the width of the film frame, so type has
+  // to GROW rather than scale down with it, or captions are unreadable on a
+  // phone. Portrait rather than "narrow", so the layout survives being rendered
+  // at more than 1080 wide. Every social size is expressed against U.
+  const SOCIAL = vh() > vw();
+  const U = vw() / 1080;
+  const K = SOCIAL ? 0.60 * U : 1;
+
+  /** The rectangle the camera frames into. Full viewport for the film, a
+   *  centred band for the social cut. */
+  const FRAME = SOCIAL ? { top: Math.round(300 * U), h: Math.round(660 * U) }
+                       : { top: 0, h: vh() };
+
   // ── Stage: everything the page rendered, under one transform ────────────────
   const stage = document.createElement('div');
   stage.id = 'film-stage';
@@ -90,10 +103,10 @@ window.FILM = (function () {
     <div id="film-chapter"><span class="n"></span><span class="r"></span><span class="l"></span></div>
     <div id="film-mark"><div class="a">Wahid Tawsif Ratul</div><div class="b">Product · Data Science</div></div>
     <div id="film-band">
-      <div style="font-size:15px;letter-spacing:.3em;color:${CYAN};font-weight:800">EQUILIBRIUM</div>
-      <div style="font-size:46px;font-weight:800;color:#f1f5f9;letter-spacing:-0.025em;line-height:1.1;margin-top:14px">
-        You cannot surge-price<br>a therapist.</div>
-      <div style="font-size:17px;color:#64748b;margin-top:16px">Wahid Tawsif Ratul · Product &amp; Data Science</div>
+      <div style="font-size:${(15 * U).toFixed(1)}px;letter-spacing:.3em;color:${CYAN};font-weight:800">EQUILIBRIUM</div>
+      <div style="font-size:${(44 * U).toFixed(1)}px;font-weight:800;color:#f1f5f9;letter-spacing:-0.025em;line-height:1.12;margin-top:${Math.round(14 * U)}px">
+        When Demand Exceeds Supply<br><span style="color:${CYAN}">in an Online Marketplace</span></div>
+      <div style="font-size:${(17 * U).toFixed(1)}px;color:#64748b;margin-top:${Math.round(14 * U)}px">Wahid Tawsif Ratul · Product &amp; Data Science</div>
     </div>
     <div id="film-caption"></div>
     <div id="film-veil"></div>
@@ -102,27 +115,19 @@ window.FILM = (function () {
     <div id="film-bar"></div>`;
   document.body.appendChild(ui);
 
-  // A 4:5 social frame is barely half the width of the film frame, so type has
-  // to GROW rather than scale down with it, or captions are unreadable on a
-  // phone. K scales the display type; captions are set outright.
-  const SOCIAL = vw() < 1400;
-  const K = SOCIAL ? 0.60 : 1;
-
-  /** The rectangle the camera frames into. Full viewport for the film, a
-   *  centred band for the social cut. */
-  const FRAME = SOCIAL ? { top: 300, h: 660 } : { top: 0, h: vh() };
   win.style.top = FRAME.top + 'px';
   win.style.height = FRAME.h + 'px';
 
   if (SOCIAL) {
     const s = document.createElement('style');
     s.textContent = `
-      #film-caption { font-size: 34px; bottom: 118px; max-width: 92%;
-                      padding: 0; border: none; background: none; backdrop-filter: none;
-                      line-height: 1.34; color: #f1f5f9; font-weight: 500; }
-      #film-band { height: 300px; }
+      #film-caption { font-size: ${(34 * U).toFixed(1)}px; bottom: ${(118 * U).toFixed(0)}px;
+                      max-width: 92%; padding: 0; border: none; background: none;
+                      backdrop-filter: none; line-height: 1.34; color: #f1f5f9;
+                      font-weight: 500; }
+      #film-band { height: ${Math.round(300 * U)}px; padding: 0 ${Math.round(54 * U)}px; }
       #film-chapter, #film-mark { display: none; }
-      #film-bar { height: 5px; }
+      #film-bar { height: ${Math.max(4, Math.round(5 * U))}px; }
     `;
     document.head.appendChild(s);
   }
@@ -262,7 +267,7 @@ window.FILM = (function () {
 
     mark: (on) => {
       markEl.style.opacity = on ? '1' : '0';
-      $('film-band').style.opacity = on ? '1' : '0';
+      $('film-band').style.opacity = (on && SOCIAL) ? '1' : '0';
     },
 
     veil: (to, dur) => fade(veil, to, dur),

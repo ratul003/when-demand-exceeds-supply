@@ -17,7 +17,9 @@ const URL_ = process.env.FILM_URL || 'http://localhost:4311/';
 // viewport is narrow, so only the frame size changes here.
 const TALL = process.env.FORMAT === 'tall';
 const SFX = TALL ? '-tall' : '';
-const SIZE = TALL ? { width: 1080, height: 1350 } : { width: 1920, height: 1080 };
+const SOC_W = Number(process.env.SOCIAL_W || 1440);
+const SIZE = TALL ? { width: SOC_W, height: Math.round(SOC_W * 1.25) }
+                  : { width: 1920, height: 1080 };
 const OUT = path.join(HERE, `raw${SFX}`);
 
 const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline.json'), 'utf8'));

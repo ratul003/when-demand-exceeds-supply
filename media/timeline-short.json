@@ -1,5 +1,5 @@
 {
-  "total": 48.652,
+  "total": 55.421,
   "provider": "edge",
   "lines": [
     {
@@ -43,11 +43,19 @@
       "dur": 8.964
     },
     {
+      "id": "s6",
+      "chapter": 0,
+      "text": "Four hundred and twenty dollars in. Three hundred and eighty out. Net cost, forty dollars.",
+      "start": 42.35,
+      "end": 48.619,
+      "dur": 6.269
+    },
+    {
       "id": "s7",
       "chapter": 0,
       "text": "You cannot surge price a therapist. But you can make sure nobody finds out too late.",
-      "start": 42.35,
-      "end": 46.852,
+      "start": 49.119,
+      "end": 53.621,
       "dur": 4.502
     }
   ]

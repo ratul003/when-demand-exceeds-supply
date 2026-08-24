@@ -63,7 +63,7 @@ if os.environ.get("SKIP_VIDEO") and os.path.exists(VID):
 else:
   run([FFMPEG, "-y", "-ss", f"{head:.3f}", "-i", RAW, "-t", f"{T:.3f}",
        "-vf", f"setpts=PTS-STARTPTS,fps=30,format=yuv420p,fade=t=out:st={T - 1.6:.2f}:d=1.6",
-       "-c:v", "libx264", "-preset", "veryslow", "-crf", "21",
+       "-c:v", "libx264", "-preset", "veryslow", "-crf", os.environ.get("CRF", "21"),
        # High@4.1 + yuv420p + faststart is the combination every
        # phone, browser and social player decodes without help.
        "-profile:v", "high", "-level", "4.1",

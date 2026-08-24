@@ -2368,7 +2368,7 @@ export default function Page() {
               onMouseEnter={e => { e.currentTarget.style.background = `${CYAN}12` }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
             >
-              Read the essay: You Cannot Surge-Price a Therapist ↗
+              Read the article: Why surge pricing does not work in every online marketplace ↗
             </a>
           </div>
         </div>

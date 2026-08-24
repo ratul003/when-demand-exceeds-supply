@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const URL_ = process.env.FILM_URL || 'http://localhost:4311/';
 const OUT = path.join(HERE, 'raw-short');
+const SOC_W = Number(process.env.SOCIAL_W || 1440);
 
 const timeline = JSON.parse(fs.readFileSync(path.join(HERE, 'timeline-short.json'), 'utf8'));
 const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
@@ -100,11 +101,13 @@ const browser = await chromium.launch({
   args: ['--force-color-profile=srgb', '--hide-scrollbars'],
 });
 const context = await browser.newContext({
-  viewport: { width: 1080, height: 1350 },   // 4:5, the LinkedIn feed ratio
+  // 4:5, the LinkedIn feed ratio. SOCIAL_W raises the render resolution;
+  // the director sizes everything against the viewport width.
+  viewport: { width: SOC_W, height: Math.round(SOC_W * 1.25) },
   // Rasterise at 2x. The camera scales the page up, and a 1x raster scaled
   // by the compositor is what made the earlier cut look soft.
   deviceScaleFactor: 2,
-  recordVideo: { dir: OUT, size: { width: 1080, height: 1350 } },
+  recordVideo: { dir: OUT, size: { width: SOC_W, height: Math.round(SOC_W * 1.25) } },
 });
 const page = await context.newPage();
 page.on('console', (m) => { if (m.text().includes('[film]')) console.log('  !', m.text()); });
@@ -119,7 +122,7 @@ const targets = [...new Set(beats
 const missing = await page.evaluate((sels) => sels.filter((s) => !document.querySelector(s)), targets);
 if (missing.length) { console.error('MISSING TARGETS:', missing); await browser.close(); process.exit(1); }
 
-console.log(`rolling · ${beats.length} beats · 1080x1350 · ${TOTAL.toFixed(1)}s`);
+console.log(`rolling · ${beats.length} beats · ${SOC_W}x${Math.round(SOC_W * 1.25)} · ${TOTAL.toFixed(1)}s`);
 await page.evaluate(({ beats, total }) => window.FILM.run(beats, total * 1000), { beats, total: TOTAL });
 
 await context.close();
