@@ -453,7 +453,7 @@ function FilmPlayer() {
         <video
           ref={ref}
           poster="/film-poster.jpg"
-          preload="none"
+          preload="metadata"
           playsInline
           controls={started}
           style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }}
@@ -2376,7 +2376,7 @@ export default function Page() {
 
       {/* ── Win Showcase ── */}
       <section style={{ padding: '0 32px 80px' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div data-film="wins" style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)' }}>
           {WIN_METRICS.map((m, i) => (
             <div key={i} style={{ background: '#0a0a0f', borderRight: i < 4 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
               <AnimatedMetric raw={m.raw} label={m.label} />

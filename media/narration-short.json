@@ -1,9 +1,9 @@
 {
-  "_note": "Synthesised narration for the social cut. Line 1 says what the marketplace is, line 6 names the project, and line 9 is the invitation: the film's job is to send people to something they can touch, not to close a story.",
+  "_note": "The LinkedIn cut. Lines 3-4 are the site's own 'What I was actually trying to solve' block, tightened for speech; line 6 folds the design brief into what was built. Covers business, why, what, how, impact, next step.",
   "voice": "en-US-AndrewNeural",
   "rate": "-4%",
   "pitch": "-2Hz",
-  "leadIn": 350,
+  "leadIn": 300,
   "elevenlabs": {
     "model_id": "eleven_multilingual_v2",
     "voice_id": null,
@@ -15,48 +15,58 @@
   "lines": [
     {
       "id": "s1",
-      "gap": 250,
-      "text": "Eleven at night on an expert marketplace. Forty seven waiting, three experts online, all on a call."
+      "gap": 350,
+      "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call. Twelve more offline, and nobody told them."
     },
     {
       "id": "s2",
-      "gap": 400,
-      "text": "Twelve more are offline. Nobody told them."
+      "gap": 300,
+      "text": "An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. Three million downloads, three hundred vetted experts."
     },
     {
       "id": "s3",
       "gap": 250,
-      "text": "At foodpanda I raised the incentive and riders appeared."
+      "text": "The marketplace had no mechanism for what happens when fifty customers arrive at eleven and three experts are free."
     },
     {
       "id": "s4",
-      "gap": 300,
-      "text": "That does not work on a therapist. You cannot price a credential into existence."
+      "gap": 350,
+      "text": "The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust."
     },
     {
       "id": "s5",
       "gap": 300,
-      "text": "They never declined. Nobody asked. Supply is fixed. Information is not."
+      "text": "At foodpanda I raised the incentive and riders appeared. You cannot do that to a therapist. But those twelve never declined. Nobody asked them."
     },
     {
       "id": "s6",
       "gap": 250,
-      "text": "So I built Equilibrium. Five modules that watch both sides and ask, in seconds."
+      "text": "So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself, before the marketplace had an engineering team to build it."
     },
     {
       "id": "s7",
-      "gap": 300,
-      "text": "The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform forty dollars."
+      "gap": 250,
+      "text": "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human has to handle."
     },
     {
       "id": "s8",
       "gap": 300,
-      "text": "You cannot surge price a therapist. You can make sure nobody finds out too late."
+      "text": "Either trigger crossing prices the surge and pushes every expert who can help. Every dollar of that surge is ring fenced to pay them."
     },
     {
       "id": "s9",
+      "gap": 350,
+      "text": "Replayed against a real evening: red at minute eight, supply closed within four minutes of detection."
+    },
+    {
+      "id": "s10",
+      "gap": 400,
+      "text": "Queue peak down forty eight percent. Delay from thirty four minutes to eighteen. Net cost to the platform, forty dollars."
+    },
+    {
+      "id": "s11",
       "gap": 1600,
-      "text": "Every module in this film is live on the site. Go and drive it yourself."
+      "text": "Watch the full film, then go and drive it yourself."
     }
   ]
 }

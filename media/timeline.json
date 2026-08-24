@@ -1,5 +1,6 @@
 {
-  "total": 137.732,
+  "total": 175.844,
+  "provider": "edge",
   "lines": [
     {
       "id": "c0-1",
@@ -26,139 +27,163 @@
       "dur": 4.296
     },
     {
+      "id": "c0-4",
+      "chapter": 0,
+      "text": "This is an on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. Three million downloads, three hundred vetted experts.",
+      "start": 15.18,
+      "end": 27.228,
+      "dur": 12.048
+    },
+    {
       "id": "c1-1",
       "chapter": 1,
-      "text": "This is where a two sided marketplace quietly loses money, and most of them cannot see it happen.",
-      "start": 15.88,
-      "end": 22.312,
-      "dur": 6.432
+      "text": "The marketplace had no mechanism for what happens when fifty customers arrive at eleven and three experts are free.",
+      "start": 28.728,
+      "end": 35.952,
+      "dur": 7.224
+    },
+    {
+      "id": "c1-1b",
+      "chapter": 1,
+      "text": "The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust.",
+      "start": 36.352,
+      "end": 48.352,
+      "dur": 12.0
     },
     {
       "id": "c1-2",
       "chapter": 1,
       "text": "Supply is fixed at eighteen sessions an hour. Push demand past that and the queue does not grow. It compounds.",
-      "start": 22.812,
-      "end": 30.492,
+      "start": 48.952,
+      "end": 56.632,
       "dur": 7.68
     },
     {
       "id": "c1-3",
       "chapter": 1,
       "text": "At three times demand, the wait crosses thirty minutes. Yellow.",
-      "start": 31.092,
-      "end": 35.748,
+      "start": 57.232,
+      "end": 61.888,
       "dur": 4.656
     },
     {
       "id": "c1-4",
       "chapter": 1,
       "text": "At five and a half, it is over an hour. Red. By the time tomorrow's report shows it, those customers are gone.",
-      "start": 36.248,
-      "end": 43.52,
+      "start": 62.388,
+      "end": 69.66,
       "dur": 7.272
     },
     {
       "id": "c2-1",
       "chapter": 2,
-      "text": "So I built the layer that watches for it.",
-      "start": 45.02,
-      "end": 47.372,
-      "dur": 2.352
+      "text": "So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself.",
+      "start": 71.16,
+      "end": 79.224,
+      "dur": 8.064
     },
     {
       "id": "c2-2",
       "chapter": 2,
       "text": "Delay time and dropout rate are the two triggers. When either one crosses, the system answers on both sides at once.",
-      "start": 48.072,
-      "end": 55.848,
+      "start": 79.924,
+      "end": 87.7,
       "dur": 7.776
     },
     {
       "id": "c2-3",
       "chapter": 2,
       "text": "Prices surge by category. Ten percent on astrology, eighteen on mental health.",
-      "start": 56.348,
-      "end": 62.276,
+      "start": 88.2,
+      "end": 94.128,
       "dur": 5.928
     },
     {
       "id": "c2-4",
       "chapter": 2,
       "text": "And every dollar of that surge is ring fenced. It does not go to margin. It funds the bonus that brings experts back online.",
-      "start": 62.776,
-      "end": 70.816,
+      "start": 94.628,
+      "end": 102.668,
       "dur": 8.04
     },
     {
       "id": "c2-5",
       "chapter": 2,
       "text": "Then the push fires. Tiered, and it names the number of people waiting and what three sessions are worth tonight.",
-      "start": 71.316,
-      "end": 78.204,
+      "start": 103.168,
+      "end": 110.056,
       "dur": 6.888
     },
     {
       "id": "c3-1",
       "chapter": 3,
       "text": "With no incentive, eight percent of experts respond. At sixteen dollars a session, fifty five percent do.",
-      "start": 79.704,
-      "end": 86.928,
+      "start": 111.556,
+      "end": 118.78,
       "dur": 7.224
     },
     {
       "id": "c3-2",
       "chapter": 3,
       "text": "That gap is the entire system.",
-      "start": 87.328,
-      "end": 89.608,
+      "start": 119.18,
+      "end": 121.46,
       "dur": 2.28
     },
     {
       "id": "c3-3",
       "chapter": 3,
       "text": "Without the engine, the queue peaks at sixty five and stays there.",
-      "start": 90.508,
-      "end": 94.78,
+      "start": 122.36,
+      "end": 126.632,
       "dur": 4.272
     },
     {
       "id": "c3-4",
       "chapter": 3,
       "text": "With it, nine experts accept, the delay drops from thirty four minutes to eighteen, and the engine switches itself off.",
-      "start": 95.28,
-      "end": 103.224,
+      "start": 127.132,
+      "end": 135.076,
       "dur": 7.944
     },
     {
       "id": "c3-5",
       "chapter": 3,
       "text": "Four hundred and twenty dollars of surge collected. Three hundred and eighty paid out. The whole response cost the platform forty dollars.",
-      "start": 103.724,
-      "end": 111.62,
+      "start": 135.576,
+      "end": 143.472,
       "dur": 7.896
+    },
+    {
+      "id": "c3-6",
+      "chapter": 3,
+      "text": "Peak queue depth down forty eight percent, on a system the platform never pays to run.",
+      "start": 143.972,
+      "end": 149.732,
+      "dur": 5.76
     },
     {
       "id": "c4-1",
       "chapter": 4,
       "text": "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human actually needs to handle.",
-      "start": 113.22,
-      "end": 123.06,
+      "start": 151.332,
+      "end": 161.172,
       "dur": 9.84
     },
     {
       "id": "c4-2",
       "chapter": 4,
       "text": "One config file. Four marketplace presets.",
-      "start": 123.56,
-      "end": 126.848,
+      "start": 161.672,
+      "end": 164.96,
       "dur": 3.288
     },
     {
       "id": "c4-3",
       "chapter": 4,
       "text": "I built it as a product manager, without an engineering team, because the alternative was watching the queue and doing nothing.",
-      "start": 127.548,
-      "end": 135.132,
+      "start": 165.66,
+      "end": 173.244,
       "dur": 7.584
     }
   ]

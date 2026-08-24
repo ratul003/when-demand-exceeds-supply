@@ -1,5 +1,5 @@
 {
- "total": 141.432,
+ "total": 179.544,
  "beats": [
   [
    0,
@@ -8,7 +8,7 @@
    0
   ],
   [
-   0.4,
+   0.1,
    "open",
    1
   ],
@@ -68,12 +68,17 @@
   [
    14.98,
    "cam",
-   "[data-film=\"queue\"]",
+   "[data-film=\"surge-matrix\"]",
    {
     "dur": 10,
-    "fill": 0.6,
-    "fillY": 0.52
+    "fill": 0.9,
+    "fillY": 0.82
    }
+  ],
+  [
+   15.06,
+   "caption",
+   "An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. 3M downloads, 300 vetted experts."
   ],
   [
    15.18,
@@ -87,18 +92,43 @@
    true
   ],
   [
-   15.58,
+   20.78,
+   "cam",
+   "[data-film=\"wins\"]",
+   {
+    "dur": 1600,
+    "fill": 0.96,
+    "fillY": 0.5
+   }
+  ],
+  [
+   27.528000000000002,
+   "caption",
+   null
+  ],
+  [
+   28.128,
    "chapter",
    "01",
    "The Problem"
   ],
   [
-   15.760000000000002,
-   "caption",
-   "This is where a two-sided marketplace quietly loses money, and most of them cannot see it happen."
+   28.428,
+   "cam",
+   "[data-film=\"queue\"]",
+   {
+    "dur": 10,
+    "fill": 0.6,
+    "fillY": 0.52
+   }
   ],
   [
-   15.93,
+   28.608,
+   "caption",
+   "The marketplace had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are free."
+  ],
+  [
+   28.778,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -108,17 +138,37 @@
    }
   ],
   [
-   22.612000000000002,
+   36.202,
    "caption",
    null
   ],
   [
-   22.692,
+   36.232,
+   "caption",
+   "The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust."
+  ],
+  [
+   36.552,
+   "cam",
+   "[data-film=\"queue\"]",
+   {
+    "dur": 2200,
+    "fill": 0.96,
+    "fillY": 0.92
+   }
+  ],
+  [
+   48.651999999999994,
+   "caption",
+   null
+  ],
+  [
+   48.832,
    "caption",
    "Supply is fixed at 18 sessions an hour. Push demand past that and the queue does not grow. It compounds."
   ],
   [
-   23.212,
+   49.352,
    "point",
    "[data-film=\"queue-slider\"]",
    {
@@ -126,7 +176,7 @@
    }
   ],
   [
-   24.412,
+   50.552,
    "slider",
    "[data-film=\"queue-slider\"]",
    1.6,
@@ -135,7 +185,7 @@
    }
   ],
   [
-   28.012,
+   54.152,
    "slider",
    "[data-film=\"queue-slider\"]",
    2.2,
@@ -144,17 +194,17 @@
    }
   ],
   [
-   30.792,
+   56.931999999999995,
    "caption",
    null
   ],
   [
-   30.971999999999998,
+   57.112,
    "caption",
    "At 3× demand, the wait crosses 30 minutes. Yellow."
   ],
   [
-   31.392,
+   57.532,
    "slider",
    "[data-film=\"queue-slider\"]",
    3,
@@ -163,7 +213,7 @@
    }
   ],
   [
-   33.692,
+   59.832,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -173,17 +223,17 @@
    }
   ],
   [
-   36.047999999999995,
+   62.187999999999995,
    "caption",
    null
   ],
   [
-   36.128,
+   62.268,
    "caption",
    "At 5.5×, it is over an hour. Red. By the time tomorrow’s report shows it, those customers are gone."
   ],
   [
-   36.648,
+   62.788,
    "slider",
    "[data-film=\"queue-slider\"]",
    5.6,
@@ -192,11 +242,11 @@
    }
   ],
   [
-   40.148,
+   66.288,
    "hideCursor"
   ],
   [
-   40.448,
+   66.588,
    "cam",
    "[data-film=\"queue\"]",
    {
@@ -206,7 +256,7 @@
    }
   ],
   [
-   43.72,
+   69.86,
    "card",
    "CHAPTER 02",
    "The Response",
@@ -214,18 +264,18 @@
    1150
   ],
   [
-   43.82,
+   69.96,
    "caption",
    null
   ],
   [
-   44.12,
+   70.26,
    "chapter",
    "02",
    "The Response"
   ],
   [
-   44.42,
+   70.56,
    "cam",
    "[data-film=\"barometer\"]",
    {
@@ -235,12 +285,12 @@
    }
   ],
   [
-   44.900000000000006,
+   71.03999999999999,
    "caption",
-   "So I built the layer that watches for it."
+   "So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself."
   ],
   [
-   45.52,
+   71.66,
    "cam",
    "[data-film=\"barometer\"]",
    {
@@ -250,17 +300,17 @@
    }
   ],
   [
-   47.672,
+   79.524,
    "caption",
    null
   ],
   [
-   47.952000000000005,
+   79.804,
    "caption",
    "Delay time and dropout rate are the two triggers. When either one crosses, the system answers on both sides at once."
   ],
   [
-   49.972,
+   81.824,
    "press",
    "[data-film=\"baro-yellow\"]",
    {
@@ -268,7 +318,7 @@
    }
   ],
   [
-   53.172,
+   85.024,
    "press",
    "[data-film=\"baro-red\"]",
    {
@@ -276,21 +326,21 @@
    }
   ],
   [
-   55.172,
+   87.024,
    "hideCursor"
   ],
   [
-   56.147999999999996,
+   88,
    "caption",
    null
   ],
   [
-   56.228,
+   88.08,
    "caption",
    "Prices surge by category. +10% on astrology, +18% on mental health."
   ],
   [
-   56.748,
+   88.6,
    "cam",
    "[data-film=\"surge-matrix\"]",
    {
@@ -300,17 +350,17 @@
    }
   ],
   [
-   62.576,
+   94.428,
    "caption",
    null
   ],
   [
-   62.656000000000006,
+   94.508,
    "caption",
    "Every dollar of that surge is ring-fenced. It does not go to margin. It funds the bonus that brings experts back online."
   ],
   [
-   63.176,
+   95.028,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -320,17 +370,17 @@
    }
   ],
   [
-   71.116,
+   102.968,
    "caption",
    null
   ],
   [
-   71.196,
+   103.048,
    "caption",
    "Then the push fires. Tiered, naming how many people are waiting and what three sessions are worth tonight."
   ],
   [
-   71.616,
+   103.468,
    "cam",
    "[data-film=\"notif\"]",
    {
@@ -340,7 +390,7 @@
    }
   ],
   [
-   74.816,
+   106.668,
    "press",
    "[data-film=\"notif-red\"]",
    {
@@ -348,11 +398,11 @@
    }
   ],
   [
-   77.216,
+   109.068,
    "hideCursor"
   ],
   [
-   78.454,
+   110.306,
    "card",
    "CHAPTER 03",
    "The Payoff",
@@ -360,18 +410,18 @@
    1100
   ],
   [
-   78.50399999999999,
+   110.356,
    "caption",
    null
   ],
   [
-   78.754,
+   110.606,
    "chapter",
    "03",
    "The Payoff"
   ],
   [
-   79.054,
+   110.906,
    "cam",
    "[data-film=\"impact\"]",
    {
@@ -381,12 +431,12 @@
    }
   ],
   [
-   79.58399999999999,
+   111.43599999999999,
    "caption",
    "With no incentive, 8% of experts respond. At $16 a session, 55% do."
   ],
   [
-   79.954,
+   111.806,
    "cam",
    "[data-film=\"impact\"]",
    {
@@ -396,7 +446,7 @@
    }
   ],
   [
-   80.004,
+   111.856,
    "press",
    "[data-film=\"impact-response\"]",
    {
@@ -404,21 +454,21 @@
    }
   ],
   [
-   82.304,
+   114.156,
    "hideCursor"
   ],
   [
-   87.178,
+   119.03,
    "caption",
    null
   ],
   [
-   87.208,
+   119.06,
    "caption",
    "That gap is the entire system."
   ],
   [
-   87.478,
+   119.33,
    "cam",
    "[data-film=\"impact\"]",
    {
@@ -428,17 +478,17 @@
    }
   ],
   [
-   89.908,
+   121.75999999999999,
    "caption",
    null
   ],
   [
-   90.38799999999999,
+   122.24,
    "caption",
    "Without the engine, the queue peaks at 65 and stays there."
   ],
   [
-   90.558,
+   122.41,
    "press",
    "[data-film=\"impact-timeline\"]",
    {
@@ -446,21 +496,21 @@
    }
   ],
   [
-   92.758,
+   124.61,
    "hideCursor"
   ],
   [
-   95.08,
+   126.932,
    "caption",
    null
   ],
   [
-   95.16,
+   127.012,
    "caption",
    "With it, nine experts accept, the delay drops from 34 minutes to 18, and the engine switches itself off."
   ],
   [
-   99.98,
+   131.832,
    "cam",
    "[data-film=\"scenario\"]",
    {
@@ -470,7 +520,7 @@
    }
   ],
   [
-   101.98,
+   133.832,
    "press",
    "[data-film=\"scenario-5\"]",
    {
@@ -478,17 +528,17 @@
    }
   ],
   [
-   103.524,
+   135.376,
    "caption",
    null
   ],
   [
-   103.604,
+   135.456,
    "caption",
    "$420 of surge collected. $380 paid out. The whole response cost the platform $40."
   ],
   [
-   103.974,
+   135.826,
    "cam",
    "[data-film=\"impact\"]",
    {
@@ -498,7 +548,7 @@
    }
   ],
   [
-   105.174,
+   137.026,
    "press",
    "[data-film=\"impact-pnl\"]",
    {
@@ -506,11 +556,11 @@
    }
   ],
   [
-   107.374,
+   139.226,
    "hideCursor"
   ],
   [
-   107.774,
+   139.626,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -520,12 +570,32 @@
    }
   ],
   [
-   111.92,
+   143.77200000000002,
    "caption",
    null
   ],
   [
-   112.02,
+   143.852,
+   "caption",
+   "Peak queue depth down 48%, on a system the platform never pays to run."
+  ],
+  [
+   144.072,
+   "cam",
+   "[data-film=\"impact\"]",
+   {
+    "dur": 1700,
+    "fill": 0.92,
+    "fillY": 0.88
+   }
+  ],
+  [
+   150.032,
+   "caption",
+   null
+  ],
+  [
+   150.132,
    "card",
    "CHAPTER 04",
    "The System",
@@ -533,13 +603,13 @@
    1100
   ],
   [
-   112.32,
+   150.432,
    "chapter",
    "04",
    "The System"
   ],
   [
-   112.62,
+   150.732,
    "cam",
    "[data-film=\"pipeline\"]",
    {
@@ -549,12 +619,12 @@
    }
   ],
   [
-   113.1,
+   151.212,
    "caption",
    "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human actually needs to handle."
   ],
   [
-   113.47,
+   151.582,
    "cam",
    "[data-film=\"pipeline\"]",
    {
@@ -564,7 +634,7 @@
    }
   ],
   [
-   115.07,
+   153.182,
    "press",
    "[data-film=\"node-signals\"]",
    {
@@ -572,7 +642,7 @@
    }
   ],
   [
-   116.57,
+   154.682,
    "press",
    "[data-film=\"node-health\"]",
    {
@@ -580,7 +650,7 @@
    }
   ],
   [
-   117.97,
+   156.082,
    "press",
    "[data-film=\"node-surge\"]",
    {
@@ -588,7 +658,7 @@
    }
   ],
   [
-   119.37,
+   157.482,
    "press",
    "[data-film=\"node-incentive\"]",
    {
@@ -596,7 +666,7 @@
    }
   ],
   [
-   120.77,
+   158.882,
    "press",
    "[data-film=\"node-router\"]",
    {
@@ -604,21 +674,21 @@
    }
   ],
   [
-   122.27,
+   160.382,
    "hideCursor"
   ],
   [
-   123.36,
+   161.472,
    "caption",
    null
   ],
   [
-   123.44,
+   161.552,
    "caption",
    "One config file. Four marketplace presets."
   ],
   [
-   123.86,
+   161.972,
    "cam",
    "[data-film=\"presets\"]",
    {
@@ -628,7 +698,7 @@
    }
   ],
   [
-   125.46,
+   163.572,
    "press",
    "[data-film=\"preset-telehealth\"]",
    {
@@ -636,7 +706,7 @@
    }
   ],
   [
-   127.148,
+   165.26,
    "press",
    "[data-film=\"preset-tutoring\"]",
    {
@@ -644,21 +714,21 @@
    }
   ],
   [
-   127.148,
+   165.26000000000002,
    "caption",
    null
   ],
   [
-   127.428,
+   165.54,
    "caption",
    "I built it as a product manager, without an engineering team, because the alternative was watching the queue and doing nothing."
   ],
   [
-   128.548,
+   166.66,
    "hideCursor"
   ],
   [
-   128.948,
+   167.06,
    "cam",
    "[data-film=\"pipeline\"]",
    {
@@ -668,22 +738,22 @@
    }
   ],
   [
-   133.632,
+   171.744,
    "chapter",
    null
   ],
   [
-   133.832,
+   171.944,
    "mark",
    false
   ],
   [
-   135.43200000000002,
+   173.544,
    "caption",
    null
   ],
   [
-   135.532,
+   173.644,
    "endcard"
   ]
  ]

@@ -1,5 +1,5 @@
 {
- "total": 52.228,
+ "total": 99.872,
  "beats": [
   [
    0,
@@ -13,128 +13,138 @@
    1
   ],
   [
-   0.22999999999999998,
+   0.18,
    "caption",
-   "23:08 on an expert marketplace. Forty-seven waiting, three experts online, all on a call."
+   "23:08. Forty-seven waiting. Three experts online, all on a call. Twelve more offline, and nobody told them."
   ],
   [
-   3.95,
+   3.4,
    "open",
    2
   ],
   [
-   7.56,
-   "caption",
-   null
-  ],
-  [
-   7.56,
-   "caption",
-   "Twelve more are offline. Nobody told them."
-  ],
-  [
-   7.73,
+   5.7,
    "open",
    3
   ],
   [
-   10.162,
+   8.328,
    "open",
    0
   ],
   [
-   10.762,
+   8.828,
    "cam",
-   "[data-film=\"queue\"]",
+   "[data-film=\"surge-matrix\"]",
    {
     "dur": 10,
-    "fill": 0.66,
-    "fillY": 0.6
+    "fill": 0.94,
+    "fillY": 0.9
    }
   ],
   [
-   10.792000000000002,
+   8.858,
    "caption",
    null
   ],
   [
-   10.792000000000002,
+   8.858,
    "caption",
-   "At foodpanda I raised the incentive and riders appeared."
+   "An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. 3M downloads, 300 vetted experts."
   ],
   [
-   10.912,
+   8.978,
    "veil",
    0,
-   700
+   650
   ],
   [
-   10.962,
+   9.178,
+   "mark",
+   true
+  ],
+  [
+   13.578,
+   "cam",
+   "[data-film=\"wins\"]",
+   {
+    "dur": 1400,
+    "fill": 0.97,
+    "fillY": 0.55
+   }
+  ],
+  [
+   20.63,
+   "caption",
+   null
+  ],
+  [
+   20.63,
+   "caption",
+   "The marketplace had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are free."
+  ],
+  [
+   20.85,
    "cam",
    "[data-film=\"queue\"]",
    {
-    "dur": 1800,
+    "dur": 1500,
     "fill": 0.97,
     "fillY": 0.92
    }
   ],
   [
-   11.112,
-   "mark",
-   true
-  ],
-  [
-   11.912,
+   22.65,
    "point",
    "[data-film=\"queue-slider\"]",
    {
-    "dur": 550
+    "dur": 500
    }
   ],
   [
-   12.612,
+   23.35,
    "slider",
    "[data-film=\"queue-slider\"]",
    2.6,
    {
-    "dur": 2000
+    "dur": 1800
    }
   ],
   [
-   14.834000000000001,
+   27.936,
    "caption",
    null
   ],
   [
-   14.834000000000001,
+   27.936,
    "caption",
-   "That does not work on a therapist. You cannot price a credential into existence."
+   "The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust."
   ],
   [
-   15.154,
+   28.456,
    "slider",
    "[data-film=\"queue-slider\"]",
    5.6,
    {
-    "dur": 3000
+    "dur": 3200
    }
   ],
   [
-   18.454,
+   32.156,
    "hideCursor"
   ],
   [
-   20.102,
+   40.046,
    "caption",
    null
   ],
   [
-   20.102,
+   40.046,
    "caption",
-   "They never declined. Nobody asked. Supply is fixed. Information is not."
+   "At foodpanda I raised the incentive and riders appeared. You cannot do that to a therapist. But those twelve never declined. Nobody asked them."
   ],
   [
-   20.322,
+   43.566,
    "cam",
    "[data-film=\"notif\"]",
    {
@@ -144,17 +154,17 @@
    }
   ],
   [
-   25.994,
+   49.514,
    "caption",
    null
   ],
   [
-   25.994,
+   49.514,
    "caption",
-   "So I built Equilibrium. Five modules that watch both sides and ask, in seconds."
+   "So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself, before the marketplace had an engineering team to build it."
   ],
   [
-   26.214,
+   49.734,
    "cam",
    "[data-film=\"pipeline\"]",
    {
@@ -164,61 +174,93 @@
    }
   ],
   [
-   28.214,
-   "press",
-   "[data-film=\"node-signals\"]",
-   {
-    "dur": 450
-   }
-  ],
-  [
-   29.014,
-   "press",
-   "[data-film=\"node-health\"]",
-   {
-    "dur": 400
-   }
-  ],
-  [
-   29.714,
-   "press",
-   "[data-film=\"node-surge\"]",
-   {
-    "dur": 400
-   }
-  ],
-  [
-   30.414,
-   "press",
-   "[data-film=\"node-incentive\"]",
-   {
-    "dur": 400
-   }
-  ],
-  [
-   31.114,
-   "press",
-   "[data-film=\"node-router\"]",
-   {
-    "dur": 400
-   }
-  ],
-  [
-   31.814,
-   "hideCursor"
-  ],
-  [
-   31.956,
+   60.948,
    "caption",
    null
   ],
   [
-   31.956,
+   60.948,
    "caption",
-   "The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform $40."
+   "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human has to handle."
   ],
   [
-   32.176,
+   61.368,
+   "press",
+   "[data-film=\"node-signals\"]",
+   {
+    "dur": 420
+   }
+  ],
+  [
+   62.168,
+   "press",
+   "[data-film=\"node-health\"]",
+   {
+    "dur": 380
+   }
+  ],
+  [
+   62.968,
+   "press",
+   "[data-film=\"node-surge\"]",
+   {
+    "dur": 380
+   }
+  ],
+  [
+   63.768,
+   "press",
+   "[data-film=\"node-incentive\"]",
+   {
+    "dur": 380
+   }
+  ],
+  [
+   64.568,
+   "press",
+   "[data-film=\"node-router\"]",
+   {
+    "dur": 380
+   }
+  ],
+  [
+   65.368,
+   "hideCursor"
+  ],
+  [
+   70.27,
+   "caption",
+   null
+  ],
+  [
+   70.27,
+   "caption",
+   "Either trigger crossing prices the surge and pushes every expert who can help. Every dollar of it is ring-fenced to pay them."
+  ],
+  [
+   70.49,
+   "cam",
+   "[data-film=\"barometer\"]",
+   {
+    "dur": 1400,
+    "fill": 0.94,
+    "fillY": 0.92
+   }
+  ],
+  [
+   71.89,
+   "press",
+   "[data-film=\"baro-red\"]",
+   {
+    "dur": 500
+   }
+  ],
+  [
+   73.39,
+   "hideCursor"
+  ],
+  [
+   73.79,
    "cam",
    "[data-film=\"self-financing\"]",
    {
@@ -228,7 +270,17 @@
    }
   ],
   [
-   36.676,
+   78.994,
+   "caption",
+   null
+  ],
+  [
+   78.994,
+   "caption",
+   "Replayed against a real evening: Red at minute 8, supply closed within four minutes of detection."
+  ],
+  [
+   79.214,
    "cam",
    "[data-film=\"scenario\"]",
    {
@@ -238,58 +290,68 @@
    }
   ],
   [
-   38.076,
+   80.714,
    "press",
    "[data-film=\"scenario-5\"]",
    {
-    "dur": 550
+    "dur": 520
    }
   ],
   [
-   39.276,
+   81.914,
    "hideCursor"
   ],
   [
-   40.128,
+   86.064,
    "caption",
    null
   ],
   [
-   40.128,
+   86.064,
    "caption",
-   "You cannot surge-price a therapist. You can make sure nobody finds out too late."
+   "Queue peak down 48%. Delay from 34 minutes to 18. Net cost to the platform, $40."
   ],
   [
-   40.448,
+   86.284,
+   "cam",
+   "[data-film=\"impact\"]",
+   {
+    "dur": 1400,
+    "fill": 0.97,
+    "fillY": 0.92
+   }
+  ],
+  [
+   93.06,
    "cam",
    "[data-film=\"pipeline\"]",
    {
-    "dur": 2800,
+    "dur": 2600,
     "fill": 0.44,
     "fillY": 0.42
    }
   ],
   [
-   44.88,
+   94.16,
    "mark",
    false
   ],
   [
-   45.06,
+   94.24,
    "caption",
    null
   ],
   [
-   45.06,
+   94.24,
    "caption",
-   "Every module in this film is live on the site. Go and drive it yourself."
+   "Watch the full film, then go and drive it yourself."
   ],
   [
-   45.38,
+   94.66,
    "endcard"
   ],
   [
-   50.327999999999996,
+   97.972,
    "caption",
    null
   ]

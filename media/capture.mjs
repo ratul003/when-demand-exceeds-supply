@@ -33,11 +33,13 @@ const CAPTIONS = {
   'c0-1': '23:08. Forty-seven people are waiting to talk to someone.',
   'c0-2': 'Three experts are online. All three are already on a call.',
   'c0-3': 'Twelve more are offline, and none of them know any of this is happening.',
-  'c1-1': 'This is where a two-sided marketplace quietly loses money, and most of them cannot see it happen.',
+  'c0-4': 'An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. 3M downloads, 300 vetted experts.',
+  'c1-1': 'The marketplace had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are free.',
+  'c1-1b': 'The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust.',
   'c1-2': 'Supply is fixed at 18 sessions an hour. Push demand past that and the queue does not grow. It compounds.',
   'c1-3': 'At 3× demand, the wait crosses 30 minutes. Yellow.',
   'c1-4': 'At 5.5×, it is over an hour. Red. By the time tomorrow’s report shows it, those customers are gone.',
-  'c2-1': 'So I built the layer that watches for it.',
+  'c2-1': 'So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself.',
   'c2-2': 'Delay time and dropout rate are the two triggers. When either one crosses, the system answers on both sides at once.',
   'c2-3': 'Prices surge by category. +10% on astrology, +18% on mental health.',
   'c2-4': 'Every dollar of that surge is ring-fenced. It does not go to margin. It funds the bonus that brings experts back online.',
@@ -47,6 +49,7 @@ const CAPTIONS = {
   'c3-3': 'Without the engine, the queue peaks at 65 and stays there.',
   'c3-4': 'With it, nine experts accept, the delay drops from 34 minutes to 18, and the engine switches itself off.',
   'c3-5': '$420 of surge collected. $380 paid out. The whole response cost the platform $40.',
+  'c3-6': 'Peak queue depth down 48%, on a system the platform never pays to run.',
   'c4-1': 'Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human actually needs to handle.',
   'c4-2': 'One config file. Four marketplace presets.',
   'c4-3': 'I built it as a product manager, without an engineering team, because the alternative was watching the queue and doing nothing.',
@@ -64,13 +67,18 @@ const beats = [
   [E('c0-3', -1.0), 'open', 0],
   [E('c0-3', -0.6), 'card', 'EQUILIBRIUM', 'When Demand Exceeds Supply',
     'A live operations layer for a two-sided expert marketplace', 1500],
-  [E('c0-3', 0.7), 'cam', F('queue'), { dur: 10, fill: 0.60, fillY: 0.52 }],
+  // The business: what it sells, then how big it is.
+  [E('c0-3', 0.7), 'cam', F('surge-matrix'), { dur: 10, fill: 0.90, fillY: 0.82 }],
   [E('c0-3', 0.9), 'veil', 0, 950],
   [E('c0-3', 1.2), 'mark', true],
-  [E('c0-3', 1.3), 'chapter', '01', 'The Problem'],
+  [S('c0-4', 5.60), 'cam', F('wins'), { dur: 1600, fill: 0.96, fillY: 0.50 }],
+  [S('c1-1', -0.60), 'chapter', '01', 'The Problem'],
+  [S('c1-1', -0.30), 'cam', F('queue'), { dur: 10, fill: 0.60, fillY: 0.52 }],
 
   // CH1 · THE PROBLEM — drive the queue from healthy to critical
   [S('c1-1', 0.05), 'cam', F('queue'), { dur: 3200, fill: 0.90, fillY: 0.86 }],
+  // The cost of the mismatch, over the queue that creates it.
+  [S('c1-1b', 0.20), 'cam', F('queue'), { dur: 2200, fill: 0.96, fillY: 0.92 }],
   [S('c1-2', 0.40), 'point', F('queue-slider'), { dur: 700 }],
   [S('c1-2', 1.60), 'slider', F('queue-slider'), 1.6, { dur: 2600 }],
   [S('c1-2', 5.20), 'slider', F('queue-slider'), 2.2, { dur: 1900 }],
@@ -110,6 +118,7 @@ const beats = [
   [S('c3-5', 1.45), 'press', F('impact-pnl'), { dur: 700 }],
   [S('c3-5', 3.65), 'hideCursor'],
   [S('c3-5', 4.05), 'cam', F('self-financing'), { dur: 2100, fill: 0.96, fillY: 0.68 }],
+  [S('c3-6', 0.10), 'cam', F('impact'), { dur: 1700, fill: 0.92, fillY: 0.88 }],
 
   // CH4 · THE SYSTEM — each module lights as it is named
   [S('c4-1', -1.20), 'card', 'CHAPTER 04', 'The System', '', 1100],

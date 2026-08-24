@@ -1,78 +1,94 @@
 {
-  "total": 51.628,
+  "total": 99.272,
   "provider": "edge",
   "lines": [
     {
       "id": "s1",
       "chapter": 0,
-      "text": "Eleven at night on an expert marketplace. Forty seven waiting, three experts online, all on a call.",
-      "start": 0.35,
-      "end": 7.43,
-      "dur": 7.08
+      "text": "Eleven at night. Forty seven people waiting. Three experts online, all on a call. Twelve more offline, and nobody told them.",
+      "start": 0.3,
+      "end": 8.628,
+      "dur": 8.328
     },
     {
       "id": "s2",
       "chapter": 0,
-      "text": "Twelve more are offline. Nobody told them.",
-      "start": 7.68,
-      "end": 10.512,
-      "dur": 2.832
+      "text": "An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. Three million downloads, three hundred vetted experts.",
+      "start": 8.978,
+      "end": 20.45,
+      "dur": 11.472
     },
     {
       "id": "s3",
       "chapter": 0,
-      "text": "At foodpanda I raised the incentive and riders appeared.",
-      "start": 10.912,
-      "end": 14.704,
-      "dur": 3.792
+      "text": "The marketplace had no mechanism for what happens when fifty customers arrive at eleven and three experts are free.",
+      "start": 20.75,
+      "end": 27.806,
+      "dur": 7.056
     },
     {
       "id": "s4",
       "chapter": 0,
-      "text": "That does not work on a therapist. You cannot price a credential into existence.",
-      "start": 14.954,
-      "end": 19.922,
-      "dur": 4.968
+      "text": "The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust.",
+      "start": 28.056,
+      "end": 39.816,
+      "dur": 11.76
     },
     {
       "id": "s5",
       "chapter": 0,
-      "text": "They never declined. Nobody asked. Supply is fixed. Information is not.",
-      "start": 20.222,
-      "end": 25.814,
-      "dur": 5.592
+      "text": "At foodpanda I raised the incentive and riders appeared. You cannot do that to a therapist. But those twelve never declined. Nobody asked them.",
+      "start": 40.166,
+      "end": 49.334,
+      "dur": 9.168
     },
     {
       "id": "s6",
       "chapter": 0,
-      "text": "So I built Equilibrium. Five modules that watch both sides and ask, in seconds.",
-      "start": 26.114,
-      "end": 31.826,
-      "dur": 5.712
+      "text": "So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself, before the marketplace had an engineering team to build it.",
+      "start": 49.634,
+      "end": 60.818,
+      "dur": 11.184
     },
     {
       "id": "s7",
       "chapter": 0,
-      "text": "The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform forty dollars.",
-      "start": 32.076,
-      "end": 39.948,
-      "dur": 7.872
+      "text": "Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human has to handle.",
+      "start": 61.068,
+      "end": 70.14,
+      "dur": 9.072
     },
     {
       "id": "s8",
       "chapter": 0,
-      "text": "You cannot surge price a therapist. You can make sure nobody finds out too late.",
-      "start": 40.248,
-      "end": 44.88,
-      "dur": 4.632
+      "text": "Either trigger crossing prices the surge and pushes every expert who can help. Every dollar of that surge is ring fenced to pay them.",
+      "start": 70.39,
+      "end": 78.814,
+      "dur": 8.424
     },
     {
       "id": "s9",
       "chapter": 0,
-      "text": "Every module in this film is live on the site. Go and drive it yourself.",
-      "start": 45.18,
-      "end": 50.028,
-      "dur": 4.848
+      "text": "Replayed against a real evening: red at minute eight, supply closed within four minutes of detection.",
+      "start": 79.114,
+      "end": 85.834,
+      "dur": 6.72
+    },
+    {
+      "id": "s10",
+      "chapter": 0,
+      "text": "Queue peak down forty eight percent. Delay from thirty four minutes to eighteen. Net cost to the platform, forty dollars.",
+      "start": 86.184,
+      "end": 93.96,
+      "dur": 7.776
+    },
+    {
+      "id": "s11",
+      "chapter": 0,
+      "text": "Watch the full film, then go and drive it yourself.",
+      "start": 94.36,
+      "end": 97.672,
+      "dur": 3.312
     }
   ]
 }

@@ -21,65 +21,74 @@ const L = Object.fromEntries(timeline.lines.map((l) => [l.id, l]));
 const S = (id, off = 0) => +(L[id].start + off).toFixed(3);
 const E = (id, off = 0) => +(L[id].end + off).toFixed(3);
 const has = (id) => Boolean(L[id]);   // a line can be recorded but skipped
-const TOTAL = E('s9', 2.2);
+const TOTAL = E('s11', 2.2);
 
 const CAPTIONS = {
-  s1: '23:08 on an expert marketplace. Forty-seven waiting, three experts online, all on a call.',
-  s2: 'Twelve more are offline. Nobody told them.',
-  s3: 'At foodpanda I raised the incentive and riders appeared.',
-  s4: 'That does not work on a therapist. You cannot price a credential into existence.',
-  s5: 'They never declined. Nobody asked. Supply is fixed. Information is not.',
-  s6: 'So I built Equilibrium. Five modules that watch both sides and ask, in seconds.',
-  s7: 'The surge pays the bonus, so it funds itself. Nine accept, the delay halves, and it cost the platform $40.',
-  s8: 'You cannot surge-price a therapist. You can make sure nobody finds out too late.',
-  s9: 'Every module in this film is live on the site. Go and drive it yourself.',
+  s1: '23:08. Forty-seven waiting. Three experts online, all on a call. Twelve more offline, and nobody told them.',
+  s2: 'An on-demand marketplace for live expert sessions. Astrology, mental health, relationship and financial coaching. 3M downloads, 300 vetted experts.',
+  s3: 'The marketplace had no mechanism for what happens when 50 customers arrive at 11pm and 3 experts are free.',
+  s4: 'The queue grows. Customers leave. Experts never know the demand was there. And the platform absorbs the whole cost of that mismatch, in lost revenue, in dropout, in trust.',
+  s5: 'At foodpanda I raised the incentive and riders appeared. You cannot do that to a therapist. But those twelve never declined. Nobody asked them.',
+  s6: 'So I designed Equilibrium. Something that detected the imbalance early, responded automatically, and paid for itself, before the marketplace had an engineering team to build it.',
+  s7: 'Five modules. Demand signals, health scoring, surge pricing, incentives, and a router that decides what a human has to handle.',
+  s8: 'Either trigger crossing prices the surge and pushes every expert who can help. Every dollar of it is ring-fenced to pay them.',
+  s9: 'Replayed against a real evening: Red at minute 8, supply closed within four minutes of detection.',
+  s10: 'Queue peak down 48%. Delay from 34 minutes to 18. Net cost to the platform, $40.',
+  s11: 'Watch the full film, then go and drive it yourself.',
 };
 
 const F = (sel) => `[data-film="${sel}"]`;
 
-// The film ends on an invitation, not a full stop: the last two beats pull back
-// to show how much of the project there is, then hand over the address.
+// One shot per claim: the business, the gap, the cost, the insight, the build,
+// the modules, the mechanism, the proof, the impact, the invitation.
 const beats = [
   [0.0, 'veil', 1, 0],
   [0.05, 'open', 1],
-  [S('s1', 3.60), 'open', 2],
-  [S('s2', 0.05), 'open', 3],
-  [E('s2', -0.35), 'open', 0],
-  [E('s2', 0.25), 'cam', F('queue'), { dur: 10, fill: 0.66, fillY: 0.60 }],
-  [E('s2', 0.40), 'veil', 0, 700],
-  [E('s2', 0.60), 'mark', true],
+  [S('s1', 3.10), 'open', 2],
+  [S('s1', 5.40), 'open', 3],
+  [E('s1', -0.30), 'open', 0],
 
-  // Demand climbs while he describes the lever that used to work...
-  [S('s3', 0.05), 'cam', F('queue'), { dur: 1800, fill: 0.97, fillY: 0.92 }],
-  [S('s3', 1.00), 'point', F('queue-slider'), { dur: 550 }],
-  [S('s3', 1.70), 'slider', F('queue-slider'), 2.6, { dur: 2000 }],
-  // ...and goes critical exactly as he says it does not work here.
-  [S('s4', 0.20), 'slider', F('queue-slider'), 5.6, { dur: 3000 }],
-  [S('s4', 3.50), 'hideCursor'],
+  // What the business sells, then how big it is.
+  [E('s1', 0.20), 'cam', F('surge-matrix'), { dur: 10, fill: 0.94, fillY: 0.90 }],
+  [E('s1', 0.35), 'veil', 0, 650],
+  [E('s1', 0.55), 'mark', true],
+  [S('s2', 4.60), 'cam', F('wins'), { dur: 1400, fill: 0.97, fillY: 0.55 }],
 
-  // The push nobody sent.
-  [S('s5', 0.10), 'cam', F('notif'), { dur: 1500, fill: 0.92, fillY: 0.92 }],
+  // The gap, and what it costs: the queue compounding with nothing to stop it.
+  [S('s3', 0.10), 'cam', F('queue'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
+  [S('s3', 1.90), 'point', F('queue-slider'), { dur: 500 }],
+  [S('s3', 2.60), 'slider', F('queue-slider'), 2.6, { dur: 1800 }],
+  [S('s4', 0.40), 'slider', F('queue-slider'), 5.6, { dur: 3200 }],
+  [S('s4', 4.10), 'hideCursor'],
 
-  // Line 6 names five modules; this is them.
+  // The insight: they were never asked.
+  [S('s5', 3.40), 'cam', F('notif'), { dur: 1500, fill: 0.92, fillY: 0.92 }],
+
+  // What was built, then the five modules themselves.
   [S('s6', 0.10), 'cam', F('pipeline'), { dur: 1500, fill: 0.97, fillY: 0.92 }],
-  [S('s6', 2.10), 'press', F('node-signals'), { dur: 450 }],
-  [S('s6', 2.90), 'press', F('node-health'), { dur: 400 }],
-  [S('s6', 3.60), 'press', F('node-surge'), { dur: 400 }],
-  [S('s6', 4.30), 'press', F('node-incentive'), { dur: 400 }],
-  [S('s6', 5.00), 'press', F('node-router'), { dur: 400 }],
-  [S('s6', 5.70), 'hideCursor'],
+  [S('s7', 0.30), 'press', F('node-signals'), { dur: 420 }],
+  [S('s7', 1.10), 'press', F('node-health'), { dur: 380 }],
+  [S('s7', 1.90), 'press', F('node-surge'), { dur: 380 }],
+  [S('s7', 2.70), 'press', F('node-incentive'), { dur: 380 }],
+  [S('s7', 3.50), 'press', F('node-router'), { dur: 380 }],
+  [S('s7', 4.30), 'hideCursor'],
 
-  // One line, two halves: the money, then the result.
-  [S('s7', 0.10), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
-  [S('s7', 4.60), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
-  [S('s7', 6.00), 'press', F('scenario-5'), { dur: 550 }],
-  [S('s7', 7.20), 'hideCursor'],
+  // How it fires, and how it pays for itself.
+  [S('s8', 0.10), 'cam', F('barometer'), { dur: 1400, fill: 0.94, fillY: 0.92 }],
+  [S('s8', 1.50), 'press', F('baro-red'), { dur: 500 }],
+  [S('s8', 3.00), 'hideCursor'],
+  [S('s8', 3.40), 'cam', F('self-financing'), { dur: 1500, fill: 0.99, fillY: 0.92 }],
 
-  // Pull back so the closing line lands over the whole thing.
-  [S('s8', 0.20), 'cam', F('pipeline'), { dur: 2800, fill: 0.44, fillY: 0.42 }],
+  // Proof, then impact.
+  [S('s9', 0.10), 'cam', F('scenario'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
+  [S('s9', 1.60), 'press', F('scenario-5'), { dur: 520 }],
+  [S('s9', 2.80), 'hideCursor'],
+  [S('s10', 0.10), 'cam', F('impact'), { dur: 1400, fill: 0.97, fillY: 0.92 }],
 
-  [S('s9', -0.30), 'mark', false],
-  [S('s9', 0.20), 'endcard'],
+  // Pull back over the whole thing, then hand over the address.
+  [S('s11', -1.30), 'cam', F('pipeline'), { dur: 2600, fill: 0.44, fillY: 0.42 }],
+  [S('s11', -0.20), 'mark', false],
+  [S('s11', 0.30), 'endcard'],
 ];
 
 timeline.lines.forEach((l, i) => {
